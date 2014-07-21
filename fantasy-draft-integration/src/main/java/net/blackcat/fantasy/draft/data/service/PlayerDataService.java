@@ -5,7 +5,7 @@ package net.blackcat.fantasy.draft.data.service;
 
 import java.util.List;
 
-import net.blackcat.fantasy.draft.player.types.Player;
+import net.blackcat.fantasy.draft.player.Player;
 
 /**
  * Defines operations for accessing Player data from the back end data store.
