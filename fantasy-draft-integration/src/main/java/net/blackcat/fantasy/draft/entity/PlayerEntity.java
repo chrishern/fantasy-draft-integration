@@ -11,7 +11,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 
-//import net.blackcat.fantasy.draft.player.types.Position;
+import net.blackcat.fantasy.draft.player.types.Position;
 
 /**
  * Entity class representing a fantasy draft player.
@@ -36,9 +36,9 @@ public class PlayerEntity implements Serializable {
 	@Column
 	private String team;
 
-//	@Column
-//	@Enumerated(EnumType.STRING)
-//	private Position position;
+	@Column
+	@Enumerated(EnumType.STRING)
+	private Position position;
 	
 	@Column
 	private int totalPoints;
@@ -99,19 +99,19 @@ public class PlayerEntity implements Serializable {
 		this.team = team;
 	}
 
-//	/**
-//	 * @return the position
-//	 */
-//	public Position getPosition() {
-//		return position;
-//	}
-//
-//	/**
-//	 * @param position the position to set
-//	 */
-//	public void setPosition(Position position) {
-//		this.position = position;
-//	}
+	/**
+	 * @return the position
+	 */
+	public Position getPosition() {
+		return position;
+	}
+
+	/**
+	 * @param position the position to set
+	 */
+	public void setPosition(Position position) {
+		this.position = position;
+	}
 
 	/**
 	 * @return the totalPoints
