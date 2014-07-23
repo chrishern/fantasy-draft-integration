@@ -39,9 +39,26 @@ public class PlayerEntity implements Serializable {
 	@Column
 	@Enumerated(EnumType.STRING)
 	private Position position;
+
+	@Column
+	private boolean selected;
 	
 	@Column
 	private int totalPoints;
+
+	public PlayerEntity() {
+	}
+
+	public PlayerEntity(final long id, final String forename, final String surname, final String team,
+			final Position position, final boolean selected, final int totalPoints) {
+		this.id = id;
+		this.forename = forename;
+		this.surname = surname;
+		this.team = team;
+		this.position = position;
+		this.selected = selected;
+		this.totalPoints = totalPoints;
+	}
 
 	/**
 	 * @return the id
@@ -111,6 +128,20 @@ public class PlayerEntity implements Serializable {
 	 */
 	public void setPosition(Position position) {
 		this.position = position;
+	}
+
+	/**
+	 * @return the selected
+	 */
+	public boolean isSelected() {
+		return selected;
+	}
+
+	/**
+	 * @param selected the selected to set
+	 */
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 
 	/**
