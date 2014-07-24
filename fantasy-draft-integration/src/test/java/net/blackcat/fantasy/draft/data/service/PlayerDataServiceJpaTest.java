@@ -11,7 +11,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import net.blackcat.fantasy.draft.entity.PlayerEntity;
+import net.blackcat.fantasy.draft.integration.data.service.PlayerDataServiceJpa;
+import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.test.util.TestDataUtil;
 

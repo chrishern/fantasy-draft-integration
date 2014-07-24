@@ -1,11 +1,11 @@
 /**
  * 
  */
-package net.blackcat.fantasy.draft.facade;
+package net.blackcat.fantasy.draft.integration.facade;
 
 import java.util.List;
 
-import net.blackcat.fantasy.draft.data.service.PlayerDataService;
+import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
 import net.blackcat.fantasy.draft.player.Player;
 
 import org.springframework.beans.factory.annotation.Autowired;

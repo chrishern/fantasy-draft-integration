@@ -4,7 +4,7 @@
 	<persistence-unit name="jpaData" transaction-type="RESOURCE_LOCAL">
 
 		<provider>org.hibernate.ejb.HibernatePersistence</provider> 
-		<class>net.blackcat.fantasy.draft.entity.PlayerEntity</class>
+		<class>net.blackcat.fantasy.draft.integration.entity.PlayerEntity</class>
 
 	</persistence-unit>
 </persistence>

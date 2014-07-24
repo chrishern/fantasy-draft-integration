@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.blackcat.fantasy.draft.facade;
+package net.blackcat.fantasy.draft.integration.facade;
 
 import java.util.List;
 

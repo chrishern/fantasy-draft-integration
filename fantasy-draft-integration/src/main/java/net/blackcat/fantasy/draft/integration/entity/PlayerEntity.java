@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.blackcat.fantasy.draft.entity;
+package net.blackcat.fantasy.draft.integration.entity;
 
 import java.io.Serializable;
 

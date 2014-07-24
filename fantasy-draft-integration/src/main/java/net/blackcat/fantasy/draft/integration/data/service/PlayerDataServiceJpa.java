@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.blackcat.fantasy.draft.data.service;
+package net.blackcat.fantasy.draft.integration.data.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,9 +9,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import net.blackcat.fantasy.draft.entity.PlayerEntity;
+import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
+import net.blackcat.fantasy.draft.integration.util.BeanUtils;
 import net.blackcat.fantasy.draft.player.Player;
-import net.blackcat.fantasy.draft.util.BeanUtils;
 
 import org.springframework.stereotype.Component;
 

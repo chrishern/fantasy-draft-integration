@@ -10,7 +10,8 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 
-import net.blackcat.fantasy.draft.facade.PlayerFacade;
+import net.blackcat.fantasy.draft.integration.controller.PlayerController;
+import net.blackcat.fantasy.draft.integration.facade.PlayerFacade;
 import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.test.util.TestDataUtil;
 

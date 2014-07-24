@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.blackcat.fantasy.draft.util;
+package net.blackcat.fantasy.draft.integration.util;
 
 /**
  * Common Java Bean utilities.

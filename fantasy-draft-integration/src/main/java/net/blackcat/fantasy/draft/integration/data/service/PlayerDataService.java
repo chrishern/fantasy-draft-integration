@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.blackcat.fantasy.draft.data.service;
+package net.blackcat.fantasy.draft.integration.data.service;
 
 import java.util.List;
 

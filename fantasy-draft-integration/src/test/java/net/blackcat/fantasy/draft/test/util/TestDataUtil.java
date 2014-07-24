@@ -3,7 +3,7 @@
  */
 package net.blackcat.fantasy.draft.test.util;
 
-import net.blackcat.fantasy.draft.entity.PlayerEntity;
+import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.player.types.Position;
 
