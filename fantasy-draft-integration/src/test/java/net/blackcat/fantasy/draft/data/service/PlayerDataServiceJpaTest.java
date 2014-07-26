@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Unit tests for {@link PlayerDataServiceJpa}.
@@ -30,7 +31,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Chris
  *
  */
-@Ignore		
+@Ignore
+@Transactional		
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(value = {"/hsqlDatasourceContext.xml", "/testApplicationContext.xml"})
 public class PlayerDataServiceJpaTest {
