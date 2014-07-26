@@ -11,6 +11,7 @@ import net.blackcat.fantasy.draft.player.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of player facade operations.
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
  * @author Chris
  *
  */
+@Transactional
 @Service(value = "playerFacade")
 public class PlayerFacadeImpl implements PlayerFacade {
 
