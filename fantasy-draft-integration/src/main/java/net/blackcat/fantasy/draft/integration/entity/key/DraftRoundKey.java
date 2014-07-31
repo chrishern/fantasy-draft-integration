@@ -10,8 +10,8 @@ import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
-import net.blackcat.fantasy.draft.bidround.types.BiddingPhase;
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
+import net.blackcat.fantasy.draft.round.types.DraftRoundPhase;
 
 /**
  * Key for the draft round entity.
@@ -26,7 +26,7 @@ public class DraftRoundKey implements Serializable {
 
 	@Column
 	@Enumerated(EnumType.STRING)
-	private BiddingPhase biddingPhase;
+	private DraftRoundPhase biddingPhase;
 	
 	@Column
 	private int sequenceNumber;
@@ -37,7 +37,7 @@ public class DraftRoundKey implements Serializable {
 	public DraftRoundKey() {
 	}
 
-	public DraftRoundKey(final BiddingPhase biddingPhase, final int sequenceNumber,
+	public DraftRoundKey(final DraftRoundPhase biddingPhase, final int sequenceNumber,
 			final LeagueEntity league) {
 		this.biddingPhase = biddingPhase;
 		this.sequenceNumber = sequenceNumber;
@@ -47,14 +47,14 @@ public class DraftRoundKey implements Serializable {
 	/**
 	 * @return the biddingPhase
 	 */
-	public BiddingPhase getBiddingPhase() {
+	public DraftRoundPhase getBiddingPhase() {
 		return biddingPhase;
 	}
 
 	/**
 	 * @param biddingPhase the biddingPhase to set
 	 */
-	public void setBiddingPhase(BiddingPhase biddingPhase) {
+	public void setBiddingPhase(DraftRoundPhase biddingPhase) {
 		this.biddingPhase = biddingPhase;
 	}
 
@@ -84,5 +84,44 @@ public class DraftRoundKey implements Serializable {
 	 */
 	public void setLeague(LeagueEntity league) {
 		this.league = league;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((biddingPhase == null) ? 0 : biddingPhase.hashCode());
+		result = prime * result + ((league == null) ? 0 : league.hashCode());
+		result = prime * result + sequenceNumber;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof DraftRoundKey)) {
+			return false;
+		}
+		DraftRoundKey other = (DraftRoundKey) obj;
+		if (biddingPhase != other.biddingPhase) {
+			return false;
+		}
+		if (league == null) {
+			if (other.league != null) {
+				return false;
+			}
+		} else if (!league.equals(other.league)) {
+			return false;
+		}
+		if (sequenceNumber != other.sequenceNumber) {
+			return false;
+		}
+		return true;
 	}
 }
