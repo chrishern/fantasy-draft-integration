@@ -13,7 +13,6 @@ import javax.persistence.PersistenceContext;
 
 import net.blackcat.fantasy.draft.integration.data.service.PlayerDataServiceJpa;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
-import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.test.util.TestDataUtil;
 
 import org.junit.Test;
@@ -53,12 +52,12 @@ public class PlayerDataServiceJpaTest {
 		assertThat(find.getForename()).isEqualTo(TestDataUtil.PLAYER_1_FORENAME);
 		
 		// act
-		final List<Player> players = playerDataServiceJpa.getPlayers();
+		final List<PlayerEntity> players = playerDataServiceJpa.getPlayers();
 		
 		// assert
 		assertThat(players).hasSize(1);
 		
-		final Player retrievedPlayer = players.get(0);
+		final PlayerEntity retrievedPlayer = players.get(0);
 		assertThat(retrievedPlayer.getId()).isEqualTo(TestDataUtil.PLAYER_1_ID);
 		assertThat(retrievedPlayer.getForename()).isEqualTo(TestDataUtil.PLAYER_1_FORENAME);
 		assertThat(retrievedPlayer.getSurname()).isEqualTo(TestDataUtil.PLAYER_1_SURNAME);
@@ -69,18 +68,18 @@ public class PlayerDataServiceJpaTest {
 	@Test
 	public void testAddPlayers() {
 		// arrange
-		final Player player1 = TestDataUtil.createModelPlayer(1);
-		final Player player2 = TestDataUtil.createModelPlayer(2);
+		final PlayerEntity player1 = TestDataUtil.createEntityPlayer(1);
+		final PlayerEntity player2 = TestDataUtil.createEntityPlayer(2);
 		
 		// act
 		playerDataServiceJpa.addPlayers(Arrays.asList(player1, player2));
 		
 		// assert
-		final List<Player> players = playerDataServiceJpa.getPlayers();
+		final List<PlayerEntity> players = playerDataServiceJpa.getPlayers();
 		
 		assertThat(players).hasSize(2);
 		
-		final Player retrievedPlayer = players.get(0);
+		final PlayerEntity retrievedPlayer = players.get(0);
 		assertThat(retrievedPlayer.getId()).isEqualTo(TestDataUtil.PLAYER_1_ID);
 		assertThat(retrievedPlayer.getForename()).isEqualTo(TestDataUtil.PLAYER_1_FORENAME);
 		assertThat(retrievedPlayer.getSurname()).isEqualTo(TestDataUtil.PLAYER_1_SURNAME);

@@ -5,7 +5,7 @@ package net.blackcat.fantasy.draft.integration.data.service;
 
 import java.util.List;
 
-import net.blackcat.fantasy.draft.player.Player;
+import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 
 /**
  * Defines operations for accessing Player data from the back end data store.
@@ -22,12 +22,12 @@ public interface PlayerDataService {
 	 * 
 	 * @param players Players to add.
 	 */
-	void addPlayers(List<Player> players);
+	void addPlayers(List<PlayerEntity> players);
 	
 	/**
 	 * Get a list of all players from the back end.
 	 * 
-	 * @return List of all {@link Player} objects.
+	 * @return List of all {@link PlayerEntity} objects.
 	 */
-	List<Player> getPlayers();
+	List<PlayerEntity> getPlayers();
 }
