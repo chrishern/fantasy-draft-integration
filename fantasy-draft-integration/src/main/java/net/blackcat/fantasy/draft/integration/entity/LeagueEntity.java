@@ -34,12 +34,22 @@ public class LeagueEntity implements Serializable {
 	@OneToMany
 	private List<TeamEntity> teams;
 	
+	@OneToMany
+	private List<DraftRoundEntity> draftRounds;
+	
 	public LeagueEntity() {
 
 	}
 	
 	public LeagueEntity(final String name) {
 		this.name = name;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
 	}
 
 	/**

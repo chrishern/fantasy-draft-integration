@@ -10,7 +10,6 @@ import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
-import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
 import net.blackcat.fantasy.draft.round.types.DraftRoundPhase;
 
 /**
@@ -32,16 +31,16 @@ public class DraftRoundKey implements Serializable {
 	private int sequenceNumber;
 	
 	@Column
-	private LeagueEntity league;
+	private int leagueId;
 
 	public DraftRoundKey() {
 	}
 
 	public DraftRoundKey(final DraftRoundPhase biddingPhase, final int sequenceNumber,
-			final LeagueEntity league) {
+			final int leagueId) {
 		this.biddingPhase = biddingPhase;
 		this.sequenceNumber = sequenceNumber;
-		this.league = league;
+		this.leagueId = leagueId;
 	}
 
 	/**
@@ -75,28 +74,34 @@ public class DraftRoundKey implements Serializable {
 	/**
 	 * @return the league
 	 */
-	public LeagueEntity getLeague() {
-		return league;
+	public int getLeague() {
+		return leagueId;
 	}
 
 	/**
-	 * @param league the league to set
+	 * @param leagueId the league to set
 	 */
-	public void setLeague(LeagueEntity league) {
-		this.league = league;
+	public void setLeague(int leagueId) {
+		this.leagueId = leagueId;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
 				+ ((biddingPhase == null) ? 0 : biddingPhase.hashCode());
-		result = prime * result + ((league == null) ? 0 : league.hashCode());
+		result = prime * result + leagueId;
 		result = prime * result + sequenceNumber;
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -112,11 +117,7 @@ public class DraftRoundKey implements Serializable {
 		if (biddingPhase != other.biddingPhase) {
 			return false;
 		}
-		if (league == null) {
-			if (other.league != null) {
-				return false;
-			}
-		} else if (!league.equals(other.league)) {
+		if (leagueId != other.leagueId) {
 			return false;
 		}
 		if (sequenceNumber != other.sequenceNumber) {

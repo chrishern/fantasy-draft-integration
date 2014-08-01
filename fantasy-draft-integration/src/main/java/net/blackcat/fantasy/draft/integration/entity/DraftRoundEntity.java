@@ -12,6 +12,8 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 
 import net.blackcat.fantasy.draft.integration.entity.key.DraftRoundKey;
@@ -36,6 +38,10 @@ public class DraftRoundEntity implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private DraftRoundStatus status;
 	
+	@ManyToOne
+	@MapsId("leagueId")
+	private LeagueEntity league;
+	
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<BidEntity> bids;
 	
@@ -46,7 +52,7 @@ public class DraftRoundEntity implements Serializable {
 	public DraftRoundEntity(final DraftRoundPhase biddingPhase, final int sequenceNumber,
 		final LeagueEntity league, final DraftRoundStatus status) {
 		
-		final DraftRoundKey key = new DraftRoundKey(biddingPhase, sequenceNumber, league);
+		final DraftRoundKey key = new DraftRoundKey(biddingPhase, sequenceNumber, league.getId());
 		
 		this.key = key;
 		this.status = status;
