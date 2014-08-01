@@ -16,7 +16,6 @@ import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.test.util.TestDataUtil;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Chris
  *
  */
-@Ignore
 @Transactional		
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(value = {"/hsqlDatasourceContext.xml", "/testApplicationContext.xml"})

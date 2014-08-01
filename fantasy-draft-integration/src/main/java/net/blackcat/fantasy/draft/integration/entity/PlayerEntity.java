@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import net.blackcat.fantasy.draft.player.types.Position;
 
@@ -19,7 +20,8 @@ import net.blackcat.fantasy.draft.player.types.Position;
  * @author Chris
  *
  */
-@Entity(name = "Player")
+@Entity
+@Table(name = "Player")
 public class PlayerEntity implements Serializable {	
 
 	private static final long serialVersionUID = 6584040856373261900L;
