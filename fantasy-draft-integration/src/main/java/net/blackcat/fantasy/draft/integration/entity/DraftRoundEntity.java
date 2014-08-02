@@ -15,6 +15,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import net.blackcat.fantasy.draft.integration.entity.key.DraftRoundKey;
 import net.blackcat.fantasy.draft.round.types.DraftRoundPhase;
@@ -26,7 +27,8 @@ import net.blackcat.fantasy.draft.round.types.DraftRoundStatus;
  * @author Chris
  *
  */
-@Entity(name = "DraftRound")
+@Entity
+@Table(name = "DraftRound")
 public class DraftRoundEntity implements Serializable {
 
 	private static final long serialVersionUID = 1986039206171397038L;

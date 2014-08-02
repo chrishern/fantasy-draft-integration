@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * Entity class representing a bid that is made during a fantasy draft auction.
@@ -19,7 +20,8 @@ import javax.persistence.ManyToOne;
  * @author Chris
  *
  */
-@Entity(name = "Bid")
+@Entity
+@Table(name = "Bid")
 public class BidEntity implements Serializable {
 
 	private static final long serialVersionUID = 5307258911998818485L;
