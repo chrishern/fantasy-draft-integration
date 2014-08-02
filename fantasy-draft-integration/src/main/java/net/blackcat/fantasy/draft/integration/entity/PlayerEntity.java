@@ -4,14 +4,18 @@
 package net.blackcat.fantasy.draft.integration.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
 import net.blackcat.fantasy.draft.player.types.Position;
 
 /**
@@ -27,7 +31,7 @@ public class PlayerEntity implements Serializable {
 	private static final long serialVersionUID = 6584040856373261900L;
 
 	@Id
-	private long id;
+	private int id;
 	
 	@Column
 	private String forename;
@@ -43,7 +47,10 @@ public class PlayerEntity implements Serializable {
 	private Position position;
 
 	@Column
-	private boolean selected;
+	private PlayerSelectionStatus selectionStatus;
+	
+	@OneToMany
+	private List<TeamEntity> teamsWhoCanBid;
 	
 	@Column
 	private int totalPoints;
@@ -51,28 +58,27 @@ public class PlayerEntity implements Serializable {
 	public PlayerEntity() {
 	}
 
-	public PlayerEntity(final long id, final String forename, final String surname, final String team,
-			final Position position, final boolean selected, final int totalPoints) {
+	public PlayerEntity(final int id, final String forename, final String surname, final String team,
+			final Position position, final int totalPoints) {
 		this.id = id;
 		this.forename = forename;
 		this.surname = surname;
 		this.team = team;
 		this.position = position;
-		this.selected = selected;
 		this.totalPoints = totalPoints;
 	}
 
 	/**
 	 * @return the id
 	 */
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -133,17 +139,17 @@ public class PlayerEntity implements Serializable {
 	}
 
 	/**
-	 * @return the selected
+	 * @return the selectionStatus
 	 */
-	public boolean isSelected() {
-		return selected;
+	public PlayerSelectionStatus getSelectionStatus() {
+		return selectionStatus;
 	}
 
 	/**
-	 * @param selected the selected to set
+	 * @param selectionStatus the selectionStatus to set
 	 */
-	public void setSelected(boolean selected) {
-		this.selected = selected;
+	public void setSelectionStatus(final PlayerSelectionStatus selectionStatus) {
+		this.selectionStatus = selectionStatus;
 	}
 
 	/**
@@ -158,6 +164,33 @@ public class PlayerEntity implements Serializable {
 	 */
 	public void setTotalPoints(int totalPoints) {
 		this.totalPoints = totalPoints;
+	}
+
+	/**
+	 * Add a new team to the list of the teams who can bid for this player.
+	 * 
+	 * @param team Team who can bid for this player.
+	 */
+	public void addTeamWhoCanBid(final TeamEntity team) {
+		if (teamsWhoCanBid == null) {
+			teamsWhoCanBid = new ArrayList<TeamEntity>();
+		}
+		
+		teamsWhoCanBid.add(team);
+	}
+	
+	/**
+	 * @return the teamsWhoCanBid
+	 */
+	public List<TeamEntity> getTeamsWhoCanBid() {
+		return teamsWhoCanBid;
+	}
+
+	/**
+	 * @param teamsWhoCanBid the teamsWhoCanBid to set
+	 */
+	public void setTeamsWhoCanBid(List<TeamEntity> teamsWhoCanBid) {
+		this.teamsWhoCanBid = teamsWhoCanBid;
 	}
 	
 }

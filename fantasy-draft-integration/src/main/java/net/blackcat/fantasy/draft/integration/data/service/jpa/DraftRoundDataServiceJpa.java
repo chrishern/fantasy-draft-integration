@@ -34,12 +34,9 @@ public class DraftRoundDataServiceJpa implements DraftRoundDataService {
 	@Override
 	public void createDraftRound(final DraftRoundEntity draftRound) throws FantasyDraftIntegrationException {
 		// Check for the presence of open draft rounds for this league
-		final TypedQuery<DraftRoundEntity> query = entityManager.createQuery(
-				"SELECT d FROM DraftRoundEntity d WHERE d.key.leagueId = :leagueId AND d.status = :status", DraftRoundEntity.class);
-		query.setParameter("leagueId", draftRound.getKey().getLeague());
-		query.setParameter("status", DraftRoundStatus.OPEN);
+		final List<DraftRoundEntity> openRound = getOpenRound(draftRound.getKey().getLeague());
 		
-		if (!query.getResultList().isEmpty()) {
+		if (!openRound.isEmpty()) {
 			throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.OPEN_DRAFT_ROUND_ALREADY_EXISTS_FOR_LEAGUE);
 		}
 
@@ -54,5 +51,30 @@ public class DraftRoundDataServiceJpa implements DraftRoundDataService {
 	public void addBids(final DraftRoundEntity draftRound, final List<BidEntity> bids) {
 		draftRound.addBids(bids);
 		entityManager.merge(draftRound);
+	}
+
+	@Override
+	public DraftRoundEntity getOpenDraftRound(final int leagueId) throws FantasyDraftIntegrationException {
+		final List<DraftRoundEntity> openRounds = getOpenRound(leagueId);
+
+		if (openRounds.isEmpty()) {
+			throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.OPEN_DRAFT_ROUND_DOES_NOT_EXIST_FOR_LEAGUE);
+		}
+		
+		return openRounds.get(0);
+	}
+	
+	/**
+	 * Get the open draft rounds for the given league Id.
+	 * 
+	 * @param leagueId Id of the league to get the open rounds for.
+	 * @return List of open draft rounds.
+	 */
+	private List<DraftRoundEntity> getOpenRound(final int leagueId) {
+		final TypedQuery<DraftRoundEntity> query = entityManager.createQuery(
+				"SELECT d FROM DraftRoundEntity d WHERE d.key.leagueId = :leagueId AND d.status = :status", DraftRoundEntity.class);
+		query.setParameter("leagueId", leagueId);
+		query.setParameter("status", DraftRoundStatus.OPEN);
+		return query.getResultList();
 	}
 }

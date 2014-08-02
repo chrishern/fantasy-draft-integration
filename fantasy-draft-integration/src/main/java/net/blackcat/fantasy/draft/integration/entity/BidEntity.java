@@ -6,6 +6,7 @@ package net.blackcat.fantasy.draft.integration.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,18 +23,18 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "Bid")
-public class BidEntity implements Serializable {
+public class BidEntity implements Serializable, Comparable<BidEntity> {
 
 	private static final long serialVersionUID = 5307258911998818485L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	private int id;
 	
 	@ManyToOne
 	private TeamEntity team;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.MERGE)
 	private PlayerEntity player;
 	
 	@Column(nullable = false)
@@ -54,14 +55,14 @@ public class BidEntity implements Serializable {
 	/**
 	 * @return the id
 	 */
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -119,5 +120,10 @@ public class BidEntity implements Serializable {
 	 */
 	public void setSuccessful(boolean successful) {
 		this.successful = successful;
+	}
+
+	@Override
+	public int compareTo(final BidEntity object) {
+		return object.getAmount().compareTo(this.amount);
 	}
 }

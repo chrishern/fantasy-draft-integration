@@ -45,13 +45,13 @@ public class TeamDataServiceJpaTest {
 		// arrange
 		
 		// act
-		teamDataServiceJpa.createTeam(TestDataUtil.TEST_TEAM);
+		teamDataServiceJpa.createTeam(TestDataUtil.TEST_TEAM_1);
 		
 		// assert
 		final List<TeamEntity> teams = entityManager.createQuery("SELECT t FROM TeamEntity t", TeamEntity.class).getResultList();
 		
 		assertThat(teams).hasSize(1);
-		assertThat(teams.get(0).getName()).isEqualTo(TestDataUtil.TEST_TEAM);
+		assertThat(teams.get(0).getName()).isEqualTo(TestDataUtil.TEST_TEAM_1);
 	}
 
 }

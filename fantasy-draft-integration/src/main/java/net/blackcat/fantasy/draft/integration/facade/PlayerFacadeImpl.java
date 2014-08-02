@@ -9,6 +9,7 @@ import java.util.List;
 import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.player.Player;
+import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,10 @@ public class PlayerFacadeImpl implements PlayerFacade {
 		
 		for (final Player modelPlayer : players) {
 			final PlayerEntity entityPlayer = new PlayerEntity();
+			
 			BeanUtils.copyProperties(modelPlayer, entityPlayer);
+			entityPlayer.setSelectionStatus(PlayerSelectionStatus.NOT_SELECTED);
+			
 			entityPlayers.add(entityPlayer);
 		}
 		

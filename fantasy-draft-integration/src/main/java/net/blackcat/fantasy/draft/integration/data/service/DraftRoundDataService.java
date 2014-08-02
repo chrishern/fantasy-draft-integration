@@ -36,4 +36,12 @@ public interface DraftRoundDataService {
 	 * @param bids List of bids to add.
 	 */
 	void addBids(DraftRoundEntity draftRound, List<BidEntity> bids);
+	
+	/**
+	 * Get the open draft round for the given league.
+	 * 
+	 * @param leagueId Id of the league we want to get the open draft round for.
+	 * @throws FantasyDraftIntegrationException If no open draft round exists for the given league.
+	 */
+	DraftRoundEntity getOpenDraftRound(int leagueId) throws FantasyDraftIntegrationException;
 }

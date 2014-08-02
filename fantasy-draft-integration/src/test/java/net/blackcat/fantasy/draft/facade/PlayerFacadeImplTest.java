@@ -14,6 +14,7 @@ import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.facade.PlayerFacadeImpl;
 import net.blackcat.fantasy.draft.player.Player;
+import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
 import net.blackcat.fantasy.draft.test.util.TestDataUtil;
 
 import org.junit.Test;
@@ -65,6 +66,7 @@ public class PlayerFacadeImplTest {
 		assertThat(firstPlayer.getTeam()).isEqualTo(modelPlayer1.getTeam());
 		assertThat(firstPlayer.getPosition()).isEqualTo(modelPlayer1.getPosition());
 		assertThat(firstPlayer.getTotalPoints()).isEqualTo(modelPlayer1.getTotalPoints());
+		assertThat(firstPlayer.getSelectionStatus()).isEqualTo(PlayerSelectionStatus.NOT_SELECTED);
 	}
 
 	@Test

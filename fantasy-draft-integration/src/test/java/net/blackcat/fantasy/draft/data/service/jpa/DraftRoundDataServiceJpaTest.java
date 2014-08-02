@@ -71,7 +71,7 @@ public class DraftRoundDataServiceJpaTest {
 		league = new LeagueEntity(TestDataUtil.LEAGUE_NAME);
 		entityManager.persist(league);
 		
-		team = new TeamEntity(TestDataUtil.TEST_TEAM);
+		team = new TeamEntity(TestDataUtil.TEST_TEAM_1);
 		entityManager.persist(team);
 		
 		player1 = TestDataUtil.createEntityPlayer(1);
@@ -181,5 +181,66 @@ public class DraftRoundDataServiceJpaTest {
 		// assert
 		retrievedObject = entityManager.find(DraftRoundEntity.class, draftRoundKey);
 		assertThat(retrievedObject.getBids()).hasSize(2);
+	}
+	
+	@Test
+	public void testGetOpenDraftRound_Success() throws Exception {
+		// arrange
+		final DraftRoundEntity draftRound = new DraftRoundEntity(DraftRoundPhase.AUCTION, 1, league);
+		dataService.createDraftRound(draftRound);
+		
+		// act
+		final DraftRoundEntity openDraftRound = dataService.getOpenDraftRound(league.getId());
+		
+		// assert
+		assertThat(openDraftRound).isNotNull();
+	}
+	
+	@Test
+	public void testGetOpenDraftRound_SuccessWithClosedPhase() throws Exception {
+		// arrange
+		final DraftRoundEntity draftRound1 = new DraftRoundEntity(DraftRoundPhase.AUCTION, 1, league);
+		draftRound1.setStatus(DraftRoundStatus.CLOSED);
+		dataService.createDraftRound(draftRound1);
+		
+		final DraftRoundEntity draftRound2 = new DraftRoundEntity(DraftRoundPhase.AUCTION, 2, league);
+		dataService.createDraftRound(draftRound2);
+		
+		// act
+		final DraftRoundEntity openDraftRound = dataService.getOpenDraftRound(league.getId());
+		
+		// assert
+		assertThat(openDraftRound).isNotNull();
+		assertThat(openDraftRound.getKey().getSequenceNumber()).isEqualTo(2);
+	}
+	
+	@Test
+	public void testGetOpenDraftRound_NoLeagueExists() throws Exception {
+		// arrange
+		thrownException.expect(FantasyDraftIntegrationException.class);
+		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.OPEN_DRAFT_ROUND_DOES_NOT_EXIST_FOR_LEAGUE));
+		
+		// act
+		dataService.getOpenDraftRound(league.getId());
+		
+		// assert
+		Assert.fail("Exception expected");
+	}
+	
+	@Test
+	public void testGetOpenDraftRound_NoOpenDraftRoundForLeague() throws Exception {
+		// arrange
+		final DraftRoundEntity draftRound = new DraftRoundEntity(DraftRoundPhase.AUCTION, 1, league);
+		draftRound.setStatus(DraftRoundStatus.CLOSED);
+		dataService.createDraftRound(draftRound);
+		
+		thrownException.expect(FantasyDraftIntegrationException.class);
+		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.OPEN_DRAFT_ROUND_DOES_NOT_EXIST_FOR_LEAGUE));
+		
+		// act
+		dataService.getOpenDraftRound(league.getId());
+		
+		// assert
+		Assert.fail("Exception expected");
 	}
 }
