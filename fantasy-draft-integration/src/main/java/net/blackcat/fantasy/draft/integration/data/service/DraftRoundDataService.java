@@ -3,6 +3,9 @@
  */
 package net.blackcat.fantasy.draft.integration.data.service;
 
+import java.util.List;
+
+import net.blackcat.fantasy.draft.integration.entity.BidEntity;
 import net.blackcat.fantasy.draft.integration.entity.DraftRoundEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.round.types.DraftRoundStatus;
@@ -25,4 +28,12 @@ public interface DraftRoundDataService {
 	 * or the draft round trying to be created already exists for the league.
 	 */
 	void createDraftRound(DraftRoundEntity draftRound) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Add a list of bids to a draft round.
+	 * 
+	 * @param draftRound Draft round to add the bids to.
+	 * @param bids List of bids to add.
+	 */
+	void addBids(DraftRoundEntity draftRound, List<BidEntity> bids);
 }

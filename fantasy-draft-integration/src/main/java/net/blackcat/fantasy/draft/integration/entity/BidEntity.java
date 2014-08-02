@@ -36,11 +36,20 @@ public class BidEntity implements Serializable {
 	@ManyToOne
 	private PlayerEntity player;
 	
-	@Column
+	@Column(nullable = false)
 	private BigDecimal amount;
 	
-	@Column
+	@Column(nullable = true)
 	private boolean successful;
+
+	public BidEntity() {
+	}
+
+	public BidEntity(final TeamEntity team, final PlayerEntity player, final BigDecimal amount) {
+		this.team = team;
+		this.player = player;
+		this.amount = amount;
+	}
 
 	/**
 	 * @return the id

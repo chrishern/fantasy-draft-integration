@@ -4,6 +4,7 @@
 package net.blackcat.fantasy.draft.integration.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -66,6 +67,10 @@ public class DraftRoundEntity implements Serializable {
 	 * @param newBids New bids to add to the entity.
 	 */
 	public void addBids(final List<BidEntity> newBids) {
+		if (bids == null) {
+			bids = new ArrayList<BidEntity>();
+		}
+		
 		bids.addAll(newBids);
 	}
 

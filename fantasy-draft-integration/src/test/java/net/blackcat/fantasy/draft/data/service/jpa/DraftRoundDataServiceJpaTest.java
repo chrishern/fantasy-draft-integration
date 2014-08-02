@@ -5,14 +5,20 @@ package net.blackcat.fantasy.draft.data.service.jpa;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import net.blackcat.fantasy.draft.integration.data.service.jpa.DraftRoundDataServiceJpa;
+import net.blackcat.fantasy.draft.integration.entity.BidEntity;
 import net.blackcat.fantasy.draft.integration.entity.DraftRoundEntity;
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
+import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
+import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
+import net.blackcat.fantasy.draft.integration.entity.key.DraftRoundKey;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.round.types.DraftRoundPhase;
@@ -20,6 +26,7 @@ import net.blackcat.fantasy.draft.round.types.DraftRoundStatus;
 import net.blackcat.fantasy.draft.test.util.CustomIntegrationExceptionMatcher;
 import net.blackcat.fantasy.draft.test.util.TestDataUtil;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -53,12 +60,29 @@ public class DraftRoundDataServiceJpaTest {
 	private DraftRoundDataServiceJpa dataService;
 
 	private LeagueEntity league;
+	private TeamEntity team;
+	private PlayerEntity player1;
+	private PlayerEntity player2;
+	private BidEntity bidPlayer1;
+	private BidEntity bidPlayer2;
 	
 	@Before
 	public void setup() {
 		league = new LeagueEntity(TestDataUtil.LEAGUE_NAME);
-		
 		entityManager.persist(league);
+		
+		team = new TeamEntity(TestDataUtil.TEST_TEAM);
+		entityManager.persist(team);
+		
+		player1 = TestDataUtil.createEntityPlayer(1);
+		entityManager.persist(player1);
+		
+		player2 = TestDataUtil.createEntityPlayer(2);
+		entityManager.persist(player2);
+		
+		bidPlayer1 = new BidEntity(team, player1, new BigDecimal("3"));
+		bidPlayer2 = new BidEntity(team, player2, new BigDecimal("6"));
+
 	}
 
 	@Test
@@ -103,6 +127,7 @@ public class DraftRoundDataServiceJpaTest {
 		dataService.createDraftRound(draftRound2);
 		
 		// assert
+		Assert.fail("Exception expected");
 	}
 	
 	@Test
@@ -120,5 +145,41 @@ public class DraftRoundDataServiceJpaTest {
 		dataService.createDraftRound(duplicateDraftRound);
 		
 		// assert
+		Assert.fail("Exception expected");
+	}
+	
+	@Test
+	public void testAddBids_Success_FirstSetOfBids() throws Exception {
+		// arrange
+		final DraftRoundEntity draftRound = new DraftRoundEntity(DraftRoundPhase.AUCTION, 1, league);
+		dataService.createDraftRound(draftRound);
+		
+		// act
+		dataService.addBids(draftRound, Arrays.asList(bidPlayer1, bidPlayer2));
+		
+		// assert
+		final DraftRoundKey draftRoundKey = new DraftRoundKey(DraftRoundPhase.AUCTION, 1, league.getId());
+		final DraftRoundEntity retrievedObject = entityManager.find(DraftRoundEntity.class, draftRoundKey);
+		assertThat(retrievedObject.getBids()).hasSize(2);
+	}
+	
+	@Test
+	public void testAddBids_Success_SecondSetOfBids() throws Exception {
+		// arrange
+		final DraftRoundEntity draftRound = new DraftRoundEntity(DraftRoundPhase.AUCTION, 1, league);
+		dataService.createDraftRound(draftRound);
+		
+		dataService.addBids(draftRound, Arrays.asList(bidPlayer1));
+		
+		final DraftRoundKey draftRoundKey = new DraftRoundKey(DraftRoundPhase.AUCTION, 1, league.getId());
+		DraftRoundEntity retrievedObject = entityManager.find(DraftRoundEntity.class, draftRoundKey);
+		assertThat(retrievedObject.getBids()).hasSize(1);
+		
+		// act
+		dataService.addBids(draftRound, Arrays.asList(bidPlayer2));
+		
+		// assert
+		retrievedObject = entityManager.find(DraftRoundEntity.class, draftRoundKey);
+		assertThat(retrievedObject.getBids()).hasSize(2);
 	}
 }
