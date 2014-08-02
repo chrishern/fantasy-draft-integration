@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.blackcat.fantasy.draft.data.service;
+package net.blackcat.fantasy.draft.data.service.jpa;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -10,7 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import net.blackcat.fantasy.draft.bid.Bid;
-import net.blackcat.fantasy.draft.integration.data.service.DraftRoundDataServiceJpa;
+import net.blackcat.fantasy.draft.integration.data.service.jpa.DraftRoundDataServiceJpa;
 import net.blackcat.fantasy.draft.integration.entity.DraftRoundEntity;
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;

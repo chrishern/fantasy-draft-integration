@@ -1,13 +1,14 @@
 /**
  * 
  */
-package net.blackcat.fantasy.draft.integration.data.service;
+package net.blackcat.fantasy.draft.integration.data.service.jpa;
 
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 
 import org.springframework.stereotype.Component;

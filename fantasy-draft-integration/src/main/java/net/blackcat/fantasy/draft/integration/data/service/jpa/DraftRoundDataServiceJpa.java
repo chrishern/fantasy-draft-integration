@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.blackcat.fantasy.draft.integration.data.service;
+package net.blackcat.fantasy.draft.integration.data.service.jpa;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import net.blackcat.fantasy.draft.bid.Bid;
+import net.blackcat.fantasy.draft.integration.data.service.DraftRoundDataService;
 import net.blackcat.fantasy.draft.integration.entity.BidEntity;
 import net.blackcat.fantasy.draft.integration.entity.DraftRoundEntity;
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
