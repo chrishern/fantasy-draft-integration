@@ -7,9 +7,11 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
+import net.blackcat.fantasy.draft.player.types.Position;
 
 import org.springframework.stereotype.Component;
 
@@ -37,4 +39,12 @@ public class PlayerDataServiceJpa implements PlayerDataService {
 		return entityManager.createQuery("select tc from PlayerEntity tc", PlayerEntity.class).getResultList();
 	}
 
+	@Override
+	public List<PlayerEntity> getPlayers(final Position position) {
+		final TypedQuery<PlayerEntity> query = entityManager.createQuery("select tc from PlayerEntity tc WHERE tc.position = :position", PlayerEntity.class);
+		
+		query.setParameter("position", position);
+		
+		return query.getResultList();
+	}
 }

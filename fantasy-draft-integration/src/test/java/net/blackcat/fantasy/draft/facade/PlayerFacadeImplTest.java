@@ -15,6 +15,7 @@ import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.facade.PlayerFacadeImpl;
 import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
+import net.blackcat.fantasy.draft.player.types.Position;
 import net.blackcat.fantasy.draft.test.util.TestDataUtil;
 
 import org.junit.Test;
@@ -82,6 +83,28 @@ public class PlayerFacadeImplTest {
 		
 		// assert
 		assertThat(players).hasSize(2);
+		
+		final Player firstPlayer = players.get(0);
+		assertThat(firstPlayer.getId()).isEqualTo(entityPlayer1.getId());
+		assertThat(firstPlayer.getForename()).isEqualTo(entityPlayer1.getForename());
+		assertThat(firstPlayer.getSurname()).isEqualTo(entityPlayer1.getSurname());
+		assertThat(firstPlayer.getTeam()).isEqualTo(entityPlayer1.getTeam());
+		assertThat(firstPlayer.getPosition()).isEqualTo(entityPlayer1.getPosition());
+		assertThat(firstPlayer.getTotalPoints()).isEqualTo(entityPlayer1.getTotalPoints());
+	}
+	
+	@Test
+	public void testGetPlayers_ByPosition() {
+		// arrange
+		final PlayerEntity entityPlayer1 = TestDataUtil.createEntityPlayer(1);
+		
+		when(playerDataService.getPlayers(Position.DEFENDER)).thenReturn(Arrays.asList(entityPlayer1));
+		
+		// act
+		final List<Player> players = playerFacade.getPlayers(Position.DEFENDER);
+		
+		// assert
+		assertThat(players).hasSize(1);
 		
 		final Player firstPlayer = players.get(0);
 		assertThat(firstPlayer.getId()).isEqualTo(entityPlayer1.getId());

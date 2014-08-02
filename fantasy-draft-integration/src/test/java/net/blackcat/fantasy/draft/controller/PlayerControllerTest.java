@@ -13,6 +13,7 @@ import java.util.List;
 import net.blackcat.fantasy.draft.integration.controller.PlayerController;
 import net.blackcat.fantasy.draft.integration.facade.PlayerFacade;
 import net.blackcat.fantasy.draft.player.Player;
+import net.blackcat.fantasy.draft.player.types.Position;
 import net.blackcat.fantasy.draft.test.util.TestDataUtil;
 
 import org.junit.Test;
@@ -64,4 +65,18 @@ public class PlayerControllerTest {
 		assertThat(players).containsOnly(player1, player2);
 	}
 
+	@Test
+	public void testGetPlayers_ByPosition() {
+		// arrange
+		final Player player1 = TestDataUtil.createModelPlayer(1);
+		
+		when(playerFacade.getPlayers(Position.MIDFIEDER)).thenReturn(Arrays.asList(player1));
+		
+		// act
+		final List<Player> players = playerController.getPlayers(Position.MIDFIEDER);
+		
+		// assert
+		assertThat(players).hasSize(1);
+		assertThat(players).containsOnly(player1);
+	}
 }

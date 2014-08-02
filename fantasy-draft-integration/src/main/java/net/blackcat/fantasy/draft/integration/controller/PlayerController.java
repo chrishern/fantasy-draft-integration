@@ -7,6 +7,7 @@ import java.util.List;
 
 import net.blackcat.fantasy.draft.integration.facade.PlayerFacade;
 import net.blackcat.fantasy.draft.player.Player;
+import net.blackcat.fantasy.draft.player.types.Position;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -43,5 +44,14 @@ public class PlayerController {
 	 */
 	public List<Player> getPlayers() {
 		return playerFacade.getPlayers();
+	}
+	
+	/**
+	 * Get a list of all players in a given {@link Position}.
+	 * 
+	 * @return List of all {@link Player} objects in the requested position.
+	 */
+	public List<Player> getPlayers(Position position) {
+		return playerFacade.getPlayers(position);
 	}
 }

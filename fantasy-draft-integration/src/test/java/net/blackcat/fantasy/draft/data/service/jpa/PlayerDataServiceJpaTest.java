@@ -13,6 +13,7 @@ import javax.persistence.PersistenceContext;
 
 import net.blackcat.fantasy.draft.integration.data.service.jpa.PlayerDataServiceJpa;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
+import net.blackcat.fantasy.draft.player.types.Position;
 import net.blackcat.fantasy.draft.test.util.TestDataUtil;
 
 import org.junit.Test;
@@ -47,10 +48,6 @@ public class PlayerDataServiceJpaTest {
 		final PlayerEntity player = TestDataUtil.createEntityPlayer(1);
 		entityManager.persist(player);
 		
-		PlayerEntity find = entityManager.find(PlayerEntity.class, TestDataUtil.PLAYER_1_ID);
-		assertThat(find).isNotNull();
-		assertThat(find.getForename()).isEqualTo(TestDataUtil.PLAYER_1_FORENAME);
-		
 		// act
 		final List<PlayerEntity> players = playerDataServiceJpa.getPlayers();
 		
@@ -78,6 +75,29 @@ public class PlayerDataServiceJpaTest {
 		final List<PlayerEntity> players = playerDataServiceJpa.getPlayers();
 		
 		assertThat(players).hasSize(2);
+		
+		final PlayerEntity retrievedPlayer = players.get(0);
+		assertThat(retrievedPlayer.getId()).isEqualTo(TestDataUtil.PLAYER_1_ID);
+		assertThat(retrievedPlayer.getForename()).isEqualTo(TestDataUtil.PLAYER_1_FORENAME);
+		assertThat(retrievedPlayer.getSurname()).isEqualTo(TestDataUtil.PLAYER_1_SURNAME);
+		assertThat(retrievedPlayer.getTeam()).isEqualTo(TestDataUtil.TEST_TEAM_1);
+		assertThat(retrievedPlayer.getTotalPoints()).isEqualTo(TestDataUtil.PLAYER_1_POINTS);
+	}
+	
+	@Test
+	public void testGetPlayersByPosition() {
+		// arrange
+		final PlayerEntity player = TestDataUtil.createEntityPlayer(1);
+		entityManager.persist(player);
+		
+		final PlayerEntity player2 = TestDataUtil.createEntityPlayer(2);
+		entityManager.persist(player2);
+		
+		// act
+		final List<PlayerEntity> players = playerDataServiceJpa.getPlayers(Position.DEFENDER);
+		
+		// assert
+		assertThat(players).hasSize(1);
 		
 		final PlayerEntity retrievedPlayer = players.get(0);
 		assertThat(retrievedPlayer.getId()).isEqualTo(TestDataUtil.PLAYER_1_ID);

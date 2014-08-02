@@ -10,6 +10,7 @@ import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
+import net.blackcat.fantasy.draft.player.types.Position;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,4 +61,16 @@ public class PlayerFacadeImpl implements PlayerFacade {
 		return modelPlayers;
 	}
 
+	@Override
+	public List<Player> getPlayers(final Position position) {
+		final List<Player> modelPlayers = new ArrayList<Player>();
+		
+		for (final PlayerEntity entityPlayer : playerDataService.getPlayers(position)) {
+			final Player modelPlayer = new Player();
+			BeanUtils.copyProperties(entityPlayer, modelPlayer);
+			modelPlayers.add(modelPlayer);
+		}
+		
+		return modelPlayers;
+	}
 }
