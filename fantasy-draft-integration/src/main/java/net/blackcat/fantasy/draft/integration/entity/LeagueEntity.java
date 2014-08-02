@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * Entity representing a league within the draft.
@@ -19,7 +20,8 @@ import javax.persistence.OneToMany;
  * @author Chris
  *
  */
-@Entity(name = "League")
+@Entity
+@Table(name = "League")
 public class LeagueEntity implements Serializable {
 
 	private static final long serialVersionUID = -128682952066413160L;
