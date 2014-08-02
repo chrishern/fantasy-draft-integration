@@ -3,25 +3,27 @@
  */
 package net.blackcat.fantasy.draft.data.service.jpa;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
+import static org.fest.assertions.Assertions.assertThat;
+
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import net.blackcat.fantasy.draft.bid.Bid;
 import net.blackcat.fantasy.draft.integration.data.service.jpa.DraftRoundDataServiceJpa;
 import net.blackcat.fantasy.draft.integration.entity.DraftRoundEntity;
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
-import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
-import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
-import net.blackcat.fantasy.draft.player.types.Position;
+import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
+import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.round.types.DraftRoundPhase;
 import net.blackcat.fantasy.draft.round.types.DraftRoundStatus;
+import net.blackcat.fantasy.draft.test.util.CustomIntegrationExceptionMatcher;
+import net.blackcat.fantasy.draft.test.util.TestDataUtil;
 
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,70 +37,88 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Chris
  *
  */
-@Ignore
 @Transactional		
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(value = {"/hsqlDatasourceContext.xml", "/testApplicationContext.xml"})
 public class DraftRoundDataServiceJpaTest {
 
-	private static final String LEAGUE_NAME = "League Name";
-	private static final String PLAYER_1 = "Player1";
-	private static final String PLAYER_2 = "Player2";
-
-	private static final String TEAM_1 = "Team1";
-
-	private static final int PLAYER_1_ID = 1;
-	private static final int PLAYER_2_ID = 2;
-
+	@Rule
+	public ExpectedException thrownException = ExpectedException.none();
+	
 	@PersistenceContext
 	private EntityManager entityManager;
 	
 	@Autowired
 	@Qualifier(value = "draftRoundDataServiceJpa")
 	private DraftRoundDataServiceJpa dataService;
+
 	private LeagueEntity league;
 	
 	@Before
 	public void setup() {
-		setupPlayerData();
-		setupTeamData();
-		setupLeagueData();
-		setupDraftRoundData();
+		league = new LeagueEntity(TestDataUtil.LEAGUE_NAME);
+		
+		entityManager.persist(league);
 	}
 
-
 	@Test
-	public void testAddBids() {
+	public void testCreateDraftRound_Success() throws Exception {
 		// arrange
-		final Bid bid = new Bid(PLAYER_1_ID, 1, new BigDecimal("35"));
+		final DraftRoundEntity draftRound = new DraftRoundEntity(DraftRoundPhase.AUCTION, 1, league);
 		
 		// act
-		dataService.addBids(1, Arrays.asList(bid));
+		dataService.createDraftRound(draftRound);
+		
+		// assert
+		final List<DraftRoundEntity> draftRounds = entityManager.createQuery("SELECT d FROM DraftRoundEntity d", DraftRoundEntity.class).getResultList();
+		
+		assertThat(draftRounds).hasSize(1);
+		
+		final DraftRoundEntity retrievedDraftRound = draftRounds.get(0);
+		
+		assertThat(retrievedDraftRound.getStatus()).isEqualTo(DraftRoundStatus.OPEN);
+		assertThat(retrievedDraftRound.getKey().getBiddingPhase()).isEqualTo(DraftRoundPhase.AUCTION);
+		assertThat(retrievedDraftRound.getKey().getSequenceNumber()).isEqualTo(1);
+		assertThat(retrievedDraftRound.getKey().getLeague()).isEqualTo(league.getId());
+	}
+	
+	@Test
+	public void testCreateDraftRound_OpenDraftRoundAlreadyExists() throws Exception {
+		// arrange
+		final DraftRoundEntity draftRound = new DraftRoundEntity(DraftRoundPhase.AUCTION, 1, league);
+		dataService.createDraftRound(draftRound);
+		
+		final LeagueEntity secondLeague = new LeagueEntity("Second League");
+		entityManager.persist(secondLeague);
+		
+		final DraftRoundEntity draftRoundForSecondLeague = new DraftRoundEntity(DraftRoundPhase.AUCTION, 1, secondLeague);
+		draftRoundForSecondLeague.setStatus(DraftRoundStatus.CLOSED);
+		dataService.createDraftRound(draftRoundForSecondLeague);
+		
+		thrownException.expect(FantasyDraftIntegrationException.class);
+		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.OPEN_DRAFT_ROUND_ALREADY_EXISTS_FOR_LEAGUE));
+		
+		// act
+		final DraftRoundEntity draftRound2 = new DraftRoundEntity(DraftRoundPhase.AUCTION, 2, league);
+		dataService.createDraftRound(draftRound2);
 		
 		// assert
 	}
-
-	private void setupTeamData() {
-		final TeamEntity team1 = new TeamEntity(TEAM_1);
+	
+	@Test
+	public void testCreateDraftRound_DraftRoundAlreadyExists() throws Exception {
+		// arrange
+		final DraftRoundEntity draftRound = new DraftRoundEntity(DraftRoundPhase.AUCTION, 1, league);
+		draftRound.setStatus(DraftRoundStatus.CLOSED);
+		dataService.createDraftRound(draftRound);
 		
-		entityManager.persist(team1);
-	}
-	
-	private void setupPlayerData() {
-		final PlayerEntity player1 = new PlayerEntity(PLAYER_1_ID, PLAYER_1, PLAYER_1, TEAM_1, Position.DEFENDER, false, 0);
-		final PlayerEntity player2 = new PlayerEntity(PLAYER_2_ID, PLAYER_2, PLAYER_2, TEAM_1, Position.DEFENDER, false, 0);
+		thrownException.expect(FantasyDraftIntegrationException.class);
+		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.DRAFT_ROUND_ALREADY_EXISTS_FOR_LEAGUE));
 		
-		entityManager.persist(player1);
-		entityManager.persist(player2);
-	}
-	
-	private void setupDraftRoundData() {
-		final DraftRoundEntity draftRound = new DraftRoundEntity(DraftRoundPhase.AUCTION, 1, league, DraftRoundStatus.OPEN);
-		entityManager.persist(draftRound);
-	}
-	
-	private void setupLeagueData() {
-		league = new LeagueEntity(LEAGUE_NAME);
-		entityManager.persist(league);
+		// act
+		final DraftRoundEntity duplicateDraftRound = new DraftRoundEntity(DraftRoundPhase.AUCTION, 1, league);
+		dataService.createDraftRound(duplicateDraftRound);
+		
+		// assert
 	}
 }

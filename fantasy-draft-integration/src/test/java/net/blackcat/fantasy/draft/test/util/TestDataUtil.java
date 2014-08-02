@@ -19,11 +19,15 @@ public final class TestDataUtil {
 	public static final int PLAYER_1_POINTS = 54;
 	public static final String PLAYER_1_SURNAME = "Player";
 	public static final String PLAYER_1_FORENAME = "Test";
+	
 	public static final long PLAYER_2_ID = 2;
 	public static final int PLAYER_2_POINTS = 89;
 	public static final String PLAYER_2_SURNAME = "Player2";
 	public static final String PLAYER_2_FORENAME = "Test2";
+	
 	public static final String TEST_TEAM = "Test Team";
+	
+	public static final String LEAGUE_NAME = "New League";
 	
 	/**
 	 * Create a {@link Player} object.

@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 
 import net.blackcat.fantasy.draft.integration.data.service.jpa.TeamDataServiceJpa;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
+import net.blackcat.fantasy.draft.test.util.TestDataUtil;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,8 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(value = {"/hsqlDatasourceContext.xml", "/testApplicationContext.xml"})
 public class TeamDataServiceJpaTest {
 
-	private static final String TEAM_NAME = "Team";
-
 	@PersistenceContext
 	private EntityManager entityManager;
 	
@@ -46,13 +45,13 @@ public class TeamDataServiceJpaTest {
 		// arrange
 		
 		// act
-		teamDataServiceJpa.createTeam(TEAM_NAME);
+		teamDataServiceJpa.createTeam(TestDataUtil.TEST_TEAM);
 		
 		// assert
 		final List<TeamEntity> teams = entityManager.createQuery("SELECT t FROM TeamEntity t", TeamEntity.class).getResultList();
 		
 		assertThat(teams).hasSize(1);
-		assertThat(teams.get(0).getName()).isEqualTo(TEAM_NAME);
+		assertThat(teams.get(0).getName()).isEqualTo(TestDataUtil.TEST_TEAM);
 	}
 
 }

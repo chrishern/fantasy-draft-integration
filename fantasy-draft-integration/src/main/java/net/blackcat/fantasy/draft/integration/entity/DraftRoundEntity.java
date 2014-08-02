@@ -51,13 +51,13 @@ public class DraftRoundEntity implements Serializable {
 		
 	}
 	
-	public DraftRoundEntity(final DraftRoundPhase biddingPhase, final int sequenceNumber,
-		final LeagueEntity league, final DraftRoundStatus status) {
+	public DraftRoundEntity(final DraftRoundPhase biddingPhase, final int sequenceNumber, final LeagueEntity league) {
 		
 		final DraftRoundKey key = new DraftRoundKey(biddingPhase, sequenceNumber, league.getId());
 		
 		this.key = key;
-		this.status = status;
+		this.league = league;
+		this.status = DraftRoundStatus.OPEN;
 	}
 	
 	/**
@@ -67,5 +67,54 @@ public class DraftRoundEntity implements Serializable {
 	 */
 	public void addBids(final List<BidEntity> newBids) {
 		bids.addAll(newBids);
+	}
+
+	/**
+	 * @return the key
+	 */
+	public DraftRoundKey getKey() {
+		return key;
+	}
+
+	/**
+	 * @param key the key to set
+	 */
+	public void setKey(DraftRoundKey key) {
+		this.key = key;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public DraftRoundStatus getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(DraftRoundStatus status) {
+		this.status = status;
+	}
+
+	/**
+	 * @return the league
+	 */
+	public LeagueEntity getLeague() {
+		return league;
+	}
+
+	/**
+	 * @param league the league to set
+	 */
+	public void setLeague(LeagueEntity league) {
+		this.league = league;
+	}
+
+	/**
+	 * @return the bids
+	 */
+	public List<BidEntity> getBids() {
+		return bids;
 	}
 }
