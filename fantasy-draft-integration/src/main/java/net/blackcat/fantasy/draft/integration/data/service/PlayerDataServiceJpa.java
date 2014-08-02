@@ -24,12 +24,14 @@ public class PlayerDataServiceJpa implements PlayerDataService {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
+	@Override
 	public void addPlayers(final List<PlayerEntity> players) {
 		for (final PlayerEntity player : players) {
 			entityManager.persist(player);
 		}
 	}
 
+	@Override
 	public List<PlayerEntity> getPlayers() {
 		return entityManager.createQuery("select tc from PlayerEntity tc", PlayerEntity.class).getResultList();
 	}
