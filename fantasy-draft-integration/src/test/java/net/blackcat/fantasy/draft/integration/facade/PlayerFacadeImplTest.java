@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.blackcat.fantasy.draft.facade;
+package net.blackcat.fantasy.draft.integration.facade;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -13,10 +13,10 @@ import java.util.List;
 import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.facade.PlayerFacadeImpl;
+import net.blackcat.fantasy.draft.integration.test.util.TestDataUtil;
 import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
 import net.blackcat.fantasy.draft.player.types.Position;
-import net.blackcat.fantasy.draft.test.util.TestDataUtil;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

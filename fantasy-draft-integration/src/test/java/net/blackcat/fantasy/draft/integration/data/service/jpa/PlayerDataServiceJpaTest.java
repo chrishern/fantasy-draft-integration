@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.blackcat.fantasy.draft.data.service.jpa;
+package net.blackcat.fantasy.draft.integration.data.service.jpa;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -13,8 +13,8 @@ import javax.persistence.PersistenceContext;
 
 import net.blackcat.fantasy.draft.integration.data.service.jpa.PlayerDataServiceJpa;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
+import net.blackcat.fantasy.draft.integration.test.util.TestDataUtil;
 import net.blackcat.fantasy.draft.player.types.Position;
-import net.blackcat.fantasy.draft.test.util.TestDataUtil;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

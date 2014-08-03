@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.blackcat.fantasy.draft.controller;
+package net.blackcat.fantasy.draft.integration.controller;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -12,9 +12,9 @@ import java.util.List;
 
 import net.blackcat.fantasy.draft.integration.controller.PlayerController;
 import net.blackcat.fantasy.draft.integration.facade.PlayerFacade;
+import net.blackcat.fantasy.draft.integration.test.util.TestDataUtil;
 import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.player.types.Position;
-import net.blackcat.fantasy.draft.test.util.TestDataUtil;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

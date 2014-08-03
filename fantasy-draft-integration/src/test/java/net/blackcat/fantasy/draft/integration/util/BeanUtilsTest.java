@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.blackcat.fantasy.draft.util;
+package net.blackcat.fantasy.draft.integration.util;
 
 import static org.fest.assertions.Assertions.assertThat;
 import net.blackcat.fantasy.draft.integration.util.BeanUtils;

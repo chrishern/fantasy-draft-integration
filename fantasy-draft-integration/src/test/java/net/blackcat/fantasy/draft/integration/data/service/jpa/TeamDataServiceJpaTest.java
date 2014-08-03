@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.blackcat.fantasy.draft.data.service.jpa;
+package net.blackcat.fantasy.draft.integration.data.service.jpa;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -17,8 +17,8 @@ import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
-import net.blackcat.fantasy.draft.test.util.CustomIntegrationExceptionMatcher;
-import net.blackcat.fantasy.draft.test.util.TestDataUtil;
+import net.blackcat.fantasy.draft.integration.test.util.CustomIntegrationExceptionMatcher;
+import net.blackcat.fantasy.draft.integration.test.util.TestDataUtil;
 
 import org.junit.Assert;
 import org.junit.Rule;
