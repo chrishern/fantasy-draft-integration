@@ -77,8 +77,8 @@ public class DraftRoundFacadeImpl implements DraftRoundFacade {
 		processAuctionRoundResults(playerAuctionResults, playerBids);
 		
 		// Update the draft round entity to show that it is CLOSED and also set the successful status on each BidEntity
-		// TODO actually call the data service update
 		openDraftRound.setStatus(DraftRoundStatus.CLOSED);
+		draftRoundDataService.updateDraftRound(openDraftRound);
 		
 		// TODO Move all the bids of successful players into the appropriate team.
 		

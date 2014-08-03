@@ -177,12 +177,16 @@ public class DraftRoundFacadeImplTest {
 		assertThat(player1Result.getUnsuccessfulBids().get(1).getAmount().doubleValue()).isEqualTo(1.5d);
 		assertThat(player1Result.getUnsuccessfulBids().get(1).getTeam().getTeamName()).isEqualTo(team1.getName());
 		
-		assertThat(draftRound.getStatus()).isEqualTo(DraftRoundStatus.CLOSED);
-		assertThat(draftRound.getBids().get(0).isSuccessful()).isFalse();
-		assertThat(draftRound.getBids().get(0).getPlayer().getSelectionStatus()).isEqualTo(PlayerSelectionStatus.SELECTED);
-		assertThat(draftRound.getBids().get(1).isSuccessful()).isTrue();
-		assertThat(draftRound.getBids().get(2).isSuccessful()).isFalse();
-		assertThat(draftRound.getBids().get(3).isSuccessful()).isTrue();
+		verify(draftRoundDataService).updateDraftRound(draftRoundCaptor.capture());
+		
+		final DraftRoundEntity updatedDraftRound = draftRoundCaptor.getValue();
+
+		assertThat(updatedDraftRound.getStatus()).isEqualTo(DraftRoundStatus.CLOSED);
+		assertThat(updatedDraftRound.getBids().get(0).isSuccessful()).isFalse();
+		assertThat(updatedDraftRound.getBids().get(0).getPlayer().getSelectionStatus()).isEqualTo(PlayerSelectionStatus.SELECTED);
+		assertThat(updatedDraftRound.getBids().get(1).isSuccessful()).isTrue();
+		assertThat(updatedDraftRound.getBids().get(2).isSuccessful()).isFalse();
+		assertThat(updatedDraftRound.getBids().get(3).isSuccessful()).isTrue();
 	}
 	
 	@Test
@@ -214,8 +218,12 @@ public class DraftRoundFacadeImplTest {
 		assertThat(player1Result.getMatchingHighBids().get(0).getAmount().doubleValue()).isEqualTo(1.5d);
 		assertThat(player1Result.getMatchingHighBids().get(0).getTeam().getTeamName()).isEqualTo(team1.getName());
 		
-		assertThat(draftRound.getBids().get(0).getPlayer().getSelectionStatus()).isEqualTo(PlayerSelectionStatus.RESTRICTED_SELECTION);
-		assertThat(draftRound.getBids().get(0).getPlayer().getTeamsWhoCanBid()).hasSize(2);
+		verify(draftRoundDataService).updateDraftRound(draftRoundCaptor.capture());
+		
+		final DraftRoundEntity updatedDraftRound = draftRoundCaptor.getValue();
+		
+		assertThat(updatedDraftRound.getBids().get(0).getPlayer().getSelectionStatus()).isEqualTo(PlayerSelectionStatus.RESTRICTED_SELECTION);
+		assertThat(updatedDraftRound.getBids().get(0).getPlayer().getTeamsWhoCanBid()).hasSize(2);
 	}
 
 	@Test
