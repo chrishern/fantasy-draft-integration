@@ -30,6 +30,13 @@ public interface DraftRoundDataService {
 	void createDraftRound(DraftRoundEntity draftRound) throws FantasyDraftIntegrationException;
 	
 	/**
+	 * Update an existing draft round for the given league.
+	 * 
+	 * @param draftRound Draft round to update.
+	 */
+	void updateDraftRound(DraftRoundEntity draftRound);
+	
+	/**
 	 * Add a list of bids to a draft round.
 	 * 
 	 * @param draftRound Draft round to add the bids to.

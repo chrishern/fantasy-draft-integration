@@ -243,4 +243,25 @@ public class DraftRoundDataServiceJpaTest {
 		// assert
 		Assert.fail("Exception expected");
 	}
+	
+	@Test
+	public void testUpdateDraftRound() throws Exception {
+		// arrange
+		final DraftRoundEntity draftRound = new DraftRoundEntity(DraftRoundPhase.AUCTION, 1, league);
+		dataService.createDraftRound(draftRound);
+		
+		// act
+		final DraftRoundEntity draftRoundToUpdate = dataService.getOpenDraftRound(league.getId());
+		
+		draftRoundToUpdate.setStatus(DraftRoundStatus.CLOSED);
+		dataService.updateDraftRound(draftRoundToUpdate);
+		
+		// assert
+		try {
+			dataService.getOpenDraftRound(league.getId());
+			Assert.fail("Exception expected as there should be zero open dtaft rounds after the update.");
+		} catch (FantasyDraftIntegrationException e) {
+			assertThat(true).isTrue();
+		}
+	}
 }

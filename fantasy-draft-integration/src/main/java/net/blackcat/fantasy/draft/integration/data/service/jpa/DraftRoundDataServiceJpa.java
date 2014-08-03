@@ -64,6 +64,11 @@ public class DraftRoundDataServiceJpa implements DraftRoundDataService {
 		return openRounds.get(0);
 	}
 	
+	@Override
+	public void updateDraftRound(final DraftRoundEntity draftRound) {
+		entityManager.merge(draftRound);
+	}
+	
 	/**
 	 * Get the open draft rounds for the given league Id.
 	 * 
