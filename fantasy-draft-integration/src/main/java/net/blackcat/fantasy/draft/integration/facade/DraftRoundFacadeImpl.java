@@ -15,10 +15,13 @@ import net.blackcat.fantasy.draft.auction.AuctionPlayerResult;
 import net.blackcat.fantasy.draft.auction.AuctionRoundResults;
 import net.blackcat.fantasy.draft.integration.data.service.DraftRoundDataService;
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
+import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
 import net.blackcat.fantasy.draft.integration.entity.BidEntity;
 import net.blackcat.fantasy.draft.integration.entity.DraftRoundEntity;
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
+import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
+import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
@@ -50,6 +53,10 @@ public class DraftRoundFacadeImpl implements DraftRoundFacade {
 	@Qualifier(value = "draftRoundDataServiceJpa")
 	private DraftRoundDataService draftRoundDataService;
 	
+	@Autowired
+	@Qualifier(value = "teamDataServiceJpa")
+	private TeamDataService teamDataService;
+	
 	@Override
 	public void startAuctionPhase(final int leagueId, final int phase) throws FantasyDraftIntegrationException {
 		// Get the LeagueEntity for the given id
@@ -62,7 +69,6 @@ public class DraftRoundFacadeImpl implements DraftRoundFacade {
 
 	@Override
 	public AuctionRoundResults closeAuctionPhase(final int leagueId) throws FantasyDraftIntegrationException {
-		
 		// Get the open auction phase for this league
 		final DraftRoundEntity openDraftRound = draftRoundDataService.getOpenDraftRound(leagueId);
 		
@@ -80,11 +86,66 @@ public class DraftRoundFacadeImpl implements DraftRoundFacade {
 		openDraftRound.setStatus(DraftRoundStatus.CLOSED);
 		draftRoundDataService.updateDraftRound(openDraftRound);
 		
-		// TODO Move all the bids of successful players into the appropriate team.
+		// Move all the bids of successful players into the appropriate team.
+		moveSuccessfulPlayerBidsToTeam(openDraftRound);
 		
 		return auctionRoundResults;
 	}
 
+	/**
+	 * Move all of the successful bids for players to be selected players within the appropriate team.
+	 * 
+	 * @param draftRound Draft round containing all bid results.
+	 */
+	private void moveSuccessfulPlayerBidsToTeam(final DraftRoundEntity draftRound) {
+		final Map<TeamEntity, List<BidEntity>> selectedPlayersMap = new HashMap<TeamEntity, List<BidEntity>>();
+		
+		buildSuccessfulBidsForTeams(draftRound, selectedPlayersMap);
+		updateTeamsWithSuccessfulBids(selectedPlayersMap);
+	}
+	
+	/**
+	 * Build up a map of the teams who had successful auction bids and their successful bids.
+	 * 
+	 * @param draftRound Draft round results.
+	 * @param selectedPlayersMap Map of teams who had successful auction bids and their successful bids.
+	 */
+	private void buildSuccessfulBidsForTeams(final DraftRoundEntity draftRound, final Map<TeamEntity, List<BidEntity>> selectedPlayersMap) {
+		for (final BidEntity bid : draftRound.getBids()) {
+			if (bid.isSuccessful()) {
+				
+				List<BidEntity> teamBidList = selectedPlayersMap.get(bid.getTeam());
+				
+				if (teamBidList == null) {
+					teamBidList = new ArrayList<BidEntity>();
+					selectedPlayersMap.put(bid.getTeam(), teamBidList);
+				}
+				
+				teamBidList.add(bid);
+			}
+		}
+	}
+
+	/**
+	 * Update each team entity with the successful player bids.
+	 * 
+	 * @param selectedPlayersMap Map of teams and their successful bids.
+	 */
+	private void updateTeamsWithSuccessfulBids(final Map<TeamEntity, List<BidEntity>> selectedPlayersMap) {
+		for (final TeamEntity teamToUpdate : selectedPlayersMap.keySet()) {
+			final List<SelectedPlayerEntity> selectedPlayers = new ArrayList<SelectedPlayerEntity>();
+			
+			for (final BidEntity successfulBid : selectedPlayersMap.get(teamToUpdate)) {
+				final SelectedPlayerEntity selectedPlayer = new SelectedPlayerEntity(successfulBid.getPlayer());
+				selectedPlayers.add(selectedPlayer);
+			}
+			
+			teamToUpdate.addSelectedPlayers(selectedPlayers);
+			teamDataService.updateTeam(teamToUpdate);
+		}
+	}
+
+	
 	/**
 	 * Process the auction round updates, updating any entities and building up the {@link AuctionPlayerResult} list as we go.
 	 * 

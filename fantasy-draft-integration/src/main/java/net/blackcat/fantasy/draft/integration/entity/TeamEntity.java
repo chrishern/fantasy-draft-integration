@@ -26,6 +26,7 @@ import javax.persistence.Table;
 @Table(name = "Team")
 public class TeamEntity implements Serializable {
 
+
 	private static final long serialVersionUID = 3011246980899172711L;
 
 	@Id
@@ -62,16 +63,16 @@ public class TeamEntity implements Serializable {
 	}
 
 	/**
-	 * Add a new selected player to the list of selected players for this team.
+	 * Add a new list of selected players to the list of selected players for this team.
 	 * 
-	 * @param selectedPlayer New selected player to add to this team.
+	 * @param selectedPlayers New selected players to add to this team.
 	 */
-	public void addSelectedPlayer(final SelectedPlayerEntity selectedPlayer) {
+	public void addSelectedPlayers(final List<SelectedPlayerEntity> newSelectedPlayers) {
 		if (selectedPlayers == null) {
 			selectedPlayers = new ArrayList<SelectedPlayerEntity>();
 		}
 		
-		selectedPlayers.add(selectedPlayer);
+		selectedPlayers.addAll(newSelectedPlayers);
  	}
 	
 	/**
@@ -79,5 +80,39 @@ public class TeamEntity implements Serializable {
 	 */
 	public List<SelectedPlayerEntity> getSelectedPlayers() {
 		return selectedPlayers;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof TeamEntity)) {
+			return false;
+		}
+		TeamEntity other = (TeamEntity) obj;
+		if (id != other.id) {
+			return false;
+		}
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		} else if (!name.equals(other.name)) {
+			return false;
+		}
+		return true;
 	}
 }

@@ -5,6 +5,7 @@ package net.blackcat.fantasy.draft.data.service.jpa;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -106,7 +107,7 @@ public class TeamDataServiceJpaTest {
 		final TeamEntity team = teamDataServiceJpa.getTeam(TestDataUtil.TEST_TEAM_1);
 		
 		final SelectedPlayerEntity selectedPlayer = new SelectedPlayerEntity(player);
-		team.addSelectedPlayer(selectedPlayer);
+		team.addSelectedPlayers(Arrays.asList(selectedPlayer));
 		
 		teamDataServiceJpa.updateTeam(team);
 		

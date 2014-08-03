@@ -8,6 +8,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -19,6 +20,7 @@ import net.blackcat.fantasy.draft.auction.AuctionPlayerResult;
 import net.blackcat.fantasy.draft.auction.AuctionRoundResults;
 import net.blackcat.fantasy.draft.integration.data.service.DraftRoundDataService;
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
+import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
 import net.blackcat.fantasy.draft.integration.entity.BidEntity;
 import net.blackcat.fantasy.draft.integration.entity.DraftRoundEntity;
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
@@ -65,11 +67,17 @@ public class DraftRoundFacadeImplTest {
 	@Mock
 	private DraftRoundDataService draftRoundDataService;
 	
+	@Mock
+	private TeamDataService teamDataService;
+	
 	@InjectMocks
 	private DraftRoundFacadeImpl draftRoundFacade = new DraftRoundFacadeImpl();
 	
 	@Captor
 	private ArgumentCaptor<DraftRoundEntity> draftRoundCaptor;
+	
+	@Captor
+	private ArgumentCaptor<TeamEntity> teamCaptor;
 	
 	private LeagueEntity league;
 	
@@ -187,6 +195,11 @@ public class DraftRoundFacadeImplTest {
 		assertThat(updatedDraftRound.getBids().get(1).isSuccessful()).isTrue();
 		assertThat(updatedDraftRound.getBids().get(2).isSuccessful()).isFalse();
 		assertThat(updatedDraftRound.getBids().get(3).isSuccessful()).isTrue();
+		
+		verify(teamDataService, times(2)).updateTeam(teamCaptor.capture());
+		
+		assertThat(teamCaptor.getAllValues()).hasSize(2);
+		assertThat(teamCaptor.getAllValues()).containsOnly(team1, team2);
 	}
 	
 	@Test
@@ -196,7 +209,7 @@ public class DraftRoundFacadeImplTest {
 		
 		final BidEntity bidP1T1 = new BidEntity(team1, player1, new BigDecimal("1.5"));
 		final BidEntity bidP1T2 = new BidEntity(team2, player1, new BigDecimal("1.5"));
-		final BidEntity bidP1T3 = new BidEntity(team2, player1, new BigDecimal("1"));
+		final BidEntity bidP1T3 = new BidEntity(team3, player1, new BigDecimal("1"));
 		
 		draftRound.addBids(Arrays.asList(bidP1T1, bidP1T2, bidP1T3));
 		
@@ -224,6 +237,8 @@ public class DraftRoundFacadeImplTest {
 		
 		assertThat(updatedDraftRound.getBids().get(0).getPlayer().getSelectionStatus()).isEqualTo(PlayerSelectionStatus.RESTRICTED_SELECTION);
 		assertThat(updatedDraftRound.getBids().get(0).getPlayer().getTeamsWhoCanBid()).hasSize(2);
+		
+		verify(teamDataService, never()).updateTeam(any(TeamEntity.class));
 	}
 
 	@Test
