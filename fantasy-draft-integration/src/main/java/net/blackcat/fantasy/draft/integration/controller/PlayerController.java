@@ -51,7 +51,7 @@ public class PlayerController {
 	 * 
 	 * @return List of all {@link Player} objects in the requested position.
 	 */
-	public List<Player> getPlayers(Position position) {
+	public List<Player> getPlayers(final Position position) {
 		return playerFacade.getPlayers(position);
 	}
 }
