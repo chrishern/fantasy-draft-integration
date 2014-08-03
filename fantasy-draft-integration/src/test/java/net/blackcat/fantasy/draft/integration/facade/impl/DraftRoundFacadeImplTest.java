@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.blackcat.fantasy.draft.integration.facade;
+package net.blackcat.fantasy.draft.integration.facade.impl;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -28,7 +28,7 @@ import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
-import net.blackcat.fantasy.draft.integration.facade.DraftRoundFacadeImpl;
+import net.blackcat.fantasy.draft.integration.facade.impl.DraftRoundFacadeImpl;
 import net.blackcat.fantasy.draft.integration.test.util.CustomIntegrationExceptionMatcher;
 import net.blackcat.fantasy.draft.integration.test.util.TestDataUtil;
 import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;

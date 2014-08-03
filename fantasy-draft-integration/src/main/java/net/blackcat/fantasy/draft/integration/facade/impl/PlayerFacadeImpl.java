@@ -1,13 +1,14 @@
 /**
  * 
  */
-package net.blackcat.fantasy.draft.integration.facade;
+package net.blackcat.fantasy.draft.integration.facade.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
+import net.blackcat.fantasy.draft.integration.facade.PlayerFacade;
 import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
 import net.blackcat.fantasy.draft.player.types.Position;
