@@ -19,7 +19,12 @@ public enum FantasyDraftIntegrationExceptionCode {
 	DRAFT_ROUND_ALREADY_EXISTS_FOR_LEAGUE,
 	
 	/**
-	 * League doesn't exist.
+	 * League codes.
 	 */
-	LEAGUE_DOES_NOT_EXIST;
+	LEAGUE_DOES_NOT_EXIST,
+	
+	/**
+	 * Team codes.
+	 */
+	TEAM_DOES_NOT_EXIST;
 }
