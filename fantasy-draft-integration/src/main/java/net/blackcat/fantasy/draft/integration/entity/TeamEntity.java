@@ -55,7 +55,13 @@ public class TeamEntity implements Serializable {
 		this.name = name;
 	}
 	
-	
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
 	/**
 	 * @return the name
 	 */

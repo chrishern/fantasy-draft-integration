@@ -40,6 +40,7 @@ public class ManagerFacadeImpl implements ManagerFacade {
 		
 		final Manager managerModel = new Manager();
 		final Team teamModel = new Team(managerEntity.getTeam().getName());
+		teamModel.setId(managerEntity.getTeam().getId());
 		
 		final List<SelectedPlayer> selectedPlayers = getSelectedPlayers(managerEntity);
 		teamModel.setSelectedPlayers(selectedPlayers);
