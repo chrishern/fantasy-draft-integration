@@ -11,10 +11,9 @@ import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.facade.TeamFacade;
-import net.blackcat.fantasy.draft.player.Player;
+import net.blackcat.fantasy.draft.player.SelectedPlayer;
 import net.blackcat.fantasy.draft.team.Team;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -45,13 +44,9 @@ public class TeamFacadeImpl implements TeamFacade {
 		
 		final Team modelTeam = new Team(teamEntity.getName());
 		
-		final List<Player> selectedModelPlayers = new ArrayList<Player>();
+		final List<SelectedPlayer> selectedModelPlayers = new ArrayList<SelectedPlayer>();
 		for (final SelectedPlayerEntity selectedPlayer : teamEntity.getSelectedPlayers()) {
-			final Player modelPlayer = new Player();
-			
-			BeanUtils.copyProperties(selectedPlayer.getPlayer(), modelPlayer);
-			
-			selectedModelPlayers.add(modelPlayer);
+			selectedModelPlayers.add(selectedPlayer.toModelSelectedPlayer());
 		}
 		
 		modelTeam.setSelectedPlayers(selectedModelPlayers);

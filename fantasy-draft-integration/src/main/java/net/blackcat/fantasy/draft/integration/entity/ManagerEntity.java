@@ -8,6 +8,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -31,31 +32,17 @@ public class ManagerEntity implements Serializable {
 	@Column
 	private String surname;
 	
-	@Column
-	private String password;
-
+	@OneToOne
+	private TeamEntity team;
+	
 	public ManagerEntity() {
 	}
 
-	public ManagerEntity(final String emailAddress, final String forename, final String surname, final String password) {
+	public ManagerEntity(final String emailAddress, final String forename, final String surname, final TeamEntity team) {
 		this.emailAddress = emailAddress;
 		this.forename = forename;
 		this.surname = surname;
-		this.password = password;
-	}
-
-	/**
-	 * @return the emailAddress
-	 */
-	public String getEmailAddress() {
-		return emailAddress;
-	}
-
-	/**
-	 * @param emailAddress the emailAddress to set
-	 */
-	public void setEmailAddress(final String emailAddress) {
-		this.emailAddress = emailAddress;
+		this.team = team;
 	}
 
 	/**
@@ -87,16 +74,31 @@ public class ManagerEntity implements Serializable {
 	}
 
 	/**
-	 * @return the password
+	 * @return the team
 	 */
-	public String getPassword() {
-		return password;
+	public TeamEntity getTeam() {
+		return team;
 	}
 
 	/**
-	 * @param password the password to set
+	 * @param team the team to set
 	 */
-	public void setPassword(final String password) {
-		this.password = password;
+	public void setTeam(TeamEntity team) {
+		this.team = team;
 	}
+
+	/**
+	 * @return the emailAddress
+	 */
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+
+	/**
+	 * @param emailAddress the emailAddress to set
+	 */
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+	}
+
 }

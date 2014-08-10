@@ -4,6 +4,7 @@
 package net.blackcat.fantasy.draft.integration.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import net.blackcat.fantasy.draft.player.SelectedPlayer;
 
 /**
  * Entity representing a player who has been picked by a team within the game.
@@ -37,6 +40,9 @@ public class SelectedPlayerEntity implements Serializable {
 	
 	@Column(nullable = false)
 	private boolean stillSelected;
+	
+	@Column
+	private BigDecimal cost;
 
 	public SelectedPlayerEntity() {
 	}
@@ -93,5 +99,37 @@ public class SelectedPlayerEntity implements Serializable {
 	 */
 	public int getId() {
 		return id;
+	}
+
+	/**
+	 * @return the cost
+	 */
+	public BigDecimal getCost() {
+		return cost;
+	}
+
+	/**
+	 * @param cost the cost to set
+	 */
+	public void setCost(BigDecimal cost) {
+		this.cost = cost;
+	}
+	
+	/**
+	 * Convert this object into an equivalent model {@link SelectedPlayer}. 
+	 * 
+	 * @return Converted {@link SelectedPlayer}.
+	 */
+	public SelectedPlayer toModelSelectedPlayer() {
+		final SelectedPlayer selectedPlayerModel = new SelectedPlayer();
+		
+		selectedPlayerModel.setCost(this.cost);
+		selectedPlayerModel.setForename(this.player.getForename());
+		selectedPlayerModel.setId(this.id);
+		selectedPlayerModel.setPointsScored(this.pointsScored);
+		selectedPlayerModel.setSurname(this.player.getSurname());
+		selectedPlayerModel.setTeam(this.player.getTeam());
+		
+		return selectedPlayerModel;
 	}
 }

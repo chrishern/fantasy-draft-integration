@@ -10,11 +10,15 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import net.blackcat.fantasy.draft.team.types.TeamStatus;
 
 /**
  * Entity class representing a managed team within the fantasy draft game.
@@ -38,6 +42,10 @@ public class TeamEntity implements Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<SelectedPlayerEntity> selectedPlayers;
+	
+	@Column
+	@Enumerated(EnumType.STRING)
+	private TeamStatus status;
 	
 	public TeamEntity() {
 		
@@ -80,6 +88,20 @@ public class TeamEntity implements Serializable {
 	 */
 	public List<SelectedPlayerEntity> getSelectedPlayers() {
 		return selectedPlayers;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public TeamStatus getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(TeamStatus status) {
+		this.status = status;
 	}
 
 	@Override

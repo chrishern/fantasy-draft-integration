@@ -63,6 +63,7 @@ public class TeamFacadeImplTest {
 		final TeamEntity teamEntity = new TeamEntity(TestDataUtil.TEST_TEAM_1);
 		final PlayerEntity playerEntity = TestDataUtil.createEntityPlayer(1);
 		final SelectedPlayerEntity selectedPlayer = new SelectedPlayerEntity(playerEntity);
+		selectedPlayer.setPointsScored(15);
 		teamEntity.addSelectedPlayers(Arrays.asList(selectedPlayer));
 		
 		when(teamDataService.getTeam(TestDataUtil.TEST_TEAM_1)).thenReturn(teamEntity);
@@ -75,7 +76,7 @@ public class TeamFacadeImplTest {
 		assertThat(team.getSelectedPlayers()).hasSize(1);
 		assertThat(team.getSelectedPlayers().get(0).getForename()).isEqualTo(playerEntity.getForename());
 		assertThat(team.getSelectedPlayers().get(0).getSurname()).isEqualTo(playerEntity.getSurname());
-		assertThat(team.getSelectedPlayers().get(0).getTotalPoints()).isEqualTo(playerEntity.getTotalPoints());
+		assertThat(team.getSelectedPlayers().get(0).getPointsScored()).isEqualTo(15);
 	}
 
 	@Test

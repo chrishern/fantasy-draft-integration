@@ -3,7 +3,9 @@
  */
 package net.blackcat.fantasy.draft.integration.test.util;
 
+import net.blackcat.fantasy.draft.integration.entity.ManagerEntity;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
+import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.player.types.Position;
 
@@ -15,6 +17,10 @@ import net.blackcat.fantasy.draft.player.types.Position;
  */
 public final class TestDataUtil {
 
+	public static final String MANAGER_EMAIL_ADDRESS = "manager@manager.com";
+	public static final String MANAGER_SURNAME = "Manager Surname";
+	public static final String MANAGER_FORENAME = "Manager Forename";
+	
 	public static final int PLAYER_1_ID = 1;
 	public static final int PLAYER_1_POINTS = 54;
 	public static final String PLAYER_1_SURNAME = "Player";
@@ -57,5 +63,15 @@ public final class TestDataUtil {
 		}
 		
 		return new PlayerEntity(PLAYER_2_ID, PLAYER_2_FORENAME, PLAYER_2_SURNAME, TEST_TEAM_1, Position.STRIKER, PLAYER_2_POINTS);
+	}
+	
+	/**
+	 * Create a {@link ManagerEntity} object.
+	 * 
+	 * @param team Team to associate the manager with,
+	 * @return {@link ManagerEntity} object.
+	 */
+	public static ManagerEntity createManager(final TeamEntity team) {
+		return new ManagerEntity(MANAGER_EMAIL_ADDRESS, MANAGER_FORENAME, MANAGER_SURNAME, team);
 	}
 }

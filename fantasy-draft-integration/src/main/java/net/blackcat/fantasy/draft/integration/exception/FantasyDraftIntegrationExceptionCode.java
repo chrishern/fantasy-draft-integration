@@ -26,5 +26,10 @@ public enum FantasyDraftIntegrationExceptionCode {
 	/**
 	 * Team codes.
 	 */
-	TEAM_DOES_NOT_EXIST;
+	TEAM_DOES_NOT_EXIST,
+	
+	/**
+	 * Manager codes.
+	 */
+	MANAGER_DOES_NOT_EXIST;
 }

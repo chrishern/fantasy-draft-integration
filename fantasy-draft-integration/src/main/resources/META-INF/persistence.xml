@@ -10,6 +10,8 @@
 		<class>net.blackcat.fantasy.draft.integration.entity.LeagueEntity</class>
 		<class>net.blackcat.fantasy.draft.integration.entity.PlayerEntity</class>
 		<class>net.blackcat.fantasy.draft.integration.entity.TeamEntity</class>
+		<class>net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity</class>
+		<class>net.blackcat.fantasy.draft.integration.entity.ManagerEntity</class>
 
 	</persistence-unit>
 </persistence>
