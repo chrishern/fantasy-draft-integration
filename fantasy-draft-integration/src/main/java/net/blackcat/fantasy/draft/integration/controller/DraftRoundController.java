@@ -24,6 +24,22 @@ public class DraftRoundController {
 	private DraftRoundFacade draftRoundFacade;
 	
 	/**
+	 * Start the auction phase with the given number for the given league.
+	 * 
+	 * @param leagueId Id of the league to start the auction phase for.
+	 * @param phase The number of the auction phase to start.
+	 * @throws FantasyDraftIntegrationException for the following reasons:
+	 * 		<ul>
+	 * 			<li><b>LEAGUE_DOES_NOT_EXIST</b> - If the given league does not exist.</li>
+	 * 			<li><b>OPEN_DRAFT_ROUND_ALREADY_EXISTS_FOR_LEAGUE</b> - If the given league already has an open draft round.</li>
+	 * 			<li><b>DRAFT_ROUND_ALREADY_EXISTS_FOR_LEAGUE</b> - If an action round for the given phase number already exists.</li>
+	 * 		</ul>
+	 */
+	public void startAuctionPhase(int leagueId, final int phase) throws FantasyDraftIntegrationException {
+		draftRoundFacade.startAuctionPhase(leagueId, phase);
+	}
+	
+	/**
 	 * Make a list of bids for a team.
 	 * 
 	 * @param teamId Team the bids are being made for.

@@ -48,4 +48,14 @@ public class DraftRoundControllerTest {
 		verify(draftRoundFacade).makeBids(teamBids);
 	}
 
+	@Test
+	public void testStartAuctionPhase() throws Exception {
+		// arrange
+		
+		// act
+		draftRoundController.startAuctionPhase(1, 1);
+		
+		// assert
+		verify(draftRoundFacade).startAuctionPhase(1, 1);
+	}
 }
