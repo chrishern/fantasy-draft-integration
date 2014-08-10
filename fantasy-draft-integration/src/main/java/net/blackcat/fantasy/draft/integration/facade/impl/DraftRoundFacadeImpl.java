@@ -116,8 +116,6 @@ public class DraftRoundFacadeImpl implements DraftRoundFacade {
 			bidEntities.add(entityBid);
 		}
 		
-		openDraftRound.addBids(bidEntities);
-		
 		draftRoundDataService.addBids(openDraftRound, bidEntities);
 	}
 
