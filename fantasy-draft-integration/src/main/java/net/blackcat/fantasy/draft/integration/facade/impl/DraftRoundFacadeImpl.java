@@ -15,6 +15,7 @@ import net.blackcat.fantasy.draft.auction.AuctionPlayerResult;
 import net.blackcat.fantasy.draft.auction.AuctionRoundResults;
 import net.blackcat.fantasy.draft.integration.data.service.DraftRoundDataService;
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
+import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
 import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
 import net.blackcat.fantasy.draft.integration.entity.BidEntity;
 import net.blackcat.fantasy.draft.integration.entity.DraftRoundEntity;
@@ -26,6 +27,8 @@ import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationE
 import net.blackcat.fantasy.draft.integration.facade.DraftRoundFacade;
 import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
+import net.blackcat.fantasy.draft.round.Bid;
+import net.blackcat.fantasy.draft.round.TeamBids;
 import net.blackcat.fantasy.draft.round.types.DraftRoundPhase;
 import net.blackcat.fantasy.draft.round.types.DraftRoundStatus;
 import net.blackcat.fantasy.draft.team.Team;
@@ -57,6 +60,10 @@ public class DraftRoundFacadeImpl implements DraftRoundFacade {
 	@Autowired
 	@Qualifier(value = "teamDataServiceJpa")
 	private TeamDataService teamDataService;
+	
+	@Autowired
+	@Qualifier(value = "playerDataServiceJpa")
+	private PlayerDataService playerDataService;
 	
 	@Override
 	public void startAuctionPhase(final int leagueId, final int phase) throws FantasyDraftIntegrationException {
@@ -91,6 +98,27 @@ public class DraftRoundFacadeImpl implements DraftRoundFacade {
 		moveSuccessfulPlayerBidsToTeam(openDraftRound);
 		
 		return auctionRoundResults;
+	}
+	
+	@Override
+	public void makeBids(final TeamBids bids) throws FantasyDraftIntegrationException {
+
+		final TeamEntity teamEntity = teamDataService.getTeam(bids.getTeamId());
+		final LeagueEntity leagueEntity = leagueDataService.getLeagueForTeam(bids.getTeamId());
+		final DraftRoundEntity openDraftRound = draftRoundDataService.getOpenDraftRound(leagueEntity.getId());
+		
+		// Add the bids to the draft round
+		final List<BidEntity> bidEntities = new ArrayList<BidEntity>();
+		for (final Bid modelBid : bids.getBids()) {
+			final PlayerEntity playerBiddedFor = playerDataService.getPlayer(modelBid.getPlayerId());
+			final BidEntity entityBid = new BidEntity(teamEntity, playerBiddedFor, modelBid.getAmount());
+			
+			bidEntities.add(entityBid);
+		}
+		
+		openDraftRound.addBids(bidEntities);
+		
+		draftRoundDataService.addBids(openDraftRound, bidEntities);
 	}
 
 	/**

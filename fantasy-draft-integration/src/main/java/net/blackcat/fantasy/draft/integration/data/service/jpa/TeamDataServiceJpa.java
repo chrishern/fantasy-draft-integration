@@ -51,4 +51,15 @@ public class TeamDataServiceJpa implements TeamDataService {
 		}
 	}
 
+	@Override
+	public TeamEntity getTeam(final int id) throws FantasyDraftIntegrationException {
+		final TeamEntity team = entityManager.find(TeamEntity.class, id);
+		
+		if (team == null) {
+			throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.TEAM_DOES_NOT_EXIST);
+		}
+		
+		return team;
+	}
+
 }

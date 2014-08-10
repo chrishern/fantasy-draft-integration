@@ -10,8 +10,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import net.blackcat.fantasy.draft.integration.data.service.jpa.LeagueDataServiceJpa;
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
+import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.test.util.CustomIntegrationExceptionMatcher;
@@ -85,6 +85,37 @@ public class LeagueDataServiceJpaTest {
 		
 		// act
 		leagueDataServiceJpa.getLeague(1);
+		
+		// assert
+		Assert.fail("Exception expected");
+	}
+	
+	@Test
+	public void testGetLeagueByTeam_Success() throws Exception {
+		// arrange
+		final TeamEntity team = new TeamEntity(TestDataUtil.TEST_TEAM_1);
+		entityManager.persist(team);
+		
+		final LeagueEntity league = new LeagueEntity(TestDataUtil.LEAGUE_NAME);
+		league.addTeam(team);
+		entityManager.persist(league);
+		
+		// act
+		final LeagueEntity retrievedLeague = leagueDataServiceJpa.getLeagueForTeam(team.getId());
+		
+		// assert
+		assertThat(retrievedLeague).isNotNull();
+		assertThat(retrievedLeague.getName()).isEqualTo(TestDataUtil.LEAGUE_NAME);
+	}
+	
+	@Test
+	public void testGetLeagueByTeam_LeagueNotFound() throws Exception {
+		// arrange
+		thrownException.expect(FantasyDraftIntegrationException.class);
+		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.TEAM_DOES_NOT_EXIST));
+		
+		// act
+		leagueDataServiceJpa.getLeagueForTeam(1);
 		
 		// assert
 		Assert.fail("Exception expected");

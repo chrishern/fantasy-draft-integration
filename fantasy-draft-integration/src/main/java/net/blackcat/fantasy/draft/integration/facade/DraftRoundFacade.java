@@ -5,6 +5,7 @@ package net.blackcat.fantasy.draft.integration.facade;
 
 import net.blackcat.fantasy.draft.auction.AuctionRoundResults;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
+import net.blackcat.fantasy.draft.round.TeamBids;
 
 /**
  * Facade operations for a draft window.
@@ -39,4 +40,17 @@ public interface DraftRoundFacade {
 	 *		</ul>
 	 */
 	AuctionRoundResults closeAuctionPhase(int leagueId) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Make a list of bids for a team.
+	 * 
+	 * @param teamId Team the bids are being made for.
+	 * @param teamBids List of bids the team wants to make.
+	 * @throws FantasyDraftIntegrationException for the following reasons:
+	 * 		<ul>
+	 * 			<li><b>OPEN_DRAFT_ROUND_DOES_NOT_EXIST_FOR_LEAGUE</b> - If the given league does not have any open auction phases.</li>
+	 * 			<li><b>TEAM_DOES_NOT_EXIST</b> - If a team with the given ID does not exist.</li>
+	 *		</ul>
+	 */
+	void makeBids(TeamBids teamBids) throws FantasyDraftIntegrationException;
 }

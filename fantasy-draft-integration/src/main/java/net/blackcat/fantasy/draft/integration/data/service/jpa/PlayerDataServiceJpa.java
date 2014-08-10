@@ -11,6 +11,8 @@ import javax.persistence.TypedQuery;
 
 import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
+import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
+import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.player.types.Position;
 
 import org.springframework.stereotype.Component;
@@ -46,5 +48,16 @@ public class PlayerDataServiceJpa implements PlayerDataService {
 		query.setParameter("position", position);
 		
 		return query.getResultList();
+	}
+
+	@Override
+	public PlayerEntity getPlayer(final int id) throws FantasyDraftIntegrationException {
+		final PlayerEntity entity = entityManager.find(PlayerEntity.class, id);
+		
+		if (entity == null) {
+			throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.PLAYER_DOES_NOT_EXIST);
+		}
+		
+		return entity;
 	}
 }

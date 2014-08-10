@@ -6,6 +6,7 @@ package net.blackcat.fantasy.draft.integration.data.service;
 import java.util.List;
 
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
+import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.player.types.Position;
 
 /**
@@ -39,4 +40,13 @@ public interface PlayerDataService {
 	 * @return List of {@link PlayerEntity} objects in the required position.
 	 */
 	List<PlayerEntity> getPlayers(Position position);
+	
+	/**
+	 * Get a single players based on ID.
+	 * 
+	 * @param id ID of the player to search for.
+	 * @return {@link PlayerEntity} with the given ID.
+	 * @throws FantasyDraftIntegrationException If a player with the given ID does not exist.
+	 */
+	PlayerEntity getPlayer(int id) throws FantasyDraftIntegrationException;
 }

@@ -29,4 +29,13 @@ public interface LeagueDataService {
 	 * @throws FantasyDraftIntegrationException If a league with the given id does not exist.
 	 */
 	LeagueEntity getLeague(int leagueId) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Get the {@link LeagueEntity} that a given team is part of.
+	 * 
+	 * @param teamId Id of the team to get the league for.
+	 * @return {@link LeagueEntity} for the given tea.
+	 * @throws FantasyDraftIntegrationException If a team with the given id does not exist.
+	 */
+	LeagueEntity getLeagueForTeam(int teamId) throws FantasyDraftIntegrationException;
 }

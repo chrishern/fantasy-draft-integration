@@ -4,7 +4,9 @@
 package net.blackcat.fantasy.draft.integration.data.service.jpa;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
@@ -41,6 +43,18 @@ public class LeagueDataServiceJpa implements LeagueDataService {
 		}
 		
 		return league;
+	}
+
+	@Override
+	public LeagueEntity getLeagueForTeam(final int teamId) throws FantasyDraftIntegrationException {
+		final TypedQuery<LeagueEntity> query = entityManager.createQuery("select l from LeagueEntity l inner join l.teams team where team.id = :teamId", LeagueEntity.class);
+		query.setParameter("teamId", teamId);
+		
+		try {
+			return query.getSingleResult();
+		} catch (final NoResultException e) {
+			throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.TEAM_DOES_NOT_EXIST);
+		}
 	}
 
 }

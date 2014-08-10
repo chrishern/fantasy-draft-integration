@@ -20,6 +20,7 @@ import net.blackcat.fantasy.draft.auction.AuctionPlayerResult;
 import net.blackcat.fantasy.draft.auction.AuctionRoundResults;
 import net.blackcat.fantasy.draft.integration.data.service.DraftRoundDataService;
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
+import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
 import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
 import net.blackcat.fantasy.draft.integration.entity.BidEntity;
 import net.blackcat.fantasy.draft.integration.entity.DraftRoundEntity;
@@ -28,10 +29,11 @@ import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
-import net.blackcat.fantasy.draft.integration.facade.impl.DraftRoundFacadeImpl;
 import net.blackcat.fantasy.draft.integration.test.util.CustomIntegrationExceptionMatcher;
 import net.blackcat.fantasy.draft.integration.test.util.TestDataUtil;
 import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
+import net.blackcat.fantasy.draft.round.Bid;
+import net.blackcat.fantasy.draft.round.TeamBids;
 import net.blackcat.fantasy.draft.round.types.DraftRoundPhase;
 import net.blackcat.fantasy.draft.round.types.DraftRoundStatus;
 
@@ -70,6 +72,9 @@ public class DraftRoundFacadeImplTest {
 	@Mock
 	private TeamDataService teamDataService;
 	
+	@Mock
+	private PlayerDataService playerDataService;
+	
 	@InjectMocks
 	private DraftRoundFacadeImpl draftRoundFacade = new DraftRoundFacadeImpl();
 	
@@ -78,6 +83,9 @@ public class DraftRoundFacadeImplTest {
 	
 	@Captor
 	private ArgumentCaptor<TeamEntity> teamCaptor;
+	
+	@Captor
+	private ArgumentCaptor<List<BidEntity>> bidCaptor;
 	
 	private LeagueEntity league;
 	
@@ -255,5 +263,36 @@ public class DraftRoundFacadeImplTest {
 		
 		// assert
 		Assert.fail("Exception expected");
+	}
+	
+	@Test
+	public void testMakeBids() throws Exception {
+		// arrange
+		final DraftRoundEntity draftRoundEntity = new DraftRoundEntity(DraftRoundPhase.AUCTION, 1, league);
+		final Bid bid1 = new Bid(1, new BigDecimal("1.5"));
+		final Bid bid2 = new Bid(2, new BigDecimal("6"));
+		final TeamBids teamBids = new TeamBids(1, Arrays.asList(bid1, bid2));
+
+		when(teamDataService.getTeam(1)).thenReturn(team1);
+		when(leagueDataService.getLeagueForTeam(1)).thenReturn(new LeagueEntity(TestDataUtil.LEAGUE_NAME));
+		when(draftRoundDataService.getOpenDraftRound(anyInt())).thenReturn(
+				draftRoundEntity);
+		when(playerDataService.getPlayer(1)).thenReturn(player1);
+		when(playerDataService.getPlayer(2)).thenReturn(player2);
+		
+		// act
+		draftRoundFacade.makeBids(teamBids);
+		
+		// assert
+		verify(draftRoundDataService).addBids(draftRoundCaptor.capture(), bidCaptor.capture());
+		
+		assertThat(draftRoundCaptor.getValue()).isEqualTo(draftRoundEntity);
+		assertThat(bidCaptor.getValue()).hasSize(2);
+		assertThat(bidCaptor.getValue().get(0).getAmount().doubleValue()).isEqualTo(1.5d);
+		assertThat(bidCaptor.getValue().get(0).getPlayer()).isEqualTo(player1);
+		assertThat(bidCaptor.getValue().get(0).getTeam()).isEqualTo(team1);
+		assertThat(bidCaptor.getValue().get(1).getAmount().doubleValue()).isEqualTo(6d);
+		assertThat(bidCaptor.getValue().get(1).getPlayer()).isEqualTo(player2);
+		assertThat(bidCaptor.getValue().get(1).getTeam()).isEqualTo(team1);
 	}
 }

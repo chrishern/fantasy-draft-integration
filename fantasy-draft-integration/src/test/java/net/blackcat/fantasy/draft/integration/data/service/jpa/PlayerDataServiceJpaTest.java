@@ -11,12 +11,17 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import net.blackcat.fantasy.draft.integration.data.service.jpa.PlayerDataServiceJpa;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
+import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
+import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
+import net.blackcat.fantasy.draft.integration.test.util.CustomIntegrationExceptionMatcher;
 import net.blackcat.fantasy.draft.integration.test.util.TestDataUtil;
 import net.blackcat.fantasy.draft.player.types.Position;
 
+import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,6 +40,9 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(value = {"/hsqlDatasourceContext.xml", "/testApplicationContext.xml"})
 public class PlayerDataServiceJpaTest {
 
+	@Rule
+	public ExpectedException thrownException = ExpectedException.none();
+	
 	@PersistenceContext
 	private EntityManager entityManager;
 	
@@ -105,5 +113,38 @@ public class PlayerDataServiceJpaTest {
 		assertThat(retrievedPlayer.getSurname()).isEqualTo(TestDataUtil.PLAYER_1_SURNAME);
 		assertThat(retrievedPlayer.getTeam()).isEqualTo(TestDataUtil.TEST_TEAM_1);
 		assertThat(retrievedPlayer.getTotalPoints()).isEqualTo(TestDataUtil.PLAYER_1_POINTS);
+	}
+	
+	@Test
+	public void testGetPlayer() throws Exception {
+		// arrange
+		final PlayerEntity player = TestDataUtil.createEntityPlayer(1);
+		entityManager.persist(player);
+		
+		final PlayerEntity player2 = TestDataUtil.createEntityPlayer(2);
+		entityManager.persist(player2);
+		
+		// act
+		final PlayerEntity retrievedPlayer = playerDataServiceJpa.getPlayer(player.getId());
+		
+		// assert
+		assertThat(retrievedPlayer.getId()).isEqualTo(TestDataUtil.PLAYER_1_ID);
+		assertThat(retrievedPlayer.getForename()).isEqualTo(TestDataUtil.PLAYER_1_FORENAME);
+		assertThat(retrievedPlayer.getSurname()).isEqualTo(TestDataUtil.PLAYER_1_SURNAME);
+		assertThat(retrievedPlayer.getTeam()).isEqualTo(TestDataUtil.TEST_TEAM_1);
+		assertThat(retrievedPlayer.getTotalPoints()).isEqualTo(TestDataUtil.PLAYER_1_POINTS);
+	}
+	
+	@Test
+	public void testGetPlayer_PlayerNotFound() throws Exception {
+		// arrange
+		thrownException.expect(FantasyDraftIntegrationException.class);
+		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.PLAYER_DOES_NOT_EXIST));
+		
+		// act
+		playerDataServiceJpa.getPlayer(1);
+		
+		// assert
+		Assert.fail("Exception expected.");
 	}
 }

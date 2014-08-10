@@ -11,7 +11,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import net.blackcat.fantasy.draft.integration.data.service.jpa.TeamDataServiceJpa;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
@@ -115,6 +114,32 @@ public class TeamDataServiceJpaTest {
 		final TeamEntity retrievedTeam = teamDataServiceJpa.getTeam(TestDataUtil.TEST_TEAM_1);
 		assertThat(retrievedTeam.getName()).isEqualTo(TestDataUtil.TEST_TEAM_1);
 		assertThat(retrievedTeam.getSelectedPlayers()).hasSize(1);
+	}
+	
+	@Test
+	public void testGetTeamById_Success() throws Exception {
+		// arrange
+		final TeamEntity teamEntity = new TeamEntity(TestDataUtil.TEST_TEAM_1);
+		entityManager.persist(teamEntity);
+		
+		// act
+		final TeamEntity team = teamDataServiceJpa.getTeam(teamEntity.getId());
+		
+		// assert
+		assertThat(team.getName()).isEqualTo(TestDataUtil.TEST_TEAM_1);
+	}
+	
+	@Test
+	public void testGetTeamById_TeamNotFound() throws Exception {
+		// arrange
+		thrownException.expect(FantasyDraftIntegrationException.class);
+		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.TEAM_DOES_NOT_EXIST));
+		
+		// act
+		teamDataServiceJpa.getTeam(1);
+		
+		// assert
+		Assert.fail("Exception expected.");
 	}
 
 }

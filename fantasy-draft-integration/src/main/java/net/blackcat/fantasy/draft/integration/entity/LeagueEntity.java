@@ -4,6 +4,7 @@
 package net.blackcat.fantasy.draft.integration.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -88,6 +89,10 @@ public class LeagueEntity implements Serializable {
 	 * @param team Team to add to the list.
 	 */
 	public void addTeam(final TeamEntity team) {
+		if (teams == null) {
+			teams = new ArrayList<TeamEntity>();
+		}
+		
 		teams.add(team);
 	}
 

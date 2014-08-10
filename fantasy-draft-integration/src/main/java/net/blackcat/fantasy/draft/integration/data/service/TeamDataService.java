@@ -36,5 +36,14 @@ public interface TeamDataService {
 	 * @throws FantasyDraftIntegrationException If a team with the given name does not exist.
 	 */
 	TeamEntity getTeam(String teamName) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Get a team based on the ID of the team.
+	 * 
+	 * @param id ID of the team to find
+	 * @return {@link TeamEntity} with the given ID. 
+	 * @throws FantasyDraftIntegrationException If a team with the given ID does not exist.
+	 */
+	TeamEntity getTeam(int id) throws FantasyDraftIntegrationException;
 
 }
