@@ -47,6 +47,7 @@ public class PlayerEntity implements Serializable {
 	private Position position;
 
 	@Column
+	@Enumerated(EnumType.STRING)
 	private PlayerSelectionStatus selectionStatus;
 	
 	@OneToMany

@@ -16,6 +16,7 @@ import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationE
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.test.util.CustomIntegrationExceptionMatcher;
 import net.blackcat.fantasy.draft.integration.test.util.TestDataUtil;
+import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
 import net.blackcat.fantasy.draft.player.types.Position;
 
 import org.junit.Assert;
@@ -146,5 +147,29 @@ public class PlayerDataServiceJpaTest {
 		
 		// assert
 		Assert.fail("Exception expected.");
+	}
+	
+	@Test
+	public void testGetPlayersByPositionAndSelectionStatus() {
+		// arrange
+		final PlayerEntity player = TestDataUtil.createEntityPlayer(1);
+		player.setSelectionStatus(PlayerSelectionStatus.SELECTED);
+		entityManager.persist(player);
+		
+		final PlayerEntity player2 = TestDataUtil.createEntityPlayer(2);
+		entityManager.persist(player2);
+		
+		// act
+		final List<PlayerEntity> players = playerDataServiceJpa.getPlayers(Position.DEFENDER, PlayerSelectionStatus.SELECTED);
+		
+		// assert
+		assertThat(players).hasSize(1);
+		
+		final PlayerEntity retrievedPlayer = players.get(0);
+		assertThat(retrievedPlayer.getId()).isEqualTo(TestDataUtil.PLAYER_1_ID);
+		assertThat(retrievedPlayer.getForename()).isEqualTo(TestDataUtil.PLAYER_1_FORENAME);
+		assertThat(retrievedPlayer.getSurname()).isEqualTo(TestDataUtil.PLAYER_1_SURNAME);
+		assertThat(retrievedPlayer.getTeam()).isEqualTo(TestDataUtil.TEST_TEAM_1);
+		assertThat(retrievedPlayer.getTotalPoints()).isEqualTo(TestDataUtil.PLAYER_1_POINTS);
 	}
 }

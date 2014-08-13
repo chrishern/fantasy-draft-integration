@@ -74,4 +74,17 @@ public class PlayerFacadeImpl implements PlayerFacade {
 		
 		return modelPlayers;
 	}
+	
+	@Override
+	public List<Player> getPlayers(final Position position, final PlayerSelectionStatus selectionStatus) {
+		final List<Player> modelPlayers = new ArrayList<Player>();
+		
+		for (final PlayerEntity entityPlayer : playerDataService.getPlayers(position, selectionStatus)) {
+			final Player modelPlayer = new Player();
+			BeanUtils.copyProperties(entityPlayer, modelPlayer);
+			modelPlayers.add(modelPlayer);
+		}
+		
+		return modelPlayers;
+	}
 }

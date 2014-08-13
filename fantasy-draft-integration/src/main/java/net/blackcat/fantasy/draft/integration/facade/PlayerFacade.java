@@ -6,6 +6,7 @@ package net.blackcat.fantasy.draft.integration.facade;
 import java.util.List;
 
 import net.blackcat.fantasy.draft.player.Player;
+import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
 import net.blackcat.fantasy.draft.player.types.Position;
 
 /**
@@ -36,4 +37,13 @@ public interface PlayerFacade {
 	 * @return List of all {@link Player} objects in the requested position.
 	 */
 	List<Player> getPlayers(Position position);
+	
+	/**
+	 * Get a list of all players in a given {@link Position} and with a certain {@link PlayerSelectionStatus}.
+	 * 
+	 * @param position Position of the players we want.
+	 * @param selectionStatus The selection status of the players we want.
+	 * @return List of all {@link Player} objects in the requested position.
+	 */
+	List<Player> getPlayers(Position position, PlayerSelectionStatus selectionStatus);
 }

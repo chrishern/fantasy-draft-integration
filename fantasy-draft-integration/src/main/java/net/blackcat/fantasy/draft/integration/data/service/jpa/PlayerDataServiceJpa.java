@@ -13,6 +13,7 @@ import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
+import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
 import net.blackcat.fantasy.draft.player.types.Position;
 
 import org.springframework.stereotype.Component;
@@ -59,5 +60,16 @@ public class PlayerDataServiceJpa implements PlayerDataService {
 		}
 		
 		return entity;
+	}
+
+	@Override
+	public List<PlayerEntity> getPlayers(final Position position, final PlayerSelectionStatus selectionStatus) {
+		final TypedQuery<PlayerEntity> query = entityManager.createQuery(
+				"select tc from PlayerEntity tc WHERE tc.position = :position and tc.selectionStatus = :selectionStatus", PlayerEntity.class);
+		
+		query.setParameter("position", position);
+		query.setParameter("selectionStatus", selectionStatus);
+		
+		return query.getResultList();
 	}
 }

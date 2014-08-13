@@ -7,6 +7,7 @@ import java.util.List;
 
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
+import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
 import net.blackcat.fantasy.draft.player.types.Position;
 
 /**
@@ -40,6 +41,15 @@ public interface PlayerDataService {
 	 * @return List of {@link PlayerEntity} objects in the required position.
 	 */
 	List<PlayerEntity> getPlayers(Position position);
+	
+	/**
+	 * Get a list of players who play a given {@link Position} and have a given {@link PlayerSelectionStatus}.
+	 * 
+	 * @param position The position we are interested in.
+	 * @param selectionStatus The selection status we are interested in.
+	 * @return List of {@link PlayerEntity} objects in the required position.
+	 */
+	List<PlayerEntity> getPlayers(Position position, PlayerSelectionStatus selectionStatus);
 	
 	/**
 	 * Get a single players based on ID.
