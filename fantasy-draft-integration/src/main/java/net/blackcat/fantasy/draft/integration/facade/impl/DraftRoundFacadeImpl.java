@@ -164,6 +164,7 @@ public class DraftRoundFacadeImpl implements DraftRoundFacade {
 			
 			for (final BidEntity successfulBid : selectedPlayersMap.get(teamToUpdate)) {
 				final SelectedPlayerEntity selectedPlayer = new SelectedPlayerEntity(successfulBid.getPlayer());
+				selectedPlayer.setCost(successfulBid.getAmount());
 				selectedPlayers.add(selectedPlayer);
 			}
 			

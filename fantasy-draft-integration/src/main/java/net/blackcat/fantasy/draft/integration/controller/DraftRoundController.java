@@ -1,5 +1,6 @@
 package net.blackcat.fantasy.draft.integration.controller;
 
+import net.blackcat.fantasy.draft.auction.AuctionRoundResults;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.facade.DraftRoundFacade;
 import net.blackcat.fantasy.draft.round.TeamBids;
@@ -52,5 +53,19 @@ public class DraftRoundController {
 	 */
 	public void makeBids(final TeamBids teamBids) throws FantasyDraftIntegrationException {
 		draftRoundFacade.makeBids(teamBids);
+	}
+	
+	/**
+	 * Close the currently open auction for a given league and calculate the results of the phase.
+	 * 
+	 * @param leagueId The Id of the league to close the auction phase for.
+	 * @return The results of the auction round.
+	 * @throws FantasyDraftIntegrationException for the following reasons:
+	 * 		<ul>
+	 * 			<li><b>OPEN_DRAFT_ROUND_DOES_NOT_EXIST_FOR_LEAGUE</b> - If the given league does not have any open auction phases.</li>
+	 *		</ul>
+	 */
+	public AuctionRoundResults closeAuctionPhase(int leagueId) throws FantasyDraftIntegrationException {
+		return draftRoundFacade.closeAuctionPhase(leagueId);
 	}
 }

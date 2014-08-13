@@ -129,6 +129,7 @@ public class SelectedPlayerEntity implements Serializable {
 		selectedPlayerModel.setPointsScored(this.pointsScored);
 		selectedPlayerModel.setSurname(this.player.getSurname());
 		selectedPlayerModel.setTeam(this.player.getTeam());
+		selectedPlayerModel.setPosition(this.player.getPosition());
 		
 		return selectedPlayerModel;
 	}
