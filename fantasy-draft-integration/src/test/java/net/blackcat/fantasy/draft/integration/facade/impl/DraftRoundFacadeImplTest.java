@@ -295,4 +295,46 @@ public class DraftRoundFacadeImplTest {
 		assertThat(bidCaptor.getValue().get(1).getPlayer()).isEqualTo(player2);
 		assertThat(bidCaptor.getValue().get(1).getTeam()).isEqualTo(team1);
 	}
+	
+	@Test
+	public void testGetAuctionRoundResults_Success() throws Exception {
+		// arrange
+		final DraftRoundEntity draftRound = new DraftRoundEntity(DraftRoundPhase.AUCTION, 1, league);
+		
+		final BidEntity bidP1T1 = new BidEntity(team1, player1, new BigDecimal("1.5"));
+		final BidEntity bidP1T2 = new BidEntity(team2, player1, new BigDecimal("4.5"));
+		final BidEntity bidP1T3 = new BidEntity(team3, player1, new BigDecimal("4"));
+		final BidEntity bidP2T1 = new BidEntity(team1, player2, new BigDecimal("1"));
+		
+		draftRound.addBids(Arrays.asList(bidP1T1, bidP1T2, bidP1T3, bidP2T1));
+		
+		when(draftRoundDataService.getDraftRounds(anyInt())).thenReturn(Arrays.asList(draftRound));
+		
+		// act
+		final List<AuctionRoundResults> auctionRoundResults = draftRoundFacade.getAuctionRoundResults(0);
+		
+		// assert
+		assertThat(auctionRoundResults).hasSize(1);
+		assertThat(auctionRoundResults.get(0).getAuctionPhase()).isEqualTo(1);
+		
+		final List<AuctionPlayerResult> playerResults = auctionRoundResults.get(0).getPlayerResults();
+		assertThat(playerResults).hasSize(2);
+		
+		final AuctionPlayerResult player1Result = playerResults.get(0);
+		assertThat(player1Result.getMatchingHighBids()).isNull();
+		
+		assertThat(player1Result.getSuccessfulBid()).isNotNull();
+		assertThat(player1Result.getSuccessfulBid().getAmount().doubleValue()).isEqualTo(4.5d);
+		assertThat(player1Result.getSuccessfulBid().getTeam().getTeamName()).isEqualTo(team2.getName());
+		
+		assertThat(player1Result.getUnsuccessfulBids()).isNotNull();
+		assertThat(player1Result.getUnsuccessfulBids()).hasSize(2);
+		assertThat(player1Result.getUnsuccessfulBids().get(0).getAmount().doubleValue()).isEqualTo(4d);
+		assertThat(player1Result.getUnsuccessfulBids().get(0).getTeam().getTeamName()).isEqualTo(team3.getName());
+		assertThat(player1Result.getUnsuccessfulBids().get(1).getAmount().doubleValue()).isEqualTo(1.5d);
+		assertThat(player1Result.getUnsuccessfulBids().get(1).getTeam().getTeamName()).isEqualTo(team1.getName());
+		
+		verify(draftRoundDataService, never()).updateDraftRound(any(DraftRoundEntity.class));
+		verify(teamDataService, never()).updateTeam(any(TeamEntity.class));
+	}
 }

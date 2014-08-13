@@ -69,6 +69,14 @@ public class DraftRoundDataServiceJpa implements DraftRoundDataService {
 		entityManager.merge(draftRound);
 	}
 	
+	@Override
+	public List<DraftRoundEntity> getDraftRounds(final int leagueId) {
+		final TypedQuery<DraftRoundEntity> query = entityManager.createQuery(
+				"SELECT d FROM DraftRoundEntity d WHERE d.key.leagueId = :leagueId", DraftRoundEntity.class);
+		query.setParameter("leagueId", leagueId);
+		return query.getResultList();
+	}
+	
 	/**
 	 * Get the open draft rounds for the given league Id.
 	 * 

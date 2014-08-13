@@ -32,6 +32,7 @@ import net.blackcat.fantasy.draft.round.TeamBids;
 import net.blackcat.fantasy.draft.round.types.DraftRoundPhase;
 import net.blackcat.fantasy.draft.round.types.DraftRoundStatus;
 import net.blackcat.fantasy.draft.team.Team;
+import net.blackcat.fantasy.draft.team.types.TeamStatus;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,6 +99,61 @@ public class DraftRoundFacadeImpl implements DraftRoundFacade {
 		moveSuccessfulPlayerBidsToTeam(openDraftRound);
 		
 		return auctionRoundResults;
+	}
+	
+	@Override
+	public List<AuctionRoundResults> getAuctionRoundResults(final int leagueId) {
+		final List<AuctionRoundResults> allAuctions = new ArrayList<AuctionRoundResults>();
+		final List<DraftRoundEntity> draftRounds = draftRoundDataService.getDraftRounds(leagueId);
+		
+		for (final DraftRoundEntity draftRound : draftRounds) {
+			final AuctionRoundResults auctionRoundResults = new AuctionRoundResults(draftRound.getKey().getSequenceNumber());
+			final List<AuctionPlayerResult> playerAuctionResults = new ArrayList<AuctionPlayerResult>();
+			auctionRoundResults.setPlayerResults(playerAuctionResults);
+			
+			// Create a map of player id to BidEntity
+			final Map<Integer, List<BidEntity>> playerBids = createPlayerBidLists(draftRound);
+			
+			for (final List<BidEntity> bids : playerBids.values()) {
+				final PlayerEntity playerEntity = bids.get(0).getPlayer();
+				final Player modelPlayer = new Player();
+				BeanUtils.copyProperties(playerEntity, modelPlayer);
+				
+				final AuctionPlayerResult playerResults = new AuctionPlayerResult(modelPlayer);
+				playerAuctionResults.add(playerResults);
+				
+				Collections.sort(bids);
+				
+				final BidEntity firstBid = bids.get(0);
+				
+				if (bids.size() == 1) {
+					final Team modelTeam = new Team(firstBid.getTeam().getName());
+					final AuctionPlayerBid auctionBid = new AuctionPlayerBid(modelTeam, firstBid.getAmount());
+					playerResults.setSuccessfulBid(auctionBid);
+				} else {
+					if (isMatchingHighestBid(bids, firstBid)) {
+						processPlayerWithMatchingHighestBid(bids, playerResults, firstBid);
+					} else {
+						final Team modelTeam = new Team(firstBid.getTeam().getName());
+						final AuctionPlayerBid auctionBid = new AuctionPlayerBid(modelTeam, firstBid.getAmount());
+						playerResults.setSuccessfulBid(auctionBid);
+						
+						final List<AuctionPlayerBid> unsuccessfulBids = new ArrayList<AuctionPlayerBid>();
+						for (int i = 1; i < bids.size(); i++) {
+							final Team unsuccessfulModelTeam = new Team(bids.get(i).getTeam().getName());
+							final AuctionPlayerBid unsuccesfulAuctionBid = new AuctionPlayerBid(unsuccessfulModelTeam, bids.get(i).getAmount());
+							unsuccessfulBids.add(unsuccesfulAuctionBid);
+						}
+						
+						playerResults.setUnsuccessfulBids(unsuccessfulBids);
+					}
+				}
+			}
+			
+			allAuctions.add(auctionRoundResults);
+		}
+		
+		return allAuctions;
 	}
 	
 	@Override
@@ -169,6 +225,11 @@ public class DraftRoundFacadeImpl implements DraftRoundFacade {
 			}
 			
 			teamToUpdate.addSelectedPlayers(selectedPlayers);
+			
+			if (teamToUpdate.getSelectedPlayers().size() == 18) {
+				teamToUpdate.setStatus(TeamStatus.COMPLETE);
+			}
+			
 			teamDataService.updateTeam(teamToUpdate);
 		}
 	}

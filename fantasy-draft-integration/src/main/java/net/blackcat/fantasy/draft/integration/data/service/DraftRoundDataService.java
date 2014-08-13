@@ -51,4 +51,11 @@ public interface DraftRoundDataService {
 	 * @throws FantasyDraftIntegrationException If no open draft round exists for the given league.
 	 */
 	DraftRoundEntity getOpenDraftRound(int leagueId) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Get all stored draft rounds for the given league.
+	 * 
+	 * @param leagueId Id of the league we want to get the draft rounds for.
+	 */
+	List<DraftRoundEntity> getDraftRounds(int leagueId);
 }

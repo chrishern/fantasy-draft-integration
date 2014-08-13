@@ -1,5 +1,7 @@
 package net.blackcat.fantasy.draft.integration.controller;
 
+import java.util.List;
+
 import net.blackcat.fantasy.draft.auction.AuctionRoundResults;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.facade.DraftRoundFacade;
@@ -67,5 +69,15 @@ public class DraftRoundController {
 	 */
 	public AuctionRoundResults closeAuctionPhase(int leagueId) throws FantasyDraftIntegrationException {
 		return draftRoundFacade.closeAuctionPhase(leagueId);
+	}
+	
+	/**
+	 * Get the results of all auctions for a league.
+	 * 
+	 * @param leagueId The Id of the league to get the auction results for.
+	 * @return The results of the auction rounds for the given league.
+	 */
+	public List<AuctionRoundResults> getAuctionRoundResults(final int leagueId) {
+		return draftRoundFacade.getAuctionRoundResults(leagueId);
 	}
 }

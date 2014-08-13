@@ -3,6 +3,8 @@
  */
 package net.blackcat.fantasy.draft.integration.facade;
 
+import java.util.List;
+
 import net.blackcat.fantasy.draft.auction.AuctionRoundResults;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.round.TeamBids;
@@ -53,4 +55,12 @@ public interface DraftRoundFacade {
 	 *		</ul>
 	 */
 	void makeBids(TeamBids teamBids) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Get the results of all auctions for a league.
+	 * 
+	 * @param leagueId The Id of the league to get the auction results for.
+	 * @return The results of the auction rounds for the given league.
+	 */
+	List<AuctionRoundResults> getAuctionRoundResults(int leagueId);
 }
