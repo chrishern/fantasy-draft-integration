@@ -226,7 +226,7 @@ public class DraftRoundFacadeImpl implements DraftRoundFacade {
 			
 			teamToUpdate.addSelectedPlayers(selectedPlayers);
 			
-			if (teamToUpdate.getSelectedPlayers().size() == 18) {
+			if (teamToUpdate.getSelectedPlayers().size() == 16) {
 				teamToUpdate.setStatus(TeamStatus.COMPLETE);
 			}
 			
