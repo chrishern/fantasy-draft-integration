@@ -6,7 +6,10 @@ package net.blackcat.fantasy.draft.integration.facade.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.blackcat.fantasy.draft.integration.data.service.DraftRoundDataService;
 import net.blackcat.fantasy.draft.integration.data.service.ManagerDataService;
+import net.blackcat.fantasy.draft.integration.entity.BidEntity;
+import net.blackcat.fantasy.draft.integration.entity.DraftRoundEntity;
 import net.blackcat.fantasy.draft.integration.entity.ManagerEntity;
 import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
@@ -34,6 +37,10 @@ public class ManagerFacadeImpl implements ManagerFacade {
 	@Qualifier(value = "managerDataServiceJpa")
 	private ManagerDataService managerDataService;
 	
+	@Autowired
+	@Qualifier(value = "draftRoundDataServiceJpa")
+	private DraftRoundDataService draftRoundDataService;
+	
 	@Override
 	public Manager getManager(final String emailAddress) throws FantasyDraftIntegrationException {
 		final ManagerEntity managerEntity = managerDataService.getManager(emailAddress);
@@ -45,6 +52,20 @@ public class ManagerFacadeImpl implements ManagerFacade {
 		final List<SelectedPlayer> selectedPlayers = getSelectedPlayers(managerEntity);
 		teamModel.setSelectedPlayers(selectedPlayers);
 		teamModel.setStatus(managerEntity.getTeam().getStatus());
+		
+		try {
+			final DraftRoundEntity openDraftRound = draftRoundDataService.getOpenDraftRound(managerEntity.getTeam().getId());
+			teamModel.setOpenDraftRound(true);
+			
+			for (final BidEntity bid : openDraftRound.getBids()) {
+				if (bid.getTeam().getId() == teamModel.getId()) {
+					teamModel.setMadeBidsInOpenDraftRound(true);
+					break;
+				}
+			}
+		} catch (final FantasyDraftIntegrationException e) {
+			teamModel.setOpenDraftRound(false);
+		}
 		
 		managerModel.setTeam(teamModel);
 		managerModel.setEmailAddress(managerEntity.getEmailAddress());

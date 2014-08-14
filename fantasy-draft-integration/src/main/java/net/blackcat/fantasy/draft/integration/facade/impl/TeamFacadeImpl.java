@@ -6,7 +6,10 @@ package net.blackcat.fantasy.draft.integration.facade.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.blackcat.fantasy.draft.integration.data.service.DraftRoundDataService;
+import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
 import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
+import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
 import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
@@ -33,6 +36,14 @@ public class TeamFacadeImpl implements TeamFacade {
 	@Qualifier(value = "teamDataServiceJpa")
 	private TeamDataService teamDataService;
 	
+	@Autowired
+	@Qualifier(value = "leagueDataServiceJpa")
+	private LeagueDataService leagueDataService;
+	
+	@Autowired
+	@Qualifier(value = "draftRoundDataServiceJpa")
+	private DraftRoundDataService draftRoundDataService;
+	
 	@Override
 	public void createTeam(final String teamName) {
 		teamDataService.createTeam(teamName);
@@ -50,6 +61,15 @@ public class TeamFacadeImpl implements TeamFacade {
 		}
 		
 		modelTeam.setSelectedPlayers(selectedModelPlayers);
+		
+		final LeagueEntity leagueForTeam = leagueDataService.getLeagueForTeam(teamEntity.getId());
+		
+		try {
+			draftRoundDataService.getOpenDraftRound(leagueForTeam.getId());
+			modelTeam.setOpenDraftRound(true);
+		} catch (final FantasyDraftIntegrationException e) {
+			modelTeam.setOpenDraftRound(false);
+		}
 		
 		return modelTeam;
 	}

@@ -20,6 +20,7 @@ import net.blackcat.fantasy.draft.integration.test.util.TestDataUtil;
 import net.blackcat.fantasy.draft.team.Team;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -34,6 +35,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Chris
  *
  */
+@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class TeamFacadeImplTest {
 

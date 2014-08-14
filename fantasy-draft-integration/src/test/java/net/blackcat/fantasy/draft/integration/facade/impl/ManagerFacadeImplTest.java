@@ -21,6 +21,7 @@ import net.blackcat.fantasy.draft.manager.Manager;
 import net.blackcat.fantasy.draft.team.types.TeamStatus;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -35,6 +36,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Chris
  *
  */
+@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class ManagerFacadeImplTest {
 
