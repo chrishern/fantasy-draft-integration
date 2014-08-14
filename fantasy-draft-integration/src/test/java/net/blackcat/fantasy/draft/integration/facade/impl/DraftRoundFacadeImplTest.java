@@ -307,6 +307,7 @@ public class DraftRoundFacadeImplTest {
 		final BidEntity bidP2T1 = new BidEntity(team1, player2, new BigDecimal("1"));
 		
 		draftRound.addBids(Arrays.asList(bidP1T1, bidP1T2, bidP1T3, bidP2T1));
+		draftRound.setStatus(DraftRoundStatus.CLOSED);
 		
 		when(draftRoundDataService.getDraftRounds(anyInt())).thenReturn(Arrays.asList(draftRound));
 		
