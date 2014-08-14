@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.blackcat.fantasy.draft.integration.data.service.DraftRoundDataService;
+import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
 import net.blackcat.fantasy.draft.integration.data.service.ManagerDataService;
 import net.blackcat.fantasy.draft.integration.entity.BidEntity;
 import net.blackcat.fantasy.draft.integration.entity.DraftRoundEntity;
+import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
 import net.blackcat.fantasy.draft.integration.entity.ManagerEntity;
 import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
@@ -41,6 +43,10 @@ public class ManagerFacadeImpl implements ManagerFacade {
 	@Qualifier(value = "draftRoundDataServiceJpa")
 	private DraftRoundDataService draftRoundDataService;
 	
+	@Autowired
+	@Qualifier(value = "leagueDataServiceJpa")
+	private LeagueDataService leagueDataService;
+	
 	@Override
 	public Manager getManager(final String emailAddress) throws FantasyDraftIntegrationException {
 		final ManagerEntity managerEntity = managerDataService.getManager(emailAddress);
@@ -53,8 +59,10 @@ public class ManagerFacadeImpl implements ManagerFacade {
 		teamModel.setSelectedPlayers(selectedPlayers);
 		teamModel.setStatus(managerEntity.getTeam().getStatus());
 		
+		final LeagueEntity league = leagueDataService.getLeagueForTeam(managerEntity.getTeam().getId());
+		
 		try {
-			final DraftRoundEntity openDraftRound = draftRoundDataService.getOpenDraftRound(managerEntity.getTeam().getId());
+			final DraftRoundEntity openDraftRound = draftRoundDataService.getOpenDraftRound(league.getId());
 			teamModel.setOpenDraftRound(true);
 			
 			for (final BidEntity bid : openDraftRound.getBids()) {
