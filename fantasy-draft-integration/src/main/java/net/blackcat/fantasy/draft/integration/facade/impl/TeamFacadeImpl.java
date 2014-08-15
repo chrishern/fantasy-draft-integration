@@ -3,7 +3,9 @@
  */
 package net.blackcat.fantasy.draft.integration.facade.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import net.blackcat.fantasy.draft.integration.data.service.DraftRoundDataService;
@@ -72,6 +74,34 @@ public class TeamFacadeImpl implements TeamFacade {
 		}
 		
 		return modelTeam;
+	}
+
+	@Override
+	public List<Team> getCompleteTeams(final int leagueId) throws FantasyDraftIntegrationException {
+		final List<Team> teams = new ArrayList<Team>();
+		
+		final LeagueEntity league = leagueDataService.getLeague(leagueId);
+		
+		for (final TeamEntity teamEntity : league.getTeams()) {
+			final Team modelTeam = new Team(teamEntity.getName());
+			BigDecimal totalCost = BigDecimal.ZERO;
+			
+			final List<SelectedPlayer> selectedModelPlayers = new ArrayList<SelectedPlayer>();
+			for (final SelectedPlayerEntity selectedPlayer : teamEntity.getSelectedPlayers()) {
+				selectedModelPlayers.add(selectedPlayer.toModelSelectedPlayer());
+				
+				totalCost = totalCost.add(selectedPlayer.getCost());
+			}
+			
+			modelTeam.setCost(totalCost);
+			Collections.sort(selectedModelPlayers);
+			modelTeam.setSelectedPlayers(selectedModelPlayers);
+			
+			teams.add(modelTeam);
+		}
+		
+		
+		return teams;
 	}
 
 }

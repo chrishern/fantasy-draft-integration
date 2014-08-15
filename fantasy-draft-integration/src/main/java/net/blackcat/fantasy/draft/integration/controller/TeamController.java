@@ -1,5 +1,7 @@
 package net.blackcat.fantasy.draft.integration.controller;
 
+import java.util.List;
+
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.facade.TeamFacade;
 import net.blackcat.fantasy.draft.team.Team;
@@ -41,5 +43,16 @@ public class TeamController {
 	 */
 	public Team getTeam(final String teamName) throws FantasyDraftIntegrationException {
 		return teamFacade.getTeam(teamName);
+	}
+	
+	/**
+	 * Get the list of completed (i.e. fully picked) teams for a given league.
+	 * 
+	 * @param leagueId
+	 * @return List of {@link Team} objects in the given league.
+	 * @throws FantasyDraftIntegrationException If the league IF does not exist.
+	 */
+	public List<Team> getCompleteTeams(int leagueId) throws FantasyDraftIntegrationException {
+		return teamFacade.getCompleteTeams(leagueId);
 	}
 }
