@@ -325,7 +325,7 @@ public class DraftRoundFacadeImpl implements DraftRoundFacade {
 			if (playerBid.getAmount().equals(highestBid)) {
 				// TODO Add back in??
 				//playerBid.getPlayer().setSelectionStatus(PlayerSelectionStatus.RESTRICTED_SELECTION);
-				playerBid.getPlayer().addTeamWhoCanBid(playerBid.getTeam());
+				//playerBid.getPlayer().addTeamWhoCanBid(playerBid.getTeam());
 				
 				matchingHighBids.add(auctionBid);
 			} else {
