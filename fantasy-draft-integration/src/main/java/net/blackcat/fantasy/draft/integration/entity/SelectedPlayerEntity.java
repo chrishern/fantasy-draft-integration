@@ -5,13 +5,17 @@ package net.blackcat.fantasy.draft.integration.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import net.blackcat.fantasy.draft.player.SelectedPlayer;
@@ -43,6 +47,9 @@ public class SelectedPlayerEntity implements Serializable {
 	
 	@Column
 	private BigDecimal cost;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<GameweekScoreEntity> gameweekScores;
 
 	public SelectedPlayerEntity() {
 	}
@@ -113,6 +120,33 @@ public class SelectedPlayerEntity implements Serializable {
 	 */
 	public void setCost(BigDecimal cost) {
 		this.cost = cost;
+	}
+	
+	/**
+	 * @return the gameweekScores
+	 */
+	public List<GameweekScoreEntity> getGameweekScores() {
+		return gameweekScores;
+	}
+
+	/**
+	 * @param gameweekScores the gameweekScores to set
+	 */
+	public void setGameweekScores(List<GameweekScoreEntity> gameweekScores) {
+		this.gameweekScores = gameweekScores;
+	}
+
+	/**
+	 * Add a new gameweek score to the selected player.
+	 * 
+	 * @param gameweekScore Score to add to the player.
+	 */
+	public void addGameweekScore(final GameweekScoreEntity gameweekScore) {
+		if (gameweekScores == null) {
+			gameweekScores = new ArrayList<GameweekScoreEntity>();
+		}
+		
+		gameweekScores.add(gameweekScore);
 	}
 	
 	/**
