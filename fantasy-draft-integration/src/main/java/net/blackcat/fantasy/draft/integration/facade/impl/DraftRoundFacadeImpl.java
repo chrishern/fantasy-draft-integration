@@ -311,7 +311,6 @@ public class DraftRoundFacadeImpl implements DraftRoundFacade {
 	 */
 	private void processPlayerWithMatchingHighestBid(final List<BidEntity> bids, final AuctionPlayerResult playerResults, final BidEntity firstBid) {
 		final BigDecimal highestBid = firstBid.getAmount();
-		firstBid.getPlayer().setTeamsWhoCanBid(null);
 		
 		final List<AuctionPlayerBid> unsuccessfulBids = new ArrayList<AuctionPlayerBid>();
 		final List<AuctionPlayerBid> matchingHighBids = new ArrayList<AuctionPlayerBid>();
@@ -323,10 +322,6 @@ public class DraftRoundFacadeImpl implements DraftRoundFacade {
 			final AuctionPlayerBid auctionBid = new AuctionPlayerBid(modelTeam, playerBid.getAmount());
 
 			if (playerBid.getAmount().equals(highestBid)) {
-				// TODO Add back in??
-				//playerBid.getPlayer().setSelectionStatus(PlayerSelectionStatus.RESTRICTED_SELECTION);
-				//playerBid.getPlayer().addTeamWhoCanBid(playerBid.getTeam());
-				
 				matchingHighBids.add(auctionBid);
 			} else {
 				unsuccessfulBids.add(auctionBid);
@@ -346,7 +341,6 @@ public class DraftRoundFacadeImpl implements DraftRoundFacade {
 	private void processSuccessfulBid(final AuctionPlayerResult playerResults, final BidEntity successfulBid) {
 		successfulBid.setSuccessful(true);
 		successfulBid.getPlayer().setSelectionStatus(PlayerSelectionStatus.SELECTED);
-		successfulBid.getPlayer().setTeamsWhoCanBid(null);
 		
 		final Team modelTeam = new Team(successfulBid.getTeam().getName());
 		final AuctionPlayerBid auctionBid = new AuctionPlayerBid(modelTeam, successfulBid.getAmount());

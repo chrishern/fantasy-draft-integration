@@ -4,15 +4,12 @@
 package net.blackcat.fantasy.draft.integration.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
@@ -49,9 +46,6 @@ public class PlayerEntity implements Serializable {
 	@Column
 	@Enumerated(EnumType.STRING)
 	private PlayerSelectionStatus selectionStatus;
-	
-	@OneToMany
-	private List<TeamEntity> teamsWhoCanBid;
 	
 	@Column
 	private int totalPoints;
@@ -165,33 +159,6 @@ public class PlayerEntity implements Serializable {
 	 */
 	public void setTotalPoints(int totalPoints) {
 		this.totalPoints = totalPoints;
-	}
-
-	/**
-	 * Add a new team to the list of the teams who can bid for this player.
-	 * 
-	 * @param team Team who can bid for this player.
-	 */
-	public void addTeamWhoCanBid(final TeamEntity team) {
-		if (teamsWhoCanBid == null) {
-			teamsWhoCanBid = new ArrayList<TeamEntity>();
-		}
-		
-		teamsWhoCanBid.add(team);
-	}
-	
-	/**
-	 * @return the teamsWhoCanBid
-	 */
-	public List<TeamEntity> getTeamsWhoCanBid() {
-		return teamsWhoCanBid;
-	}
-
-	/**
-	 * @param teamsWhoCanBid the teamsWhoCanBid to set
-	 */
-	public void setTeamsWhoCanBid(List<TeamEntity> teamsWhoCanBid) {
-		this.teamsWhoCanBid = teamsWhoCanBid;
 	}
 	
 }
