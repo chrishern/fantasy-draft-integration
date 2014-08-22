@@ -44,6 +44,12 @@ public class TeamEntity implements Serializable {
 	private List<SelectedPlayerEntity> selectedPlayers;
 	
 	@Column
+	private int totalScore;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<GameweekScoreEntity> gameweekScores;
+	
+	@Column
 	@Enumerated(EnumType.STRING)
 	private TeamStatus status;
 	
@@ -108,6 +114,20 @@ public class TeamEntity implements Serializable {
 	 */
 	public void setStatus(TeamStatus status) {
 		this.status = status;
+	}
+
+	/**
+	 * @return the totalScore
+	 */
+	public int getTotalScore() {
+		return totalScore;
+	}
+
+	/**
+	 * @param totalScore the totalScore to set
+	 */
+	public void setTotalScore(int totalScore) {
+		this.totalScore = totalScore;
 	}
 
 	@Override

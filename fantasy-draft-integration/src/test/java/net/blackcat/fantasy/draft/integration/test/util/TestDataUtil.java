@@ -3,6 +3,9 @@
  */
 package net.blackcat.fantasy.draft.integration.test.util;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.blackcat.fantasy.draft.integration.entity.ManagerEntity;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
@@ -34,6 +37,10 @@ public final class TestDataUtil {
 	public static final String TEST_TEAM_1 = "Test Team 1";
 	public static final String TEST_TEAM_2 = "Test Team 2";
 	public static final String TEST_TEAM_3 = "Test Team 3";
+
+	public static final int TEST_TEAM_1_SCORE = 134;
+	public static final int TEST_TEAM_2_SCORE = 190;
+	public static final int TEST_TEAM_3_SCORE = 156;
 	
 	public static final String LEAGUE_NAME = "New League";
 	
@@ -73,5 +80,22 @@ public final class TestDataUtil {
 	 */
 	public static ManagerEntity createManager(final TeamEntity team) {
 		return new ManagerEntity(MANAGER_EMAIL_ADDRESS, MANAGER_FORENAME, MANAGER_SURNAME, team);
+	}
+	
+	/**
+	 * Create a list of {@link TeamEntity} objects with the total score attribute populated.
+	 * @return List of {@link TeamEntity} objects with the total score attribute populated.
+	 */
+	public static List<TeamEntity> createTeamEntitiesWithScore() {
+		final TeamEntity team1 = new TeamEntity(TEST_TEAM_1);
+		team1.setTotalScore(TEST_TEAM_1_SCORE);
+		
+		final TeamEntity team2 = new TeamEntity(TEST_TEAM_2);
+		team2.setTotalScore(TEST_TEAM_2_SCORE);
+		
+		final TeamEntity team3 = new TeamEntity(TEST_TEAM_3);
+		team3.setTotalScore(TEST_TEAM_3_SCORE);
+		
+		return Arrays.asList(team1, team2, team3);
 	}
 }

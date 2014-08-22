@@ -240,12 +240,6 @@ public class DraftRoundFacadeImplTest {
 		assertThat(player1Result.getMatchingHighBids().get(0).getTeam().getTeamName()).isEqualTo(team1.getName());
 		
 		verify(draftRoundDataService).updateDraftRound(draftRoundCaptor.capture());
-		
-		final DraftRoundEntity updatedDraftRound = draftRoundCaptor.getValue();
-		
-		//assertThat(updatedDraftRound.getBids().get(0).getPlayer().getSelectionStatus()).isEqualTo(PlayerSelectionStatus.RESTRICTED_SELECTION);
-		//assertThat(updatedDraftRound.getBids().get(0).getPlayer().getTeamsWhoCanBid()).hasSize(2);
-		
 		verify(teamDataService, never()).updateTeam(any(TeamEntity.class));
 	}
 
