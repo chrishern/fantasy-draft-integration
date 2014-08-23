@@ -11,6 +11,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +21,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import net.blackcat.fantasy.draft.player.SelectedPlayer;
+import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
 
 /**
  * Entity representing a player who has been picked by a team within the game.
@@ -48,9 +51,13 @@ public class SelectedPlayerEntity implements Serializable {
 	@Column
 	private BigDecimal cost;
 	
+	@Column
+	@Enumerated(EnumType.STRING)
+	private SelectedPlayerStatus selectionStatus;
+	
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<GameweekScoreEntity> gameweekScores;
-
+	
 	public SelectedPlayerEntity() {
 	}
 
@@ -134,6 +141,20 @@ public class SelectedPlayerEntity implements Serializable {
 	 */
 	public void setGameweekScores(List<GameweekScoreEntity> gameweekScores) {
 		this.gameweekScores = gameweekScores;
+	}
+
+	/**
+	 * @return the selectionStatus
+	 */
+	public SelectedPlayerStatus getSelectionStatus() {
+		return selectionStatus;
+	}
+
+	/**
+	 * @param selectionStatus the selectionStatus to set
+	 */
+	public void setSelectionStatus(SelectedPlayerStatus selectionStatus) {
+		this.selectionStatus = selectionStatus;
 	}
 
 	/**
