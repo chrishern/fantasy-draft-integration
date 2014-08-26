@@ -32,6 +32,11 @@ public class GameweekScoreEntity {
 
 	public GameweekScoreEntity() {
 	}
+	
+	public GameweekScoreEntity(final int gameweek, final int score) {
+		this.gameweek = gameweek;
+		this.score = score;
+	}
 
 	/**
 	 * @return the id
