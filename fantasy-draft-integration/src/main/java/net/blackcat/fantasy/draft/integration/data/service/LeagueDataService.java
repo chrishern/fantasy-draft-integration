@@ -3,6 +3,8 @@
  */
 package net.blackcat.fantasy.draft.integration.data.service;
 
+import java.util.List;
+
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 
@@ -38,4 +40,11 @@ public interface LeagueDataService {
 	 * @throws FantasyDraftIntegrationException If a team with the given id does not exist.
 	 */
 	LeagueEntity getLeagueForTeam(int teamId) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Get all leagues stored in the backend.
+	 * 
+	 * @return All {@link LeagueEntity} objects currently stored in the backend.
+	 */
+	List<LeagueEntity> getLeagues();
 }

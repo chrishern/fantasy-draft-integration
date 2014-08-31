@@ -39,6 +39,8 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(value = {"/hsqlDatasourceContext.xml", "/testApplicationContext.xml"})
 public class LeagueDataServiceJpaTest {
 
+	private static final String SECOND_LEAGUE_NAME = "Second League";
+
 	@Rule
 	public ExpectedException thrownException = ExpectedException.none();
 	
@@ -119,5 +121,21 @@ public class LeagueDataServiceJpaTest {
 		
 		// assert
 		Assert.fail("Exception expected");
+	}
+	
+	@Test
+	public void testGetLeagues() {
+		// arrange
+		final LeagueEntity league = new LeagueEntity(TestDataUtil.LEAGUE_NAME);
+		entityManager.persist(league);
+		
+		final LeagueEntity league2 = new LeagueEntity(SECOND_LEAGUE_NAME);
+		entityManager.persist(league2);
+		
+		// act
+		final List<LeagueEntity> retrievedLeagues = leagueDataServiceJpa.getLeagues();
+		
+		// assert
+		assertThat(retrievedLeagues).hasSize(2);
 	}
 }

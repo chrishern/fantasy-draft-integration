@@ -31,7 +31,7 @@ import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
  */
 @Entity
 @Table(name = "SelectedPlayer")
-public class SelectedPlayerEntity implements Serializable {
+public class SelectedPlayerEntity implements Serializable, Comparable<SelectedPlayerEntity> {
 
 	private static final long serialVersionUID = 3472489202239807734L;
 
@@ -187,5 +187,10 @@ public class SelectedPlayerEntity implements Serializable {
 		selectedPlayerModel.setPosition(this.player.getPosition());
 		
 		return selectedPlayerModel;
+	}
+
+	@Override
+	public int compareTo(final SelectedPlayerEntity objectToCompareTo) {
+		return this.selectionStatus.compareTo(objectToCompareTo.getSelectionStatus());
 	}
 }

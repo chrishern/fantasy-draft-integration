@@ -130,6 +130,19 @@ public class TeamEntity implements Serializable {
 		this.totalScore = totalScore;
 	}
 
+	/**
+	 * Add a new gameweek score to the team.
+	 * 
+	 * @param gameweekScore Score to add to the team.
+	 */
+	public void addGameweekScore(final GameweekScoreEntity gameweekScore) {
+		if (gameweekScores == null) {
+			gameweekScores = new ArrayList<GameweekScoreEntity>();
+		}
+		
+		gameweekScores.add(gameweekScore);
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

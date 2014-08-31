@@ -3,10 +3,13 @@
  */
 package net.blackcat.fantasy.draft.integration.controller;
 
-import java.util.List;
+import java.util.Map;
 
+import net.blackcat.fantasy.draft.integration.facade.GameweekScoreFacade;
 import net.blackcat.fantasy.draft.player.GameweekScorePlayer;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 
 
@@ -21,12 +24,17 @@ import org.springframework.stereotype.Controller;
 @Controller(value = "gameweekScoreIntegrationController")
 public class GameweekScoreController {
 
+	@Autowired
+	@Qualifier(value = "gameweekScoreFacade")
+	private GameweekScoreFacade gameweekScoreFacade;
+	
 	/**
 	 * Stores the gameweek scores for a given list of players.
 	 * 
-	 * @param gameweekScores List of {@link GameweekScorePlayer} storing the gameweek scores for each player.
+	 * @param gameweek The number of the gameweek the scores relate to.
+	 * @param gameweekScores Map of player ID to {@link GameweekScorePlayer} storing the gameweek scores for each player.
 	 */
-	public void storeGameweekScores(final List<GameweekScorePlayer> gameweekScores) {
-		
+	public void storeGameweekScores(final int gameweek, final Map<Integer, GameweekScorePlayer> gameweekScores) {
+		gameweekScoreFacade.storeGameweekScores(gameweek, gameweekScores);
 	}
 }
