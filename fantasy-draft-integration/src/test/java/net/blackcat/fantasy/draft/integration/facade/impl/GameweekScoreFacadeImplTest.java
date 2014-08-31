@@ -11,8 +11,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.blackcat.fantasy.draft.integration.data.service.GameweekDataService;
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
 import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
+import net.blackcat.fantasy.draft.integration.entity.GameweekEntity;
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
 import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
@@ -42,11 +44,17 @@ public class GameweekScoreFacadeImplTest {
 	@Mock
 	private TeamDataService teamDataService;
 	
+	@Mock
+	private GameweekDataService gameweekDataService;
+	
 	@InjectMocks
 	private GameweekScoreFacadeImpl gameweekScoreFacade = new GameweekScoreFacadeImpl();
 	
 	@Captor
 	private ArgumentCaptor<TeamEntity> teamCaptor;
+	
+	@Captor
+	private ArgumentCaptor<GameweekEntity> gameweekCaptor;
 	
 	@Test
 	public void testStoreGameweekScores() {
@@ -58,18 +66,26 @@ public class GameweekScoreFacadeImplTest {
 		final LeagueEntity league = new LeagueEntity();
 		league.setTeams(Arrays.asList(team));
 		
+		final GameweekEntity gameweekData = new GameweekEntity();
+		gameweekData.setCurrentGameweek(1);
+		
 		when(leagueDataService.getLeagues()).thenReturn(Arrays.asList(league));
+		when(gameweekDataService.getGameweekData()).thenReturn(gameweekData);
 		
 		final int orginalScore = team.getTotalScore();
 		
 		// act
-		gameweekScoreFacade.storeGameweekScores(1, TestDataUtil.buildFullGameweekScores());
+		gameweekScoreFacade.storeCurrentGameweekScores(TestDataUtil.buildFullGameweekScores());
 		
 		// assert
 		verify(teamDataService).updateTeam(teamCaptor.capture());
+		verify(gameweekDataService).updateGameweekData(gameweekCaptor.capture());
 		
 		assertThat(teamCaptor.getAllValues()).hasSize(1);
 		assertThat(teamCaptor.getValue().getTotalScore()).isGreaterThan(orginalScore);
+		
+		assertThat(gameweekCaptor.getValue().getCurrentGameweek()).isEqualTo(2);
+		assertThat(gameweekCaptor.getValue().getPreviousGameweek()).isEqualTo(1);
 	}
 
 	private List<SelectedPlayerEntity> removeNonSubstitutes(final List<SelectedPlayerEntity> squadList) {

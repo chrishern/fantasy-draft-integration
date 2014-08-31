@@ -7,11 +7,13 @@
 		
 		<class>net.blackcat.fantasy.draft.integration.entity.BidEntity</class>
 		<class>net.blackcat.fantasy.draft.integration.entity.DraftRoundEntity</class>
+		<class>net.blackcat.fantasy.draft.integration.entity.GameweekEntity</class>
+		<class>net.blackcat.fantasy.draft.integration.entity.GameweekScoreEntity</class>
 		<class>net.blackcat.fantasy.draft.integration.entity.LeagueEntity</class>
-		<class>net.blackcat.fantasy.draft.integration.entity.PlayerEntity</class>
-		<class>net.blackcat.fantasy.draft.integration.entity.TeamEntity</class>
-		<class>net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity</class>
 		<class>net.blackcat.fantasy.draft.integration.entity.ManagerEntity</class>
+		<class>net.blackcat.fantasy.draft.integration.entity.PlayerEntity</class>
+		<class>net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity</class>
+		<class>net.blackcat.fantasy.draft.integration.entity.TeamEntity</class>
 
 	</persistence-unit>
 </persistence>

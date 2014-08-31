@@ -38,10 +38,10 @@ public class GameweekScoreControllerTest {
 		final Map<Integer, GameweekScorePlayer> gameweekScores = TestDataUtil.buildFullGameweekScores();
 		
 		// act
-		gameweekScoreController.storeGameweekScores(1, gameweekScores);
+		gameweekScoreController.storeGameweekScores(gameweekScores);
 		
 		// assert
-		verify(gameweekScoreFacade).storeGameweekScores(1, gameweekScores);
+		verify(gameweekScoreFacade).storeCurrentGameweekScores(gameweekScores);
 	}
 
 }

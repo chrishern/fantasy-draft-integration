@@ -16,10 +16,9 @@ import net.blackcat.fantasy.draft.player.GameweekScorePlayer;
 public interface GameweekScoreFacade {
 
 	/**
-	 * Stores the gameweek scores for a given list of players.
+	 * Stores the current gameweek scores for a given list of players.
 	 * 
-	 * @param gameweek The number of the gameweek the scores relate to.
-	 * @param gameweekScores Map of player ID to {@link GameweekScorePlayer} storing the gameweek scores for each player.
+	 * @param currentGameweekScores Map of player ID to {@link GameweekScorePlayer} storing the gameweek scores for each player.
 	 */
-	void storeGameweekScores(int gameweek, final Map<Integer, GameweekScorePlayer> gameweekScores);
+	void storeCurrentGameweekScores(final Map<Integer, GameweekScorePlayer> currentGameweekScores);
 }

@@ -7,8 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.blackcat.fantasy.draft.integration.data.service.GameweekDataService;
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
 import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
+import net.blackcat.fantasy.draft.integration.entity.GameweekEntity;
 import net.blackcat.fantasy.draft.integration.entity.GameweekScoreEntity;
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
 import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
@@ -41,8 +43,14 @@ public class GameweekScoreFacadeImpl implements GameweekScoreFacade {
 	@Qualifier(value = "teamDataServiceJpa")
 	private TeamDataService teamDataService;
 	
+	@Autowired
+	@Qualifier(value = "gameweekDataServiceJpa")
+	private GameweekDataService gameweekDataService;
+	
 	@Override
-	public void storeGameweekScores(final int gameweek, final Map<Integer, GameweekScorePlayer> gameweekScores) {
+	public void storeCurrentGameweekScores(final Map<Integer, GameweekScorePlayer> currentGameweekScores) {
+		final GameweekEntity gameweekData = gameweekDataService.getGameweekData();
+		final int currentGameweek = gameweekData.getCurrentGameweek();
 		
 		for (final LeagueEntity league : leagueDataService.getLeagues()) {
 			for (final TeamEntity team : league.getTeams()) {
@@ -51,15 +59,15 @@ public class GameweekScoreFacadeImpl implements GameweekScoreFacade {
 				
 				final Map<Position, List<SelectedPlayerEntity>> startingTeamForWeek = new HashMap<Position, List<SelectedPlayerEntity>>();
 				
-				int numberOfStartingPlayersForWeek = TeamSelectionUtils.buildTeamFromPickedPlayersForWeek(gameweekScores, team, startingTeamForWeek);
+				int numberOfStartingPlayersForWeek = TeamSelectionUtils.buildTeamFromPickedPlayersForWeek(currentGameweekScores, team, startingTeamForWeek);
 				
 				final List<SelectedPlayerEntity> selectedPlayers = team.getSelectedPlayers();
 				
-				TeamSelectionUtils.fillTeamUpWithSubstitutes(startingTeamForWeek, numberOfStartingPlayersForWeek, selectedPlayers, gameweekScores);
+				TeamSelectionUtils.fillTeamUpWithSubstitutes(startingTeamForWeek, numberOfStartingPlayersForWeek, selectedPlayers, currentGameweekScores);
 				
-				final int teamWeekScore = TeamSelectionUtils.calculateTeamGameweekScore(startingTeamForWeek, gameweek, gameweekScores);
+				final int teamWeekScore = TeamSelectionUtils.calculateTeamGameweekScore(startingTeamForWeek, currentGameweek, currentGameweekScores);
 				
-				final GameweekScoreEntity teamWeekScoreEntity = new GameweekScoreEntity(gameweek, teamWeekScore);
+				final GameweekScoreEntity teamWeekScoreEntity = new GameweekScoreEntity(currentGameweek, teamWeekScore);
 				team.addGameweekScore(teamWeekScoreEntity);
 				team.setTotalScore(team.getTotalScore() + teamWeekScore);
 				
@@ -68,5 +76,19 @@ public class GameweekScoreFacadeImpl implements GameweekScoreFacade {
 				System.out.println("**** End processing of scores for " + team.getName() + ", total score: " + teamWeekScore  + " ****");
 			}
 		}
+		
+		updateGameweek(gameweekData);
+	}
+
+	/**
+	 * Update the gameweek data to reflect the changing of the week.
+	 *  
+	 * @param gameweekData Gameweek data in the form of a {@link GameweekEntity}.
+	 */
+	private void updateGameweek(final GameweekEntity gameweekData) {
+		gameweekData.setPreviousGameweek(gameweekData.getCurrentGameweek());
+		gameweekData.setCurrentGameweek(gameweekData.getCurrentGameweek() + 1);
+		
+		gameweekDataService.updateGameweekData(gameweekData);
 	}
 }

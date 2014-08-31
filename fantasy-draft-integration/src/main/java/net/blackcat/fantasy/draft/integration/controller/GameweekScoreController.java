@@ -31,10 +31,9 @@ public class GameweekScoreController {
 	/**
 	 * Stores the gameweek scores for a given list of players.
 	 * 
-	 * @param gameweek The number of the gameweek the scores relate to.
 	 * @param gameweekScores Map of player ID to {@link GameweekScorePlayer} storing the gameweek scores for each player.
 	 */
-	public void storeGameweekScores(final int gameweek, final Map<Integer, GameweekScorePlayer> gameweekScores) {
-		gameweekScoreFacade.storeGameweekScores(gameweek, gameweekScores);
+	public void storeGameweekScores(final Map<Integer, GameweekScorePlayer> gameweekScores) {
+		gameweekScoreFacade.storeCurrentGameweekScores(gameweekScores);
 	}
 }
