@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import net.blackcat.fantasy.draft.integration.entity.GameweekScoreEntity;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
@@ -112,6 +113,40 @@ public final class TeamSelectionUtils {
 				substitutePosition++;
 			}
 		}
+	}
+	
+	/**
+	 * Calculate the gameweek score for a given team.
+	 * 
+	 * @param startingTeamForWeek The starting players for the team this gameweek.
+	 * @param gameweek The number of the gameweek the scores are being calculated for.
+	 * @param gameweekScores The player scores for this gameweek.
+	 * @return The calculated weekly score for the given team.
+	 */
+	public static int calculateTeamGameweekScore(final Map<Position, List<SelectedPlayerEntity>> startingTeamForWeek, final int gameweek, 
+			final Map<Integer, GameweekScorePlayer> gameweekScores) {
+		int teamWeekScore = 0;
+		
+		final boolean isCaptainInTeam = isCaptainInTeam(startingTeamForWeek);
+		
+		for (final Position position : Position.values()) {
+			final List<SelectedPlayerEntity> playersInPosition = startingTeamForWeek.get(position);
+			
+			for (final SelectedPlayerEntity selectedPlayer : playersInPosition) {
+				final GameweekScorePlayer weekScorePlayer = gameweekScores.get(selectedPlayer.getPlayer().getId());
+				final int weekPointsScored = calculatePlayerScore(isCaptainInTeam, selectedPlayer, weekScorePlayer.getScore());
+				
+				System.out.println("Player: " + selectedPlayer.getPlayer().getForename() + " " + selectedPlayer.getPlayer().getSurname() + ", score: " + weekPointsScored);
+				
+				final GameweekScoreEntity playerWeekScoreEntity = new GameweekScoreEntity(gameweek, weekPointsScored);
+				selectedPlayer.addGameweekScore(playerWeekScoreEntity);
+				selectedPlayer.setPointsScored(selectedPlayer.getPointsScored() + teamWeekScore);
+				
+				teamWeekScore += weekPointsScored;
+			}
+		}
+		
+		return teamWeekScore;
 	}
 	
 	/**
@@ -221,5 +256,43 @@ public final class TeamSelectionUtils {
 		}
 		
 		return playersInPosition.size();
+	}
+	
+	/**
+	 * Determine if the team captain is in the starting lineup this week.
+	 * 
+	 * @param startingTeamForWeek The starting lineup for a given team.
+	 * @return True if the captain is in the team, false otherwise.
+	 */
+	private static boolean isCaptainInTeam(final Map<Position, List<SelectedPlayerEntity>> startingTeamForWeek) {
+		for (final Position position : Position.values()) {
+			final List<SelectedPlayerEntity> playersInPosition = startingTeamForWeek.get(position);
+			
+			for (final SelectedPlayerEntity selectedPlayer : playersInPosition) {
+				if (selectedPlayer.getSelectionStatus() == SelectedPlayerStatus.CAPTAIN) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Calculate the weekly score for a given player.
+	 * 
+	 * @param isCaptainInTeam Boolean which indicates whether the team captain is in the team or not.
+	 * @param selectedPlayer The player to calculate the score for.
+	 * @param baseScore The base score, before any adjustments are taken into account.
+	 * @return The weekly score for the player with any adjustments taken into account.
+	 */
+	private static int calculatePlayerScore(final boolean isCaptainInTeam, final SelectedPlayerEntity selectedPlayer, final int baseScore) {
+		if (selectedPlayer.getSelectionStatus() == SelectedPlayerStatus.CAPTAIN) {
+			return baseScore * 2;
+		} else if (selectedPlayer.getSelectionStatus() == SelectedPlayerStatus.VICE_CAPTAIN && !isCaptainInTeam) {
+			return baseScore * 2;
+		}
+		
+		return baseScore;
 	}
 }

@@ -17,7 +17,6 @@ import net.blackcat.fantasy.draft.integration.facade.GameweekScoreFacade;
 import net.blackcat.fantasy.draft.integration.util.TeamSelectionUtils;
 import net.blackcat.fantasy.draft.player.GameweekScorePlayer;
 import net.blackcat.fantasy.draft.player.types.Position;
-import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -58,26 +57,7 @@ public class GameweekScoreFacadeImpl implements GameweekScoreFacade {
 				
 				TeamSelectionUtils.fillTeamUpWithSubstitutes(startingTeamForWeek, numberOfStartingPlayersForWeek, selectedPlayers, gameweekScores);
 				
-				int teamWeekScore = 0;
-				
-				final boolean isCaptainInTeam = isCaptainInTeam(startingTeamForWeek);
-				
-				for (final Position position : Position.values()) {
-					final List<SelectedPlayerEntity> playersInPosition = startingTeamForWeek.get(position);
-					
-					for (final SelectedPlayerEntity selectedPlayer : playersInPosition) {
-						final GameweekScorePlayer weekScorePlayer = gameweekScores.get(selectedPlayer.getPlayer().getId());
-						final int weekPointsScored = calculatePlayerScore(isCaptainInTeam, selectedPlayer, weekScorePlayer.getScore());
-						
-						System.out.println("Player: " + selectedPlayer.getPlayer().getForename() + " " + selectedPlayer.getPlayer().getSurname() + ", score: " + weekPointsScored);
-						
-						final GameweekScoreEntity playerWeekScoreEntity = new GameweekScoreEntity(gameweek, weekPointsScored);
-						selectedPlayer.addGameweekScore(playerWeekScoreEntity);
-						selectedPlayer.setPointsScored(selectedPlayer.getPointsScored() + teamWeekScore);
-						
-						teamWeekScore += weekPointsScored;
-					}
-				}
+				final int teamWeekScore = TeamSelectionUtils.calculateTeamGameweekScore(startingTeamForWeek, gameweek, gameweekScores);
 				
 				final GameweekScoreEntity teamWeekScoreEntity = new GameweekScoreEntity(gameweek, teamWeekScore);
 				team.addGameweekScore(teamWeekScoreEntity);
@@ -88,43 +68,5 @@ public class GameweekScoreFacadeImpl implements GameweekScoreFacade {
 				System.out.println("**** End processing of scores for " + team.getName() + ", total score: " + teamWeekScore  + " ****");
 			}
 		}
-	}
-	
-	/**
-	 * Determine if the team captain is in the starting lineup this week.
-	 * 
-	 * @param startingTeamForWeek The starting lineup for a given team.
-	 * @return True if the captain is in the team, false otherwise.
-	 */
-	private boolean isCaptainInTeam(final Map<Position, List<SelectedPlayerEntity>> startingTeamForWeek) {
-		for (final Position position : Position.values()) {
-			final List<SelectedPlayerEntity> playersInPosition = startingTeamForWeek.get(position);
-			
-			for (final SelectedPlayerEntity selectedPlayer : playersInPosition) {
-				if (selectedPlayer.getSelectionStatus() == SelectedPlayerStatus.CAPTAIN) {
-					return true;
-				}
-			}
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * Calculate the weekly score for a given player.
-	 * 
-	 * @param isCaptainInTeam Boolean which indicates whether the team captain is in the team or not.
-	 * @param selectedPlayer The player to calculate the score for.
-	 * @param baseScore The base score, before any adjustments are taken into account.
-	 * @return The weekly score for the player with any adjustments taken into account.
-	 */
-	private int calculatePlayerScore(final boolean isCaptainInTeam, final SelectedPlayerEntity selectedPlayer, final int baseScore) {
-		if (selectedPlayer.getSelectionStatus() == SelectedPlayerStatus.CAPTAIN) {
-			return baseScore * 2;
-		} else if (selectedPlayer.getSelectionStatus() == SelectedPlayerStatus.CAPTAIN && !isCaptainInTeam) {
-			return baseScore * 2;
-		}
-		
-		return baseScore;
 	}
 }
