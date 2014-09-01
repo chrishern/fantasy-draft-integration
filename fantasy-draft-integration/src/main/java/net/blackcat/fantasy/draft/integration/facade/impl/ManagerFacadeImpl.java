@@ -6,6 +6,7 @@ package net.blackcat.fantasy.draft.integration.facade.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.blackcat.fantasy.draft.LoggedInUser;
 import net.blackcat.fantasy.draft.integration.data.service.DraftRoundDataService;
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
 import net.blackcat.fantasy.draft.integration.data.service.ManagerDataService;
@@ -82,6 +83,14 @@ public class ManagerFacadeImpl implements ManagerFacade {
 		
 		return managerModel;
 	}
+	
+	@Override
+	public LoggedInUser getLoggedInUser(final String emailAddress) throws FantasyDraftIntegrationException {
+		final ManagerEntity managerEntity = managerDataService.getManager(emailAddress);
+		final LeagueEntity league = leagueDataService.getLeagueForTeam(managerEntity.getTeam().getId());
+		
+		return new LoggedInUser(managerEntity.getTeam().getId(), league.getId());
+	}
 
 	/**
 	 * Create a list of selected players associated with a given manager.
@@ -97,5 +106,4 @@ public class ManagerFacadeImpl implements ManagerFacade {
 		}
 		return selectedPlayers;
 	}
-
 }

@@ -5,6 +5,7 @@ package net.blackcat.fantasy.draft.integration.controller;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import net.blackcat.fantasy.draft.LoggedInUser;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.facade.ManagerFacade;
@@ -65,6 +66,36 @@ public class ManagerControllerTest {
 		
 		// act
 		managerController.getManager(TestDataUtil.MANAGER_EMAIL_ADDRESS);
+		
+		// assert
+		Assert.fail("Exception expected");
+	}
+	
+	@Test
+	public void testGetLoggedInUser_Success() throws Exception {
+		// arrange
+		final LoggedInUser loggedInUser = new LoggedInUser(1, 2);
+		
+		when(managerFacade.getLoggedInUser(TestDataUtil.MANAGER_EMAIL_ADDRESS)).thenReturn(loggedInUser);
+		
+		// act
+		final LoggedInUser retrievedLoggedInUser = managerController.getLoggedInUser(TestDataUtil.MANAGER_EMAIL_ADDRESS);
+		
+		// assert
+		assertThat(retrievedLoggedInUser).isEqualTo(loggedInUser);
+	}
+	
+	@Test
+	public void testGetLoggedInUser_ManagerNotFound() throws Exception {
+		// arrange
+		when(managerFacade.getLoggedInUser(TestDataUtil.MANAGER_EMAIL_ADDRESS)).thenThrow(
+				new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.MANAGER_DOES_NOT_EXIST));
+		
+		thrownException.expect(FantasyDraftIntegrationException.class);
+		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.MANAGER_DOES_NOT_EXIST));
+		
+		// act
+		managerController.getLoggedInUser(TestDataUtil.MANAGER_EMAIL_ADDRESS);
 		
 		// assert
 		Assert.fail("Exception expected");

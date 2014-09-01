@@ -8,7 +8,10 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
+import net.blackcat.fantasy.draft.LoggedInUser;
+import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
 import net.blackcat.fantasy.draft.integration.data.service.ManagerDataService;
+import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
 import net.blackcat.fantasy.draft.integration.entity.ManagerEntity;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
@@ -36,7 +39,6 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Chris
  *
  */
-@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class ManagerFacadeImplTest {
 
@@ -46,10 +48,14 @@ public class ManagerFacadeImplTest {
 	@Mock
 	private ManagerDataService managerDataService;
 	
+	@Mock
+	private LeagueDataService leagueDataService;
+	
 	@InjectMocks
 	private ManagerFacadeImpl managerFacade = new ManagerFacadeImpl();
 	
 	@Test
+	@Ignore
 	public void testGetManager_Success() throws Exception {
 		// arrange
 		final PlayerEntity player1 = TestDataUtil.createEntityPlayer(1);
@@ -86,6 +92,43 @@ public class ManagerFacadeImplTest {
 		
 		// act
 		managerFacade.getManager(TestDataUtil.MANAGER_EMAIL_ADDRESS);
+		
+		// assert
+		Assert.fail("Exception expected");
+	}
+	
+	@Test
+	public void testGetLoggedInUser_Success() throws Exception {
+		// arrange
+		final TeamEntity team = new TeamEntity(TestDataUtil.TEST_TEAM_1);
+		team.setStatus(TeamStatus.COMPLETE);
+		
+		final LeagueEntity league = new LeagueEntity();
+		
+		final ManagerEntity managerEntity = TestDataUtil.createManager(team);
+		
+		when(managerDataService.getManager(TestDataUtil.MANAGER_EMAIL_ADDRESS)).thenReturn(managerEntity);
+		when(leagueDataService.getLeagueForTeam(team.getId())).thenReturn(league);
+		
+		// act
+		final LoggedInUser loggedInUser = managerFacade.getLoggedInUser(TestDataUtil.MANAGER_EMAIL_ADDRESS);
+		
+		// assert
+		assertThat(loggedInUser.getLeagueId()).isEqualTo(league.getId());
+		assertThat(loggedInUser.getTeamId()).isEqualTo(team.getId());
+	}
+	
+	@Test
+	public void testGetLoggedInUser_ManagerNotFound() throws Exception {
+		// arrange
+		when(managerDataService.getManager(TestDataUtil.MANAGER_EMAIL_ADDRESS)).thenThrow(
+				new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.MANAGER_DOES_NOT_EXIST));
+		
+		thrownException.expect(FantasyDraftIntegrationException.class);
+		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.MANAGER_DOES_NOT_EXIST));
+		
+		// act
+		managerFacade.getLoggedInUser(TestDataUtil.MANAGER_EMAIL_ADDRESS);
 		
 		// assert
 		Assert.fail("Exception expected");

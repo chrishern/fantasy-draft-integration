@@ -1,5 +1,6 @@
 package net.blackcat.fantasy.draft.integration.controller;
 
+import net.blackcat.fantasy.draft.LoggedInUser;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.facade.ManagerFacade;
 import net.blackcat.fantasy.draft.manager.Manager;
@@ -32,5 +33,16 @@ public class ManagerController {
 	 */
 	public Manager getManager(final String emailAddress) throws FantasyDraftIntegrationException {
 		return managerFacade.getManager(emailAddress);
+	}
+	
+	/**
+	 * Get based logged in user information about a manager based on their email address.
+	 * 
+	 * @param emailAddress
+	 * @return Logged in user details.
+	 * @throws FantasyDraftIntegrationException If a manager with the given email address does not exist.
+	 */
+	public LoggedInUser getLoggedInUser(final String emailAddress) throws FantasyDraftIntegrationException {
+		return managerFacade.getLoggedInUser(emailAddress);
 	}
 }
