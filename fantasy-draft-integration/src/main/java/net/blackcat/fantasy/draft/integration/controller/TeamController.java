@@ -5,6 +5,7 @@ import java.util.List;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.facade.TeamFacade;
 import net.blackcat.fantasy.draft.team.Team;
+import net.blackcat.fantasy.draft.team.TeamSummary;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -54,5 +55,17 @@ public class TeamController {
 	 */
 	public List<Team> getCompleteTeams(int leagueId) throws FantasyDraftIntegrationException {
 		return teamFacade.getCompleteTeams(leagueId);
+	}
+	
+	/**
+	 * Get the summary of a team.  This summary includes the total points for the team and the
+	 * squad (in selection order) with the total points for each player.
+	 * 
+	 * @param teamId ID of the team to get the summary for.
+	 * @return Summary of the desired team.
+	 * @throws FantasyDraftIntegrationException If a team with the given ID is not found.
+	 */
+	public TeamSummary getTeamSummary(int teamId) throws FantasyDraftIntegrationException {
+		return teamFacade.getTeamSummary(teamId);
 	}
 }

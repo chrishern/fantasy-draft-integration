@@ -140,7 +140,7 @@ public final class TeamSelectionUtils {
 				
 				final GameweekScoreEntity playerWeekScoreEntity = new GameweekScoreEntity(gameweek, weekPointsScored);
 				selectedPlayer.addGameweekScore(playerWeekScoreEntity);
-				selectedPlayer.setPointsScored(selectedPlayer.getPointsScored() + teamWeekScore);
+				selectedPlayer.setPointsScored(selectedPlayer.getPointsScored() + weekPointsScored);
 				
 				teamWeekScore += weekPointsScored;
 			}

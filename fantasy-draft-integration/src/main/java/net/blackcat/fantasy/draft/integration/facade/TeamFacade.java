@@ -7,6 +7,7 @@ import java.util.List;
 
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.team.Team;
+import net.blackcat.fantasy.draft.team.TeamSummary;
 
 /**
  * Operations for manipulating team related data.
@@ -41,4 +42,14 @@ public interface TeamFacade {
 	 * @throws FantasyDraftIntegrationException If the league IF does not exist.
 	 */
 	List<Team> getCompleteTeams(int leagueId) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Get the summary of a team.  This summary includes the total points for the team and the
+	 * squad (in selection order) with the total points for each player.
+	 * 
+	 * @param teamId ID of the team to get the summary for.
+	 * @return Summary of the desired team.
+	 * @throws FantasyDraftIntegrationException If a team with the given ID is not found.
+	 */
+	TeamSummary getTeamSummary(int teamId) throws FantasyDraftIntegrationException;
 }

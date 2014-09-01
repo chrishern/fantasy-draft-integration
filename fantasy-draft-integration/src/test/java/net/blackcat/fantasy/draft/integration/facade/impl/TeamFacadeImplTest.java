@@ -17,7 +17,10 @@ import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationE
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.test.util.CustomIntegrationExceptionMatcher;
 import net.blackcat.fantasy.draft.integration.test.util.TestDataUtil;
+import net.blackcat.fantasy.draft.player.types.Position;
+import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
 import net.blackcat.fantasy.draft.team.Team;
+import net.blackcat.fantasy.draft.team.TeamSummary;
 
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -35,7 +38,6 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Chris
  *
  */
-@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class TeamFacadeImplTest {
 
@@ -60,6 +62,7 @@ public class TeamFacadeImplTest {
 	}
 	
 	@Test
+	@Ignore
 	public void testGetTeam_Success() throws Exception {
 		// arrange
 		final TeamEntity teamEntity = new TeamEntity(TestDataUtil.TEST_TEAM_1);
@@ -91,6 +94,39 @@ public class TeamFacadeImplTest {
 		
 		// act
 		teamFacade.getTeam(TestDataUtil.TEST_TEAM_1);
+		
+		// assert
+		Assert.fail("Exception expected.");
+	}
+	
+	@Test
+	public void getGetTeamSummary_Success() throws Exception {
+		// arrange
+		final TeamEntity team = TestDataUtil.createTeamEntitiesWithScore().get(0);
+		
+		when(teamDataService.getTeam(1)).thenReturn(team);
+		
+		// act
+		final TeamSummary teamSummary = teamFacade.getTeamSummary(1);
+		
+		// assert
+		assertThat(teamSummary.getTeamName()).isEqualTo(TestDataUtil.TEST_TEAM_1);
+		assertThat(teamSummary.getTotalPoints()).isEqualTo(TestDataUtil.TEST_TEAM_1_SCORE);
+		assertThat(teamSummary.getTeam()).hasSize(1);
+		assertThat(teamSummary.getTeam().get(0).getPosition()).isEqualTo(Position.DEFENDER);
+		assertThat(teamSummary.getTeam().get(0).getSelectionStatus()).isEqualTo(SelectedPlayerStatus.PICKED);
+	}
+	
+	@Test
+	public void getGetTeamSummary_TeamNotFound() throws Exception {
+		// arrange
+		when(teamDataService.getTeam(1)).thenThrow(new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.TEAM_DOES_NOT_EXIST));
+		
+		thrownException.expect(FantasyDraftIntegrationException.class);
+		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.TEAM_DOES_NOT_EXIST));
+		
+		// act
+		teamFacade.getTeamSummary(1);
 		
 		// assert
 		Assert.fail("Exception expected.");

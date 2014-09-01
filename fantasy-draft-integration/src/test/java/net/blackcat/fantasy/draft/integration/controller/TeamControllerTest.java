@@ -12,6 +12,7 @@ import net.blackcat.fantasy.draft.integration.facade.TeamFacade;
 import net.blackcat.fantasy.draft.integration.test.util.CustomIntegrationExceptionMatcher;
 import net.blackcat.fantasy.draft.integration.test.util.TestDataUtil;
 import net.blackcat.fantasy.draft.team.Team;
+import net.blackcat.fantasy.draft.team.TeamSummary;
 
 import org.junit.Assert;
 import org.junit.Rule;
@@ -80,4 +81,32 @@ public class TeamControllerTest {
 		Assert.fail("Exception expected.");
 	}
 
+	@Test
+	public void testGetTeamSummary_Success() throws Exception {
+		// arrange
+		final TeamSummary team = new TeamSummary();
+		
+		when(teamFacade.getTeamSummary(1)).thenReturn(team);
+		
+		// act
+		final TeamSummary retrievedTeam = teamController.getTeamSummary(1);
+		
+		// assert
+		assertThat(retrievedTeam).isEqualTo(team);
+	}
+	
+	@Test
+	public void testGetTeamSummary_TeamNotFound() throws Exception {
+		// arrange
+		when(teamFacade.getTeamSummary(1)).thenThrow(new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.TEAM_DOES_NOT_EXIST));
+		
+		thrownException.expect(FantasyDraftIntegrationException.class);
+		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.TEAM_DOES_NOT_EXIST));
+		
+		// act
+		teamController.getTeamSummary(1);
+		
+		// assert
+		Assert.fail("Exception expected.");
+	}
 }
