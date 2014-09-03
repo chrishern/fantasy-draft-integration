@@ -37,7 +37,10 @@ public interface TeamFacade {
 	/**
 	 * Get the list of completed (i.e. fully picked) teams for a given league.
 	 * 
-	 * @param leagueId
+	 * This was used to display the list of squads straight after the auction finished.
+	 * I.e. without any points or selected starting eleven information.
+	 * 
+	 * @param leagueId ID of the league to get the teams for.
 	 * @return List of {@link Team} objects in the given league.
 	 * @throws FantasyDraftIntegrationException If the league IF does not exist.
 	 */
@@ -52,4 +55,14 @@ public interface TeamFacade {
 	 * @throws FantasyDraftIntegrationException If a team with the given ID is not found.
 	 */
 	TeamSummary getTeamSummary(int teamId) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Get the team summaries for a specific league.  This summary includes the total points for 
+	 * the team and the squad (in selection order) with the total points for each player.
+	 * 
+	 * @param leagueId ID of the league to get the team summaries for.
+	 * @return Team summaries from the desired league.
+	 * @throws FantasyDraftIntegrationException If a league with the given ID is not found.
+	 */
+	List<TeamSummary> getTeamSummaries(int leagueId) throws FantasyDraftIntegrationException;
 }

@@ -68,4 +68,16 @@ public class TeamController {
 	public TeamSummary getTeamSummary(int teamId) throws FantasyDraftIntegrationException {
 		return teamFacade.getTeamSummary(teamId);
 	}
+	
+	/**
+	 * Get the team summaries for a specific league.  This summary includes the total points for 
+	 * the team and the squad (in selection order) with the total points for each player.
+	 * 
+	 * @param leagueId ID of the league to get the team summaries for.
+	 * @return Team summaries from the desired league.
+	 * @throws FantasyDraftIntegrationException If a league with the given ID is not found.
+	 */
+	public List<TeamSummary> getTeamSummaries(int leagueId) throws FantasyDraftIntegrationException {
+		return teamFacade.getTeamSummaries(leagueId);
+	}
 }

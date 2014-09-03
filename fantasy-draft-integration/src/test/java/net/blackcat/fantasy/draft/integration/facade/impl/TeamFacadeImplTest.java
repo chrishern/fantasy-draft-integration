@@ -8,8 +8,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.List;
 
+import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
 import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
+import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
@@ -46,6 +49,9 @@ public class TeamFacadeImplTest {
 	
 	@Mock
 	private TeamDataService teamDataService;
+	
+	@Mock
+	private LeagueDataService leagueDataService;
 	
 	@InjectMocks
 	private TeamFacadeImpl teamFacade = new TeamFacadeImpl();
@@ -127,6 +133,40 @@ public class TeamFacadeImplTest {
 		
 		// act
 		teamFacade.getTeamSummary(1);
+		
+		// assert
+		Assert.fail("Exception expected.");
+	}
+	
+	@Test
+	public void getGetTeamSummaries_Success() throws Exception {
+		// arrange
+		final LeagueEntity league = new LeagueEntity();
+		
+		league.setTeams(TestDataUtil.createTeamEntitiesWithScore());
+		
+		when(leagueDataService.getLeague(1)).thenReturn(league);
+		
+		// act
+		final List<TeamSummary> teamSummaries = teamFacade.getTeamSummaries(1);
+		
+		// assert
+		assertThat(teamSummaries).hasSize(3);
+		assertThat(teamSummaries.get(0).getTeamName()).isEqualTo(TestDataUtil.TEST_TEAM_1);
+		assertThat(teamSummaries.get(1).getTeamName()).isEqualTo(TestDataUtil.TEST_TEAM_2);
+		assertThat(teamSummaries.get(2).getTeamName()).isEqualTo(TestDataUtil.TEST_TEAM_3);
+	}
+	
+	@Test
+	public void getGetTeamSummaries_LeagueNotFound() throws Exception {
+		// arrange
+		when(leagueDataService.getLeague(1)).thenThrow(new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.LEAGUE_DOES_NOT_EXIST));
+		
+		thrownException.expect(FantasyDraftIntegrationException.class);
+		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.LEAGUE_DOES_NOT_EXIST));
+		
+		// act
+		teamFacade.getTeamSummaries(1);
 		
 		// assert
 		Assert.fail("Exception expected.");

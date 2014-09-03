@@ -108,19 +108,42 @@ public class TeamFacadeImpl implements TeamFacade {
 
 	@Override
 	public TeamSummary getTeamSummary(final int teamId) throws FantasyDraftIntegrationException {
-		final TeamSummary teamSummary = new TeamSummary();
-		
 		final TeamEntity teamEntity = teamDataService.getTeam(teamId);
+		
+		return getTeamSummaryFromEntity(teamEntity);
+	}
+	
+	@Override
+	public List<TeamSummary> getTeamSummaries(final int leagueId) throws FantasyDraftIntegrationException {
+		final List<TeamSummary> teamSummaries = new ArrayList<TeamSummary>();
+		
+		final LeagueEntity league = leagueDataService.getLeague(leagueId);
+		
+		for (final TeamEntity teamEntity : league.getTeams()) {
+			teamSummaries.add(getTeamSummaryFromEntity(teamEntity));
+		}
+		
+		return teamSummaries;
+	}
+
+	/**
+	 * Convert a {@link TeamEntity} into a {@link TeamSummary}.
+	 * 
+	 * @param teamEntity {@link TeamEntity} to convert.
+	 * @return {@link TeamSummary} Converted {@link TeamSummary}.
+	 */
+	private TeamSummary getTeamSummaryFromEntity(final TeamEntity teamEntity) {
+		final TeamSummary teamSummary = new TeamSummary();
 		
 		teamSummary.setTeamName(teamEntity.getName());
 		teamSummary.setTotalPoints(teamEntity.getTotalScore());
 		
 		final List<SelectedPlayer> selectedPlayerModelList = new ArrayList<SelectedPlayer>();
 		for (final SelectedPlayerEntity selectedPlayerEntity : teamEntity.getSelectedPlayers()) {
-			final PlayerEntity playerEntity = selectedPlayerEntity.getPlayer();
 			
 			final SelectedPlayer selectedPlayerModel = new SelectedPlayer();
 			
+			final PlayerEntity playerEntity = selectedPlayerEntity.getPlayer();
 			selectedPlayerModel.setCost(selectedPlayerEntity.getCost());
 			selectedPlayerModel.setForename(playerEntity.getForename());
 			selectedPlayerModel.setId(playerEntity.getId());

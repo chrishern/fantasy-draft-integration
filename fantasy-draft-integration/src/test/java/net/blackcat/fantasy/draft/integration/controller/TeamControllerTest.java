@@ -6,6 +6,10 @@ package net.blackcat.fantasy.draft.integration.controller;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
+import java.util.List;
+
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.facade.TeamFacade;
@@ -105,6 +109,37 @@ public class TeamControllerTest {
 		
 		// act
 		teamController.getTeamSummary(1);
+		
+		// assert
+		Assert.fail("Exception expected.");
+	}
+	
+	@Test
+	public void testGetTeamSummaries_Success() throws Exception {
+		// arrange
+		final TeamSummary team1 = new TeamSummary();
+		final TeamSummary team2 = new TeamSummary();
+		
+		when(teamFacade.getTeamSummaries(1)).thenReturn(Arrays.asList(team1, team2));
+		
+		// act
+		final List<TeamSummary> retrievedTeams = teamController.getTeamSummaries(1);
+		
+		// assert
+		assertThat(retrievedTeams.get(0)).isEqualTo(team1);
+		assertThat(retrievedTeams.get(1)).isEqualTo(team2);
+	}
+	
+	@Test
+	public void testGetTeamSummaries_TeamNotFound() throws Exception {
+		// arrange
+		when(teamFacade.getTeamSummaries(1)).thenThrow(new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.LEAGUE_DOES_NOT_EXIST));
+		
+		thrownException.expect(FantasyDraftIntegrationException.class);
+		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.LEAGUE_DOES_NOT_EXIST));
+		
+		// act
+		teamController.getTeamSummaries(1);
 		
 		// assert
 		Assert.fail("Exception expected.");
