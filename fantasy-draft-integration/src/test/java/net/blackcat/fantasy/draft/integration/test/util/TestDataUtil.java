@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.blackcat.fantasy.draft.integration.entity.GameweekScoreEntity;
 import net.blackcat.fantasy.draft.integration.entity.ManagerEntity;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
@@ -58,6 +59,10 @@ public final class TestDataUtil {
 	public static final int TEST_TEAM_2_SCORE = 190;
 	public static final int TEST_TEAM_3_SCORE = 156;
 	
+	public static final int TEST_TEAM_1_WEEK_SCORE = 54;
+	public static final int TEST_TEAM_2_WEEK_SCORE = 14;
+	public static final int TEST_TEAM_3_WEEK_SCORE = 32;
+	
 	public static final String LEAGUE_NAME = "New League";
 	
 	/**
@@ -106,14 +111,17 @@ public final class TestDataUtil {
 		final TeamEntity team1 = new TeamEntity(TEST_TEAM_1);
 		team1.setTotalScore(TEST_TEAM_1_SCORE);
 		team1.addSelectedPlayers(Arrays.asList(buildSelectedPlayer(PLAYER_1_ID, Position.DEFENDER, SelectedPlayerStatus.PICKED)));
+		team1.addGameweekScore(new GameweekScoreEntity(1, TEST_TEAM_1_WEEK_SCORE));
 		
 		final TeamEntity team2 = new TeamEntity(TEST_TEAM_2);
 		team2.setTotalScore(TEST_TEAM_2_SCORE);
 		team2.addSelectedPlayers(Arrays.asList(buildSelectedPlayer(PLAYER_2_ID, Position.DEFENDER, SelectedPlayerStatus.PICKED)));
+		team2.addGameweekScore(new GameweekScoreEntity(1, TEST_TEAM_2_WEEK_SCORE));
 		
 		final TeamEntity team3 = new TeamEntity(TEST_TEAM_3);
 		team3.setTotalScore(TEST_TEAM_3_SCORE);
 		team3.addSelectedPlayers(Arrays.asList(buildSelectedPlayer(PLAYER_14_ID, Position.DEFENDER, SelectedPlayerStatus.PICKED)));
+		team3.addGameweekScore(new GameweekScoreEntity(1, TEST_TEAM_3_WEEK_SCORE));
 		
 		return Arrays.asList(team1, team2, team3);
 	}

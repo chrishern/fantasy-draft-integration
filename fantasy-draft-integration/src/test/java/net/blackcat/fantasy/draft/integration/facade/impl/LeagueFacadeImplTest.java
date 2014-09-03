@@ -6,7 +6,9 @@ package net.blackcat.fantasy.draft.integration.facade.impl;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import net.blackcat.fantasy.draft.integration.data.service.GameweekDataService;
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
+import net.blackcat.fantasy.draft.integration.entity.GameweekEntity;
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
@@ -38,6 +40,9 @@ public class LeagueFacadeImplTest {
 	@Mock
 	private LeagueDataService leagueDataService;
 	
+	@Mock
+	private GameweekDataService gameweekDataService;
+	
 	@InjectMocks
 	private LeagueFacadeImpl leagueFacade = new LeagueFacadeImpl();
 	
@@ -58,7 +63,12 @@ public class LeagueFacadeImplTest {
 		final LeagueEntity leagueEntity = new LeagueEntity();
 		leagueEntity.setTeams(TestDataUtil.createTeamEntitiesWithScore());
 		
+		final GameweekEntity gameweek = new GameweekEntity();
+		gameweek.setPreviousGameweek(1);
+		gameweek.setCurrentGameweek(2);
+
 		when(leagueDataService.getLeague(1)).thenReturn(leagueEntity);
+		when(gameweekDataService.getGameweekData()).thenReturn(gameweek);
 		
 		// act
 		final League leagueTable = leagueFacade.getLeagueTable(1);
@@ -70,6 +80,10 @@ public class LeagueFacadeImplTest {
 		
 		assertThat(firstScore).isGreaterThan(secondScore);
 		assertThat(secondScore).isGreaterThan(thirdScore);
+		
+		assertThat(leagueTable.getTeams().get(0).getWeekScore()).isEqualTo(TestDataUtil.TEST_TEAM_2_WEEK_SCORE);
+		assertThat(leagueTable.getTeams().get(1).getWeekScore()).isEqualTo(TestDataUtil.TEST_TEAM_3_WEEK_SCORE);
+		assertThat(leagueTable.getTeams().get(2).getWeekScore()).isEqualTo(TestDataUtil.TEST_TEAM_1_WEEK_SCORE);
 	}
 	
 	@Test

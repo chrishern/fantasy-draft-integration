@@ -131,6 +131,13 @@ public class TeamEntity implements Serializable {
 	}
 
 	/**
+	 * @return the gameweekScores
+	 */
+	public List<GameweekScoreEntity> getGameweekScores() {
+		return gameweekScores;
+	}
+
+	/**
 	 * Add a new gameweek score to the team.
 	 * 
 	 * @param gameweekScore Score to add to the team.
