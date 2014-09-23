@@ -36,5 +36,11 @@ public enum FantasyDraftIntegrationExceptionCode {
 	/**
 	 * Player codes.
 	 */
-	PLAYER_DOES_NOT_EXIST;
+	PLAYER_DOES_NOT_EXIST,
+	
+	/**
+	 * Transfer window codes.
+	 */
+	OPEN_TRANSFER_WINDOW_ALREADY_EXISTS_FOR_LEAGUE,
+	TRANSFER_WINDOW_ALREADY_EXISTS_FOR_LEAGUE;
 }
