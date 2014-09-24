@@ -4,8 +4,10 @@
 package net.blackcat.fantasy.draft.integration.facade;
 
 import java.util.List;
+import java.util.Map;
 
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
+import net.blackcat.fantasy.draft.player.PopulateInitialFplCostPlayer;
 import net.blackcat.fantasy.draft.team.Team;
 import net.blackcat.fantasy.draft.team.TeamSummary;
 
@@ -65,4 +67,6 @@ public interface TeamFacade {
 	 * @throws FantasyDraftIntegrationException If a league with the given ID is not found.
 	 */
 	List<TeamSummary> getTeamSummaries(int leagueId) throws FantasyDraftIntegrationException;
+	
+	void updateSelectedPlayersWithInitialFplCost(final Map<Integer, PopulateInitialFplCostPlayer> initialPlayerCosts);
 }

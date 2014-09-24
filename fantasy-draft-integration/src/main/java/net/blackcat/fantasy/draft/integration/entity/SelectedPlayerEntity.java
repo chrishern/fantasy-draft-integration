@@ -58,6 +58,9 @@ public class SelectedPlayerEntity implements Serializable, Comparable<SelectedPl
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<GameweekScoreEntity> gameweekScores;
 	
+	@Column
+	private BigDecimal fplCostAtPurchase;
+	
 	public SelectedPlayerEntity() {
 	}
 
@@ -155,6 +158,20 @@ public class SelectedPlayerEntity implements Serializable, Comparable<SelectedPl
 	 */
 	public void setSelectionStatus(SelectedPlayerStatus selectionStatus) {
 		this.selectionStatus = selectionStatus;
+	}
+
+	/**
+	 * @return the fplCostAtPurchase
+	 */
+	public BigDecimal getFplCostAtPurchase() {
+		return fplCostAtPurchase;
+	}
+
+	/**
+	 * @param fplCostAtPurchase the fplCostAtPurchase to set
+	 */
+	public void setFplCostAtPurchase(BigDecimal fplCostAtPurchase) {
+		this.fplCostAtPurchase = fplCostAtPurchase;
 	}
 
 	/**

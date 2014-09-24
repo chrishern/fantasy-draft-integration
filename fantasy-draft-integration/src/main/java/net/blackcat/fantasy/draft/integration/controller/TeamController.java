@@ -1,9 +1,11 @@
 package net.blackcat.fantasy.draft.integration.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.facade.TeamFacade;
+import net.blackcat.fantasy.draft.player.PopulateInitialFplCostPlayer;
 import net.blackcat.fantasy.draft.team.Team;
 import net.blackcat.fantasy.draft.team.TeamSummary;
 
@@ -79,5 +81,9 @@ public class TeamController {
 	 */
 	public List<TeamSummary> getTeamSummaries(int leagueId) throws FantasyDraftIntegrationException {
 		return teamFacade.getTeamSummaries(leagueId);
+	}
+	
+	public void updateSelectedPlayersWithIntialFplCost(final Map<Integer, PopulateInitialFplCostPlayer> initialPlayerCosts) {
+		teamFacade.updateSelectedPlayersWithInitialFplCost(initialPlayerCosts);
 	}
 }

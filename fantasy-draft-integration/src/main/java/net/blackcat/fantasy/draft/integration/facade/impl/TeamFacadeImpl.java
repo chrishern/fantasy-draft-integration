@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import net.blackcat.fantasy.draft.integration.data.service.DraftRoundDataService;
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
@@ -17,6 +18,7 @@ import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.facade.TeamFacade;
+import net.blackcat.fantasy.draft.player.PopulateInitialFplCostPlayer;
 import net.blackcat.fantasy.draft.player.SelectedPlayer;
 import net.blackcat.fantasy.draft.team.Team;
 import net.blackcat.fantasy.draft.team.TeamSummary;
@@ -124,6 +126,20 @@ public class TeamFacadeImpl implements TeamFacade {
 		}
 		
 		return teamSummaries;
+	}
+	
+	@Override
+	public void updateSelectedPlayersWithInitialFplCost(final Map<Integer, PopulateInitialFplCostPlayer> initialPlayerCosts) {
+		for (final LeagueEntity league : leagueDataService.getLeagues()) {
+			for (final TeamEntity team : league.getTeams()) {
+				for (final SelectedPlayerEntity selectedPlayer : team.getSelectedPlayers()) {
+					final BigDecimal initialCost = initialPlayerCosts.get(selectedPlayer.getPlayer().getId()).getInitialCost();
+					selectedPlayer.setFplCostAtPurchase(initialCost);
+				}
+				
+				teamDataService.updateTeam(team);
+			}
+		}
 	}
 
 	/**
