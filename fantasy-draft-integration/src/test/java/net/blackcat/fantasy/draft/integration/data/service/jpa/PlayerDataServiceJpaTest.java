@@ -172,4 +172,25 @@ public class PlayerDataServiceJpaTest {
 		assertThat(retrievedPlayer.getTeam()).isEqualTo(TestDataUtil.TEST_TEAM_1);
 		assertThat(retrievedPlayer.getTotalPoints()).isEqualTo(TestDataUtil.PLAYER_1_POINTS);
 	}
+	
+	@Test
+	public void testUpdatePlayer() throws Exception {
+		// arrange
+		final PlayerEntity player = TestDataUtil.createEntityPlayer(1);
+		player.setSelectionStatus(PlayerSelectionStatus.SELECTED);
+		entityManager.persist(player);
+		
+		final PlayerEntity retrievedPlayerBeforeUpdate = playerDataServiceJpa.getPlayer(1);
+		assertThat(retrievedPlayerBeforeUpdate.getSelectionStatus()).isEqualTo(PlayerSelectionStatus.SELECTED);
+		
+		// act
+		final PlayerEntity updatedPlayer = TestDataUtil.createEntityPlayer(1);
+		updatedPlayer.setSelectionStatus(PlayerSelectionStatus.NOT_SELECTED);
+		
+		playerDataServiceJpa.updatePlayer(updatedPlayer);
+		
+		// assert
+		final PlayerEntity retrievedPlayerAfterUpdate = playerDataServiceJpa.getPlayer(1);
+		assertThat(retrievedPlayerAfterUpdate.getSelectionStatus()).isEqualTo(PlayerSelectionStatus.NOT_SELECTED);
+	}
 }

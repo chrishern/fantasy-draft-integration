@@ -59,4 +59,11 @@ public interface PlayerDataService {
 	 * @throws FantasyDraftIntegrationException If a player with the given ID does not exist.
 	 */
 	PlayerEntity getPlayer(int id) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Update the given player in the backend.
+	 * 
+	 * @param updatedPlayer {@link PlayerEntity} to update with updated data.
+	 */
+	void updatePlayer(PlayerEntity updatedPlayer);
 }

@@ -72,4 +72,9 @@ public class PlayerDataServiceJpa implements PlayerDataService {
 		
 		return query.getResultList();
 	}
+
+	@Override
+	public void updatePlayer(final PlayerEntity updatedPlayer) {
+		entityManager.merge(updatedPlayer);
+	}
 }
