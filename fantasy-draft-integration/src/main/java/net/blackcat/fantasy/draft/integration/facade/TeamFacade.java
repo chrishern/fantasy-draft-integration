@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
-import net.blackcat.fantasy.draft.player.PopulateInitialFplCostPlayer;
+import net.blackcat.fantasy.draft.player.FplCostPlayer;
 import net.blackcat.fantasy.draft.team.Team;
 import net.blackcat.fantasy.draft.team.TeamSummary;
 
@@ -68,5 +68,5 @@ public interface TeamFacade {
 	 */
 	List<TeamSummary> getTeamSummaries(int leagueId) throws FantasyDraftIntegrationException;
 	
-	void updateSelectedPlayersWithInitialFplCost(final Map<Integer, PopulateInitialFplCostPlayer> initialPlayerCosts);
+	void updateSelectedPlayersWithInitialFplCost(final Map<Integer, FplCostPlayer> initialPlayerCosts);
 }

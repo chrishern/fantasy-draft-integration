@@ -5,7 +5,7 @@ import java.util.Map;
 
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.facade.TeamFacade;
-import net.blackcat.fantasy.draft.player.PopulateInitialFplCostPlayer;
+import net.blackcat.fantasy.draft.player.FplCostPlayer;
 import net.blackcat.fantasy.draft.team.Team;
 import net.blackcat.fantasy.draft.team.TeamSummary;
 
@@ -83,7 +83,7 @@ public class TeamController {
 		return teamFacade.getTeamSummaries(leagueId);
 	}
 	
-	public void updateSelectedPlayersWithIntialFplCost(final Map<Integer, PopulateInitialFplCostPlayer> initialPlayerCosts) {
+	public void updateSelectedPlayersWithIntialFplCost(final Map<Integer, FplCostPlayer> initialPlayerCosts) {
 		teamFacade.updateSelectedPlayersWithInitialFplCost(initialPlayerCosts);
 	}
 }

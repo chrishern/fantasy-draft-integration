@@ -18,7 +18,7 @@ import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.facade.TeamFacade;
-import net.blackcat.fantasy.draft.player.PopulateInitialFplCostPlayer;
+import net.blackcat.fantasy.draft.player.FplCostPlayer;
 import net.blackcat.fantasy.draft.player.SelectedPlayer;
 import net.blackcat.fantasy.draft.team.Team;
 import net.blackcat.fantasy.draft.team.TeamSummary;
@@ -129,7 +129,7 @@ public class TeamFacadeImpl implements TeamFacade {
 	}
 	
 	@Override
-	public void updateSelectedPlayersWithInitialFplCost(final Map<Integer, PopulateInitialFplCostPlayer> initialPlayerCosts) {
+	public void updateSelectedPlayersWithInitialFplCost(final Map<Integer, FplCostPlayer> initialPlayerCosts) {
 		for (final LeagueEntity league : leagueDataService.getLeagues()) {
 			for (final TeamEntity team : league.getTeams()) {
 				for (final SelectedPlayerEntity selectedPlayer : team.getSelectedPlayers()) {
