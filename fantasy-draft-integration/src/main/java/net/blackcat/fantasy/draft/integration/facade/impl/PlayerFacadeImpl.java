@@ -5,10 +5,12 @@ package net.blackcat.fantasy.draft.integration.facade.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.facade.PlayerFacade;
+import net.blackcat.fantasy.draft.player.FplCostPlayer;
 import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
 import net.blackcat.fantasy.draft.player.types.Position;
@@ -86,5 +88,17 @@ public class PlayerFacadeImpl implements PlayerFacade {
 		}
 		
 		return modelPlayers;
+	}
+
+	@Override
+	public void updatePlayersCurrentPrice(final Map<Integer, FplCostPlayer> playersWithScores) {
+		for (final PlayerEntity player : playerDataService.getPlayers()) {
+			final FplCostPlayer fplCostPlayer = playersWithScores.get(player.getId());
+			
+			player.setCurrentPrice(fplCostPlayer.getCurrentCost());
+			
+			playerDataService.updatePlayer(player);
+		}
+		
 	}
 }

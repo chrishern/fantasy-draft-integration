@@ -4,8 +4,10 @@
 package net.blackcat.fantasy.draft.integration.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import net.blackcat.fantasy.draft.integration.facade.PlayerFacade;
+import net.blackcat.fantasy.draft.player.FplCostPlayer;
 import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
 import net.blackcat.fantasy.draft.player.types.Position;
@@ -65,5 +67,14 @@ public class PlayerController {
 	 */
 	public List<Player> getPlayers(final Position position, final PlayerSelectionStatus selectionStatus) {
 		return playerFacade.getPlayers(position, selectionStatus);
+	}
+	
+	/**
+	 * Update the current price of all players in the game with the latest data from FPL.
+	 * 
+	 * @param playersWithScores Map of the players containing the latest price from FPL.
+	 */
+	public void updatePlayersCurrentPrice(final Map<Integer, FplCostPlayer> playersWithScores) {
+		playerFacade.updatePlayersCurrentPrice(playersWithScores);
 	}
 }

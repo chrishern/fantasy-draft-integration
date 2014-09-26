@@ -4,6 +4,7 @@
 package net.blackcat.fantasy.draft.integration.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -49,6 +50,9 @@ public class PlayerEntity implements Serializable {
 	
 	@Column
 	private int totalPoints;
+	
+	@Column
+	private BigDecimal currentPrice;
 
 	public PlayerEntity() {
 	}
@@ -159,6 +163,20 @@ public class PlayerEntity implements Serializable {
 	 */
 	public void setTotalPoints(int totalPoints) {
 		this.totalPoints = totalPoints;
+	}
+
+	/**
+	 * @return the currentPrice
+	 */
+	public BigDecimal getCurrentPrice() {
+		return currentPrice;
+	}
+
+	/**
+	 * @param currentPrice the currentPrice to set
+	 */
+	public void setCurrentPrice(BigDecimal currentPrice) {
+		this.currentPrice = currentPrice;
 	}
 	
 }
