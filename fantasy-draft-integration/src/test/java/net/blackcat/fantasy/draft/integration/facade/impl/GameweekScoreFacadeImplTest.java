@@ -19,7 +19,7 @@ import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
 import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.integration.test.util.TestDataUtil;
-import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
+import net.blackcat.fantasy.draft.player.types.SelectedPlayerStartingElevenStatus;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -92,7 +92,7 @@ public class GameweekScoreFacadeImplTest {
 		final List<SelectedPlayerEntity> squadWithOnlySubs = new ArrayList<SelectedPlayerEntity>();
 		
 		for (final SelectedPlayerEntity selectedPlayer : squadList) {
-			if (SelectedPlayerStatus.SUBSTITUTE_POSITIONS.contains(selectedPlayer.getSelectionStatus())) {
+			if (SelectedPlayerStartingElevenStatus.SUBSTITUTE_POSITIONS.contains(selectedPlayer.getSelectionStatus())) {
 				squadWithOnlySubs.add(selectedPlayer);
 			}
  		}

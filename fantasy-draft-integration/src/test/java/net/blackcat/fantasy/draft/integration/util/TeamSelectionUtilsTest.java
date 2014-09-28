@@ -15,7 +15,7 @@ import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.integration.test.util.TestDataUtil;
 import net.blackcat.fantasy.draft.player.GameweekScorePlayer;
 import net.blackcat.fantasy.draft.player.types.Position;
-import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
+import net.blackcat.fantasy.draft.player.types.SelectedPlayerStartingElevenStatus;
 
 import org.junit.Test;
 
@@ -147,11 +147,11 @@ public class TeamSelectionUtilsTest {
 		gameweekScores.put(TestDataUtil.PLAYER_5_ID, TestDataUtil.buildGameweekScorePlayer(TestDataUtil.PLAYER_5_ID, true));
 		gameweekScores.put(TestDataUtil.PLAYER_6_ID, TestDataUtil.buildGameweekScorePlayer(TestDataUtil.PLAYER_6_ID, false));
 		
-		final SelectedPlayerEntity selectedPlayer1 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_1_ID, Position.GOALKEEPER, SelectedPlayerStatus.CAPTAIN);
-		final SelectedPlayerEntity selectedPlayer2 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_2_ID, Position.DEFENDER, SelectedPlayerStatus.SUB_1);
-		final SelectedPlayerEntity selectedPlayer3 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_3_ID, Position.MIDFIEDER, SelectedPlayerStatus.PICKED);
-		final SelectedPlayerEntity selectedPlayer4 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_4_ID, Position.MIDFIEDER, SelectedPlayerStatus.PICKED);
-		final SelectedPlayerEntity selectedPlayer6 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_6_ID, Position.STRIKER, SelectedPlayerStatus.PICKED);
+		final SelectedPlayerEntity selectedPlayer1 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_1_ID, Position.GOALKEEPER, SelectedPlayerStartingElevenStatus.CAPTAIN);
+		final SelectedPlayerEntity selectedPlayer2 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_2_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.SUB_1);
+		final SelectedPlayerEntity selectedPlayer3 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_3_ID, Position.MIDFIEDER, SelectedPlayerStartingElevenStatus.PICKED);
+		final SelectedPlayerEntity selectedPlayer4 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_4_ID, Position.MIDFIEDER, SelectedPlayerStartingElevenStatus.PICKED);
+		final SelectedPlayerEntity selectedPlayer6 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_6_ID, Position.STRIKER, SelectedPlayerStartingElevenStatus.PICKED);
 		
 		final TeamEntity team = new TeamEntity();
 		team.addSelectedPlayers(Arrays.asList(selectedPlayer1, selectedPlayer2, selectedPlayer3, selectedPlayer4, selectedPlayer6));
@@ -173,7 +173,7 @@ public class TeamSelectionUtilsTest {
 	@Test
 	public void testIsPlayerASubstitute_True() {
 		// arrange
-		final SelectedPlayerEntity selectedPlayer = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_1_ID, Position.DEFENDER, SelectedPlayerStatus.SUB_1);
+		final SelectedPlayerEntity selectedPlayer = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_1_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.SUB_1);
 		
 		// act
 		final boolean isPlayerASubstitute = TeamSelectionUtils.isPlayerASubstitute(selectedPlayer);
@@ -185,7 +185,7 @@ public class TeamSelectionUtilsTest {
 	@Test
 	public void testIsPlayerASubstitute_False() {
 		// arrange
-		final SelectedPlayerEntity selectedPlayer = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_1_ID, Position.DEFENDER, SelectedPlayerStatus.CAPTAIN);
+		final SelectedPlayerEntity selectedPlayer = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_1_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.CAPTAIN);
 		
 		// act
 		final boolean isPlayerASubstitute = TeamSelectionUtils.isPlayerASubstitute(selectedPlayer);
@@ -198,8 +198,8 @@ public class TeamSelectionUtilsTest {
 	public void testAddPlayerToStartingTeam() {
 		// arrange
 		final Map<Position, List<SelectedPlayerEntity>> startingTeamForWeek = new HashMap<Position, List<SelectedPlayerEntity>>();
-		final SelectedPlayerEntity selectedPlayer1 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_1_ID, Position.DEFENDER, SelectedPlayerStatus.CAPTAIN);
-		final SelectedPlayerEntity selectedPlayer2 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_2_ID, Position.DEFENDER, SelectedPlayerStatus.PICKED);
+		final SelectedPlayerEntity selectedPlayer1 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_1_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.CAPTAIN);
+		final SelectedPlayerEntity selectedPlayer2 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_2_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.PICKED);
 		
 		// act
 		TeamSelectionUtils.addPlayerToStartingTeam(startingTeamForWeek, selectedPlayer1, Position.DEFENDER);
@@ -310,10 +310,10 @@ public class TeamSelectionUtilsTest {
 		// arrange
 		final Map<Position, List<SelectedPlayerEntity>> startingTeamForWeek = new HashMap<Position, List<SelectedPlayerEntity>>();
 		
-		final List<SelectedPlayerEntity> goalkeeperList = Arrays.asList(TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_1_ID, Position.GOALKEEPER, SelectedPlayerStatus.CAPTAIN));
-		final List<SelectedPlayerEntity> defenderList = Arrays.asList(TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_2_ID, Position.DEFENDER, SelectedPlayerStatus.VICE_CAPTAIN));
-		final List<SelectedPlayerEntity> midfielderList = Arrays.asList(TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_7_ID, Position.DEFENDER, SelectedPlayerStatus.PICKED));
-		final List<SelectedPlayerEntity> strikerList = Arrays.asList(TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_13_ID, Position.DEFENDER, SelectedPlayerStatus.PICKED));
+		final List<SelectedPlayerEntity> goalkeeperList = Arrays.asList(TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_1_ID, Position.GOALKEEPER, SelectedPlayerStartingElevenStatus.CAPTAIN));
+		final List<SelectedPlayerEntity> defenderList = Arrays.asList(TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_2_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.VICE_CAPTAIN));
+		final List<SelectedPlayerEntity> midfielderList = Arrays.asList(TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_7_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.PICKED));
+		final List<SelectedPlayerEntity> strikerList = Arrays.asList(TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_13_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.PICKED));
 		
 		startingTeamForWeek.put(Position.GOALKEEPER, goalkeeperList);
 		startingTeamForWeek.put(Position.DEFENDER, defenderList);
@@ -332,10 +332,10 @@ public class TeamSelectionUtilsTest {
 		// arrange
 		final Map<Position, List<SelectedPlayerEntity>> startingTeamForWeek = new HashMap<Position, List<SelectedPlayerEntity>>();
 		
-		final List<SelectedPlayerEntity> goalkeeperList = Arrays.asList(TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_1_ID, Position.GOALKEEPER, SelectedPlayerStatus.PICKED));
-		final List<SelectedPlayerEntity> defenderList = Arrays.asList(TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_2_ID, Position.DEFENDER, SelectedPlayerStatus.VICE_CAPTAIN));
-		final List<SelectedPlayerEntity> midfielderList = Arrays.asList(TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_7_ID, Position.DEFENDER, SelectedPlayerStatus.PICKED));
-		final List<SelectedPlayerEntity> strikerList = Arrays.asList(TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_13_ID, Position.DEFENDER, SelectedPlayerStatus.PICKED));
+		final List<SelectedPlayerEntity> goalkeeperList = Arrays.asList(TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_1_ID, Position.GOALKEEPER, SelectedPlayerStartingElevenStatus.PICKED));
+		final List<SelectedPlayerEntity> defenderList = Arrays.asList(TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_2_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.VICE_CAPTAIN));
+		final List<SelectedPlayerEntity> midfielderList = Arrays.asList(TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_7_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.PICKED));
+		final List<SelectedPlayerEntity> strikerList = Arrays.asList(TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_13_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.PICKED));
 		
 		startingTeamForWeek.put(Position.GOALKEEPER, goalkeeperList);
 		startingTeamForWeek.put(Position.DEFENDER, defenderList);

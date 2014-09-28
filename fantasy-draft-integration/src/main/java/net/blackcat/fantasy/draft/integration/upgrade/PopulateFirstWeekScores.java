@@ -8,7 +8,7 @@ import net.blackcat.fantasy.draft.integration.entity.GameweekScoreEntity;
 import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
-import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
+import net.blackcat.fantasy.draft.player.types.SelectedPlayerStartingElevenStatus;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -52,90 +52,90 @@ public class PopulateFirstWeekScores {
 		final List<SelectedPlayerEntity> selectedPlayers = team.getSelectedPlayers();
 		
 		final SelectedPlayerEntity cech = getSelectedPlayer(87, selectedPlayers);
-		cech.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		cech.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity cechScore = new GameweekScoreEntity(1, 0);
 		cech.addGameweekScore(cechScore);
 		
 		final SelectedPlayerEntity zaba = getSelectedPlayer(26, selectedPlayers);
-		zaba.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		zaba.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity zabaScore = new GameweekScoreEntity(1, 0);
 		zaba.addGameweekScore(zabaScore);
 		
 		final SelectedPlayerEntity vert = getSelectedPlayer(27, selectedPlayers);
-		vert.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		vert.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity vertScore = new GameweekScoreEntity(1, 0);
 		vert.addGameweekScore(vertScore);
 		
 		final SelectedPlayerEntity baines = getSelectedPlayer(88, selectedPlayers);
-		baines.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		baines.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		baines.setPointsScored(1);
 		final GameweekScoreEntity bainesScore = new GameweekScoreEntity(1, 1);
 		baines.addGameweekScore(bainesScore);
 		
 		final SelectedPlayerEntity sagna = getSelectedPlayer(135, selectedPlayers);
-		sagna.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		sagna.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity sagnaScore = new GameweekScoreEntity(1, 0);
 		sagna.addGameweekScore(sagnaScore);
 		
 		final SelectedPlayerEntity herr = getSelectedPlayer(28, selectedPlayers);
-		herr.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		herr.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		herr.setPointsScored(2);
 		final GameweekScoreEntity herrScore = new GameweekScoreEntity(1, 2);
 		herr.addGameweekScore(herrScore);
 		
 		final SelectedPlayerEntity nolan = getSelectedPlayer(111, selectedPlayers);
-		nolan.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		nolan.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		nolan.setPointsScored(2);
 		final GameweekScoreEntity nolanScore = new GameweekScoreEntity(1, 2);
 		nolan.addGameweekScore(nolanScore);
 		
 		final SelectedPlayerEntity walcott = getSelectedPlayer(89, selectedPlayers);
-		walcott.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		walcott.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity walcottScore = new GameweekScoreEntity(1, 0);
 		walcott.addGameweekScore(walcottScore);
 		
 		final SelectedPlayerEntity lall = getSelectedPlayer(90, selectedPlayers);
-		lall.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		lall.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity lallScore = new GameweekScoreEntity(1, 0);
 		lall.addGameweekScore(lallScore);
 		
 		final SelectedPlayerEntity aguero = getSelectedPlayer(29, selectedPlayers);
-		aguero.setSelectionStatus(SelectedPlayerStatus.CAPTAIN);
+		aguero.setSelectionStatus(SelectedPlayerStartingElevenStatus.CAPTAIN);
 		aguero.setPointsScored(12);
 		final GameweekScoreEntity agueroScore = new GameweekScoreEntity(1, 12);
 		aguero.addGameweekScore(agueroScore);
 		
 		final SelectedPlayerEntity luk = getSelectedPlayer(91, selectedPlayers);
-		luk.setSelectionStatus(SelectedPlayerStatus.VICE_CAPTAIN);
+		luk.setSelectionStatus(SelectedPlayerStartingElevenStatus.VICE_CAPTAIN);
 		luk.setPointsScored(2);
 		final GameweekScoreEntity lukScore = new GameweekScoreEntity(1, 2);
 		luk.addGameweekScore(lukScore);
 		
 		final SelectedPlayerEntity court = getSelectedPlayer(25, selectedPlayers);
-		court.setSelectionStatus(SelectedPlayerStatus.SUB_1);
+		court.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_1);
 		court.setPointsScored(2);
 		final GameweekScoreEntity courtScore = new GameweekScoreEntity(1, 2);
 		court.addGameweekScore(courtScore);
 		
 		final SelectedPlayerEntity drog = getSelectedPlayer(92, selectedPlayers);
-		drog.setSelectionStatus(SelectedPlayerStatus.SUB_2);
+		drog.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_2);
 		drog.setPointsScored(1);
 		final GameweekScoreEntity drogScore = new GameweekScoreEntity(1, 1);
 		drog.addGameweekScore(drogScore);
 		
 		final SelectedPlayerEntity hend = getSelectedPlayer(136, selectedPlayers);
-		hend.setSelectionStatus(SelectedPlayerStatus.SUB_3);
+		hend.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_3);
 		hend.setPointsScored(5);
 		final GameweekScoreEntity hendScore = new GameweekScoreEntity(1, 5);
 		hend.addGameweekScore(hendScore);
 		
 		final SelectedPlayerEntity camp = getSelectedPlayer(144, selectedPlayers);
-		camp.setSelectionStatus(SelectedPlayerStatus.SUB_4);
+		camp.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_4);
 		final GameweekScoreEntity campScore = new GameweekScoreEntity(1, 0);
 		camp.addGameweekScore(campScore);
 		
 		final SelectedPlayerEntity gibs = getSelectedPlayer(110, selectedPlayers);
-		gibs.setSelectionStatus(SelectedPlayerStatus.SUB_5);
+		gibs.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_5);
 		gibs.setPointsScored(1);
 		final GameweekScoreEntity gibsScore = new GameweekScoreEntity(1, 1);
 		gibs.addGameweekScore(gibsScore);
@@ -148,90 +148,90 @@ public class PopulateFirstWeekScores {
 		final List<SelectedPlayerEntity> selectedPlayers = team.getSelectedPlayers();
 		
 		final SelectedPlayerEntity cech = getSelectedPlayer(45, selectedPlayers);
-		cech.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		cech.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		cech.setPointsScored(2);
 		final GameweekScoreEntity cechScore = new GameweekScoreEntity(1, 2);
 		cech.addGameweekScore(cechScore);
 		
 		final SelectedPlayerEntity zaba = getSelectedPlayer(46, selectedPlayers);
 		zaba.setPointsScored(2);
-		zaba.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		zaba.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity zabaScore = new GameweekScoreEntity(1, 2);
 		zaba.addGameweekScore(zabaScore);
 		
 		final SelectedPlayerEntity vert = getSelectedPlayer(47, selectedPlayers);
-		vert.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		vert.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity vertScore = new GameweekScoreEntity(1, 0);
 		vert.addGameweekScore(vertScore);
 		
 		final SelectedPlayerEntity baines = getSelectedPlayer(48, selectedPlayers);
-		baines.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		baines.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity bainesScore = new GameweekScoreEntity(1, 0);
 		baines.addGameweekScore(bainesScore);
 		
 		final SelectedPlayerEntity sagna = getSelectedPlayer(99, selectedPlayers);
-		sagna.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		sagna.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity sagnaScore = new GameweekScoreEntity(1, 0);
 		sagna.addGameweekScore(sagnaScore);
 		
 		final SelectedPlayerEntity herr = getSelectedPlayer(50, selectedPlayers);
-		herr.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		herr.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		herr.setPointsScored(5);
 		final GameweekScoreEntity herrScore = new GameweekScoreEntity(1, 5);
 		herr.addGameweekScore(herrScore);
 		
 		final SelectedPlayerEntity nolan = getSelectedPlayer(51, selectedPlayers);
-		nolan.setSelectionStatus(SelectedPlayerStatus.VICE_CAPTAIN);
+		nolan.setSelectionStatus(SelectedPlayerStartingElevenStatus.VICE_CAPTAIN);
 		nolan.setPointsScored(2);
 		final GameweekScoreEntity nolanScore = new GameweekScoreEntity(1, 2);
 		nolan.addGameweekScore(nolanScore);
 		
 		final SelectedPlayerEntity walcott = getSelectedPlayer(100, selectedPlayers);
-		walcott.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		walcott.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		walcott.setPointsScored(2);
 		final GameweekScoreEntity walcottScore = new GameweekScoreEntity(1, 2);
 		walcott.addGameweekScore(walcottScore);
 		
 		final SelectedPlayerEntity lall = getSelectedPlayer(101, selectedPlayers);
-		lall.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		lall.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		lall.setPointsScored(1);
 		final GameweekScoreEntity lallScore = new GameweekScoreEntity(1, 1);
 		lall.addGameweekScore(lallScore);
 		
 		final SelectedPlayerEntity aguero = getSelectedPlayer(102, selectedPlayers);
-		aguero.setSelectionStatus(SelectedPlayerStatus.CAPTAIN);
+		aguero.setSelectionStatus(SelectedPlayerStartingElevenStatus.CAPTAIN);
 		aguero.setPointsScored(14);
 		final GameweekScoreEntity agueroScore = new GameweekScoreEntity(1, 14);
 		aguero.addGameweekScore(agueroScore);
 		
 		final SelectedPlayerEntity luk = getSelectedPlayer(52, selectedPlayers);
-		luk.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		luk.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity lukScore = new GameweekScoreEntity(1, 0);
 		luk.addGameweekScore(lukScore);
 		
 		final SelectedPlayerEntity court = getSelectedPlayer(53, selectedPlayers);
-		court.setSelectionStatus(SelectedPlayerStatus.SUB_1);
+		court.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_1);
 		final GameweekScoreEntity courtScore = new GameweekScoreEntity(1, 0);
 		court.addGameweekScore(courtScore);
 		
 		final SelectedPlayerEntity drog = getSelectedPlayer(121, selectedPlayers);
-		drog.setSelectionStatus(SelectedPlayerStatus.SUB_2);
+		drog.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_2);
 		final GameweekScoreEntity drogScore = new GameweekScoreEntity(1, 0);
 		drog.addGameweekScore(drogScore);
 		
 		final SelectedPlayerEntity hend = getSelectedPlayer(49, selectedPlayers);
-		hend.setSelectionStatus(SelectedPlayerStatus.SUB_3);
+		hend.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_3);
 		hend.setPointsScored(1);
 		final GameweekScoreEntity hendScore = new GameweekScoreEntity(1, 1);
 		hend.addGameweekScore(hendScore);
 		
 		final SelectedPlayerEntity camp = getSelectedPlayer(122, selectedPlayers);
-		camp.setSelectionStatus(SelectedPlayerStatus.SUB_4);
+		camp.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_4);
 		final GameweekScoreEntity campScore = new GameweekScoreEntity(1, 0);
 		camp.addGameweekScore(campScore);
 		
 		final SelectedPlayerEntity gibs = getSelectedPlayer(44, selectedPlayers);
-		gibs.setSelectionStatus(SelectedPlayerStatus.SUB_5);
+		gibs.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_5);
 		final GameweekScoreEntity gibsScore = new GameweekScoreEntity(1, 0);
 		gibs.addGameweekScore(gibsScore);
 		
@@ -243,92 +243,92 @@ public class PopulateFirstWeekScores {
 		final List<SelectedPlayerEntity> selectedPlayers = team.getSelectedPlayers();
 		
 		final SelectedPlayerEntity cech = getSelectedPlayer(38, selectedPlayers);
-		cech.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		cech.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		cech.setPointsScored(1);
 		final GameweekScoreEntity cechScore = new GameweekScoreEntity(1, 1);
 		cech.addGameweekScore(cechScore);
 		
 		final SelectedPlayerEntity zaba = getSelectedPlayer(94, selectedPlayers);
-		zaba.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		zaba.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		zaba.setPointsScored(1);
 		final GameweekScoreEntity zabaScore = new GameweekScoreEntity(1, 1);
 		zaba.addGameweekScore(zabaScore);
 		
 		final SelectedPlayerEntity vert = getSelectedPlayer(117, selectedPlayers);
-		vert.setSelectionStatus(SelectedPlayerStatus.CAPTAIN);
+		vert.setSelectionStatus(SelectedPlayerStartingElevenStatus.CAPTAIN);
 		vert.setPointsScored(4);
 		final GameweekScoreEntity vertScore = new GameweekScoreEntity(1, 4);
 		vert.addGameweekScore(vertScore);
 		
 		final SelectedPlayerEntity baines = getSelectedPlayer(39, selectedPlayers);
-		baines.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		baines.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		baines.setPointsScored(10);
 		final GameweekScoreEntity bainesScore = new GameweekScoreEntity(1, 10);
 		baines.addGameweekScore(bainesScore);
 		
 		final SelectedPlayerEntity sagna = getSelectedPlayer(137, selectedPlayers);
-		sagna.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		sagna.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		sagna.setPointsScored(9);
 		final GameweekScoreEntity sagnaScore = new GameweekScoreEntity(1, 9);
 		sagna.addGameweekScore(sagnaScore);
 		
 		final SelectedPlayerEntity herr = getSelectedPlayer(40, selectedPlayers);
-		herr.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		herr.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		herr.setPointsScored(9);
 		final GameweekScoreEntity herrScore = new GameweekScoreEntity(1, 9);
 		herr.addGameweekScore(herrScore);
 		
 		final SelectedPlayerEntity nolan = getSelectedPlayer(41, selectedPlayers);
-		nolan.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		nolan.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		nolan.setPointsScored(13);
 		final GameweekScoreEntity nolanScore = new GameweekScoreEntity(1, 13);
 		nolan.addGameweekScore(nolanScore);
 		
 		final SelectedPlayerEntity walcott = getSelectedPlayer(118, selectedPlayers);
-		walcott.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		walcott.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity walcottScore = new GameweekScoreEntity(1, 0);
 		walcott.addGameweekScore(walcottScore);
 		
 		final SelectedPlayerEntity lall = getSelectedPlayer(119, selectedPlayers);
-		lall.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		lall.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity lallScore = new GameweekScoreEntity(1, 0);
 		lall.addGameweekScore(lallScore);
 		
 		final SelectedPlayerEntity aguero = getSelectedPlayer(42, selectedPlayers);
-		aguero.setSelectionStatus(SelectedPlayerStatus.CAPTAIN);
+		aguero.setSelectionStatus(SelectedPlayerStartingElevenStatus.CAPTAIN);
 		aguero.setPointsScored(12);
 		final GameweekScoreEntity agueroScore = new GameweekScoreEntity(1, 12);
 		aguero.addGameweekScore(agueroScore);
 		
 		final SelectedPlayerEntity luk = getSelectedPlayer(43, selectedPlayers);
-		luk.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		luk.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		luk.setPointsScored(1);
 		final GameweekScoreEntity lukScore = new GameweekScoreEntity(1, 1);
 		luk.addGameweekScore(lukScore);
 		
 		final SelectedPlayerEntity court = getSelectedPlayer(95, selectedPlayers);
-		court.setSelectionStatus(SelectedPlayerStatus.SUB_1);
+		court.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_1);
 		court.setPointsScored(5);
 		final GameweekScoreEntity courtScore = new GameweekScoreEntity(1, 5);
 		court.addGameweekScore(courtScore);
 		
 		final SelectedPlayerEntity drog = getSelectedPlayer(120, selectedPlayers);
-		drog.setSelectionStatus(SelectedPlayerStatus.SUB_2);
+		drog.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_2);
 		final GameweekScoreEntity drogScore = new GameweekScoreEntity(1, 0);
 		drog.addGameweekScore(drogScore);
 		
 		final SelectedPlayerEntity hend = getSelectedPlayer(138, selectedPlayers);
-		hend.setSelectionStatus(SelectedPlayerStatus.SUB_3);
+		hend.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_3);
 		final GameweekScoreEntity hendScore = new GameweekScoreEntity(1, 0);
 		hend.addGameweekScore(hendScore);
 		
 		final SelectedPlayerEntity camp = getSelectedPlayer(96, selectedPlayers);
-		camp.setSelectionStatus(SelectedPlayerStatus.SUB_4);
+		camp.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_4);
 		final GameweekScoreEntity campScore = new GameweekScoreEntity(1, 0);
 		camp.addGameweekScore(campScore);
 		
 		final SelectedPlayerEntity gibs = getSelectedPlayer(93, selectedPlayers);
-		gibs.setSelectionStatus(SelectedPlayerStatus.SUB_5);
+		gibs.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_5);
 		final GameweekScoreEntity gibsScore = new GameweekScoreEntity(1, 0);
 		gibs.addGameweekScore(gibsScore);
 		
@@ -340,93 +340,93 @@ public class PopulateFirstWeekScores {
 		final List<SelectedPlayerEntity> selectedPlayers = team.getSelectedPlayers();
 		
 		final SelectedPlayerEntity cech = getSelectedPlayer(1, selectedPlayers);
-		cech.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		cech.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		cech.setPointsScored(3);
 		final GameweekScoreEntity cechScore = new GameweekScoreEntity(1, 3);
 		cech.addGameweekScore(cechScore);
 		
 		final SelectedPlayerEntity zaba = getSelectedPlayer(104, selectedPlayers);
-		zaba.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		zaba.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		zaba.setPointsScored(4);
 		final GameweekScoreEntity zabaScore = new GameweekScoreEntity(1, 4);
 		zaba.addGameweekScore(zabaScore);
 		
 		final SelectedPlayerEntity vert = getSelectedPlayer(2, selectedPlayers);
-		vert.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		vert.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		vert.setPointsScored(1);
 		final GameweekScoreEntity vertScore = new GameweekScoreEntity(1, 1);
 		vert.addGameweekScore(vertScore);
 		
 		final SelectedPlayerEntity baines = getSelectedPlayer(73, selectedPlayers);
-		baines.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		baines.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		baines.setPointsScored(2);
 		final GameweekScoreEntity bainesScore = new GameweekScoreEntity(1, 2);
 		baines.addGameweekScore(bainesScore);
 		
 		final SelectedPlayerEntity sagna = getSelectedPlayer(3, selectedPlayers);
-		sagna.setSelectionStatus(SelectedPlayerStatus.CAPTAIN);
+		sagna.setSelectionStatus(SelectedPlayerStartingElevenStatus.CAPTAIN);
 		sagna.setPointsScored(4);
 		final GameweekScoreEntity sagnaScore = new GameweekScoreEntity(1, 4);
 		sagna.addGameweekScore(sagnaScore);
 		
 		final SelectedPlayerEntity herr = getSelectedPlayer(4, selectedPlayers);
-		herr.setSelectionStatus(SelectedPlayerStatus.VICE_CAPTAIN);
+		herr.setSelectionStatus(SelectedPlayerStartingElevenStatus.VICE_CAPTAIN);
 		herr.setPointsScored(3);
 		final GameweekScoreEntity herrScore = new GameweekScoreEntity(1, 3);
 		herr.addGameweekScore(herrScore);
 		
 		final SelectedPlayerEntity nolan = getSelectedPlayer(74, selectedPlayers);
-		nolan.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		nolan.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity nolanScore = new GameweekScoreEntity(1, 0);
 		nolan.addGameweekScore(nolanScore);
 		
 		final SelectedPlayerEntity walcott = getSelectedPlayer(75, selectedPlayers);
-		walcott.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		walcott.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		walcott.setPointsScored(2);
 		final GameweekScoreEntity walcottScore = new GameweekScoreEntity(1, 2);
 		walcott.addGameweekScore(walcottScore);
 		
 		final SelectedPlayerEntity lall = getSelectedPlayer(5, selectedPlayers);
-		lall.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		lall.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		lall.setPointsScored(2);
 		final GameweekScoreEntity lallScore = new GameweekScoreEntity(1, 2);
 		lall.addGameweekScore(lallScore);
 		
 		final SelectedPlayerEntity aguero = getSelectedPlayer(105, selectedPlayers);
-		aguero.setSelectionStatus(SelectedPlayerStatus.CAPTAIN);
+		aguero.setSelectionStatus(SelectedPlayerStartingElevenStatus.CAPTAIN);
 		final GameweekScoreEntity agueroScore = new GameweekScoreEntity(1, 0);
 		aguero.addGameweekScore(agueroScore);
 		
 		final SelectedPlayerEntity luk = getSelectedPlayer(106, selectedPlayers);
-		luk.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		luk.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity lukScore = new GameweekScoreEntity(1, 0);
 		luk.addGameweekScore(lukScore);
 		
 		final SelectedPlayerEntity court = getSelectedPlayer(76, selectedPlayers);
-		court.setSelectionStatus(SelectedPlayerStatus.SUB_1);
+		court.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_1);
 		court.setPointsScored(13);
 		final GameweekScoreEntity courtScore = new GameweekScoreEntity(1, 13);
 		court.addGameweekScore(courtScore);
 		
 		final SelectedPlayerEntity drog = getSelectedPlayer(133, selectedPlayers);
-		drog.setSelectionStatus(SelectedPlayerStatus.SUB_2);
+		drog.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_2);
 		final GameweekScoreEntity drogScore = new GameweekScoreEntity(1, 0);
 		drog.addGameweekScore(drogScore);
 		
 		final SelectedPlayerEntity hend = getSelectedPlayer(143, selectedPlayers);
-		hend.setSelectionStatus(SelectedPlayerStatus.SUB_3);
+		hend.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_3);
 		hend.setPointsScored(2);
 		final GameweekScoreEntity hendScore = new GameweekScoreEntity(1, 2);
 		hend.addGameweekScore(hendScore);
 		
 		final SelectedPlayerEntity camp = getSelectedPlayer(77, selectedPlayers);
-		camp.setSelectionStatus(SelectedPlayerStatus.SUB_4);
+		camp.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_4);
 		camp.setPointsScored(2);
 		final GameweekScoreEntity campScore = new GameweekScoreEntity(1, 2);
 		camp.addGameweekScore(campScore);
 		
 		final SelectedPlayerEntity gibs = getSelectedPlayer(72, selectedPlayers);
-		gibs.setSelectionStatus(SelectedPlayerStatus.SUB_5);
+		gibs.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_5);
 		final GameweekScoreEntity gibsScore = new GameweekScoreEntity(1, 0);
 		gibs.addGameweekScore(gibsScore);
 		
@@ -438,93 +438,93 @@ public class PopulateFirstWeekScores {
 		final List<SelectedPlayerEntity> selectedPlayers = team.getSelectedPlayers();
 		
 		final SelectedPlayerEntity cech = getSelectedPlayer(30, selectedPlayers);
-		cech.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		cech.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		cech.setPointsScored(2);
 		final GameweekScoreEntity cechScore = new GameweekScoreEntity(1, 2);
 		cech.addGameweekScore(cechScore);
 		
 		final SelectedPlayerEntity zaba = getSelectedPlayer(112, selectedPlayers);
-		zaba.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		zaba.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		zaba.setPointsScored(5);
 		final GameweekScoreEntity zabaScore = new GameweekScoreEntity(1, 5);
 		zaba.addGameweekScore(zabaScore);
 		
 		final SelectedPlayerEntity vert = getSelectedPlayer(34, selectedPlayers);
-		vert.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		vert.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity vertScore = new GameweekScoreEntity(1, 0);
 		vert.addGameweekScore(vertScore);
 		
 		final SelectedPlayerEntity baines = getSelectedPlayer(33, selectedPlayers);
-		baines.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		baines.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity bainesScore = new GameweekScoreEntity(1, 0);
 		baines.addGameweekScore(bainesScore);
 		
 		final SelectedPlayerEntity sagna = getSelectedPlayer(35, selectedPlayers);
-		sagna.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		sagna.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		sagna.setPointsScored(1);
 		final GameweekScoreEntity sagnaScore = new GameweekScoreEntity(1, 1);
 		sagna.addGameweekScore(sagnaScore);
 		
 		final SelectedPlayerEntity herr = getSelectedPlayer(36, selectedPlayers);
-		herr.setSelectionStatus(SelectedPlayerStatus.VICE_CAPTAIN);
+		herr.setSelectionStatus(SelectedPlayerStartingElevenStatus.VICE_CAPTAIN);
 		herr.setPointsScored(3);
 		final GameweekScoreEntity herrScore = new GameweekScoreEntity(1, 3);
 		herr.addGameweekScore(herrScore);
 		
 		final SelectedPlayerEntity nolan = getSelectedPlayer(114, selectedPlayers);
-		nolan.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		nolan.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		nolan.setPointsScored(3);
 		final GameweekScoreEntity nolanScore = new GameweekScoreEntity(1, 3);
 		nolan.addGameweekScore(nolanScore);
 		
 		final SelectedPlayerEntity walcott = getSelectedPlayer(115, selectedPlayers);
-		walcott.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		walcott.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		walcott.setPointsScored(2);
 		final GameweekScoreEntity walcottScore = new GameweekScoreEntity(1, 2);
 		walcott.addGameweekScore(walcottScore);
 		
 		final SelectedPlayerEntity lall = getSelectedPlayer(139, selectedPlayers);
-		lall.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		lall.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity lallScore = new GameweekScoreEntity(1, 0);
 		lall.addGameweekScore(lallScore);
 		
 		final SelectedPlayerEntity aguero = getSelectedPlayer(37, selectedPlayers);
-		aguero.setSelectionStatus(SelectedPlayerStatus.CAPTAIN);
+		aguero.setSelectionStatus(SelectedPlayerStartingElevenStatus.CAPTAIN);
 		aguero.setPointsScored(2);
 		final GameweekScoreEntity agueroScore = new GameweekScoreEntity(1, 2);
 		aguero.addGameweekScore(agueroScore);
 		
 		final SelectedPlayerEntity luk = getSelectedPlayer(97, selectedPlayers);
-		luk.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		luk.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		luk.setPointsScored(2);
 		final GameweekScoreEntity lukScore = new GameweekScoreEntity(1, 2);
 		luk.addGameweekScore(lukScore);
 		
 		final SelectedPlayerEntity court = getSelectedPlayer(31, selectedPlayers);
-		court.setSelectionStatus(SelectedPlayerStatus.SUB_1);
+		court.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_1);
 		final GameweekScoreEntity courtScore = new GameweekScoreEntity(1, 0);
 		court.addGameweekScore(courtScore);
 		
 		final SelectedPlayerEntity drog = getSelectedPlayer(98, selectedPlayers);
-		drog.setSelectionStatus(SelectedPlayerStatus.SUB_2);
+		drog.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_2);
 		drog.setPointsScored(1);
 		final GameweekScoreEntity drogScore = new GameweekScoreEntity(1, 1);
 		drog.addGameweekScore(drogScore);
 		
 		final SelectedPlayerEntity hend = getSelectedPlayer(113, selectedPlayers);
-		hend.setSelectionStatus(SelectedPlayerStatus.SUB_3);
+		hend.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_3);
 		hend.setPointsScored(1);
 		final GameweekScoreEntity hendScore = new GameweekScoreEntity(1, 1);
 		hend.addGameweekScore(hendScore);
 		
 		final SelectedPlayerEntity camp = getSelectedPlayer(32, selectedPlayers);
-		camp.setSelectionStatus(SelectedPlayerStatus.SUB_4);
+		camp.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_4);
 		camp.setPointsScored(1);
 		final GameweekScoreEntity campScore = new GameweekScoreEntity(1, 1);
 		camp.addGameweekScore(campScore);
 		
 		final SelectedPlayerEntity gibs = getSelectedPlayer(116, selectedPlayers);
-		gibs.setSelectionStatus(SelectedPlayerStatus.SUB_5);
+		gibs.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_5);
 		final GameweekScoreEntity gibsScore = new GameweekScoreEntity(1, 0);
 		gibs.addGameweekScore(gibsScore);
 		
@@ -536,92 +536,92 @@ public class PopulateFirstWeekScores {
 		final List<SelectedPlayerEntity> selectedPlayers = team.getSelectedPlayers();
 		
 		final SelectedPlayerEntity cech = getSelectedPlayer(103, selectedPlayers);
-		cech.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		cech.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		cech.setPointsScored(2);
 		final GameweekScoreEntity cechScore = new GameweekScoreEntity(1, 2);
 		cech.addGameweekScore(cechScore);
 		
 		final SelectedPlayerEntity zaba = getSelectedPlayer(55, selectedPlayers);
-		zaba.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		zaba.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		zaba.setPointsScored(2);
 		final GameweekScoreEntity zabaScore = new GameweekScoreEntity(1, 2);
 		zaba.addGameweekScore(zabaScore);
 		
 		final SelectedPlayerEntity vert = getSelectedPlayer(56, selectedPlayers);
-		vert.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		vert.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity vertScore = new GameweekScoreEntity(1, 0);
 		vert.addGameweekScore(vertScore);
 		
 		final SelectedPlayerEntity baines = getSelectedPlayer(57, selectedPlayers);
-		baines.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		baines.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity bainesScore = new GameweekScoreEntity(1, 0);
 		baines.addGameweekScore(bainesScore);
 		
 		final SelectedPlayerEntity sagna = getSelectedPlayer(60, selectedPlayers);
-		sagna.setSelectionStatus(SelectedPlayerStatus.VICE_CAPTAIN);
+		sagna.setSelectionStatus(SelectedPlayerStartingElevenStatus.VICE_CAPTAIN);
 		sagna.setPointsScored(4);
 		final GameweekScoreEntity sagnaScore = new GameweekScoreEntity(1, 4);
 		sagna.addGameweekScore(sagnaScore);
 		
 		final SelectedPlayerEntity herr = getSelectedPlayer(61, selectedPlayers);
-		herr.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		herr.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		herr.setPointsScored(3);
 		final GameweekScoreEntity herrScore = new GameweekScoreEntity(1, 3);
 		herr.addGameweekScore(herrScore);
 		
 		final SelectedPlayerEntity nolan = getSelectedPlayer(62, selectedPlayers);
-		nolan.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		nolan.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		nolan.setPointsScored(2);
 		final GameweekScoreEntity nolanScore = new GameweekScoreEntity(1, 2);
 		nolan.addGameweekScore(nolanScore);
 		
 		final SelectedPlayerEntity walcott = getSelectedPlayer(63, selectedPlayers);
-		walcott.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		walcott.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		walcott.setPointsScored(1);
 		final GameweekScoreEntity walcottScore = new GameweekScoreEntity(1, 1);
 		walcott.addGameweekScore(walcottScore);
 		
 		final SelectedPlayerEntity lall = getSelectedPlayer(64, selectedPlayers);
-		lall.setSelectionStatus(SelectedPlayerStatus.CAPTAIN);
+		lall.setSelectionStatus(SelectedPlayerStartingElevenStatus.CAPTAIN);
 		final GameweekScoreEntity lallScore = new GameweekScoreEntity(1, 0);
 		lall.addGameweekScore(lallScore);
 		
 		final SelectedPlayerEntity aguero = getSelectedPlayer(65, selectedPlayers);
-		aguero.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		aguero.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		aguero.setPointsScored(5);
 		final GameweekScoreEntity agueroScore = new GameweekScoreEntity(1, 5);
 		aguero.addGameweekScore(agueroScore);
 		
 		final SelectedPlayerEntity luk = getSelectedPlayer(66, selectedPlayers);
-		luk.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		luk.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		luk.setPointsScored(2);
 		final GameweekScoreEntity lukScore = new GameweekScoreEntity(1, 2);
 		luk.addGameweekScore(lukScore);
 		
 		final SelectedPlayerEntity court = getSelectedPlayer(67, selectedPlayers);
-		court.setSelectionStatus(SelectedPlayerStatus.SUB_1);
+		court.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_1);
 		court.setPointsScored(2);
 		final GameweekScoreEntity courtScore = new GameweekScoreEntity(1, 2);
 		court.addGameweekScore(courtScore);
 		
 		final SelectedPlayerEntity drog = getSelectedPlayer(59, selectedPlayers);
-		drog.setSelectionStatus(SelectedPlayerStatus.SUB_2);
+		drog.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_2);
 		drog.setPointsScored(4);
 		final GameweekScoreEntity drogScore = new GameweekScoreEntity(1, 4);
 		drog.addGameweekScore(drogScore);
 		
 		final SelectedPlayerEntity hend = getSelectedPlayer(140, selectedPlayers);
-		hend.setSelectionStatus(SelectedPlayerStatus.SUB_3);
+		hend.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_3);
 		final GameweekScoreEntity hendScore = new GameweekScoreEntity(1, 0);
 		hend.addGameweekScore(hendScore);
 		
 		final SelectedPlayerEntity camp = getSelectedPlayer(58, selectedPlayers);
-		camp.setSelectionStatus(SelectedPlayerStatus.SUB_4);
+		camp.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_4);
 		final GameweekScoreEntity campScore = new GameweekScoreEntity(1, 0);
 		camp.addGameweekScore(campScore);
 		
 		final SelectedPlayerEntity gibs = getSelectedPlayer(54, selectedPlayers);
-		gibs.setSelectionStatus(SelectedPlayerStatus.SUB_5);
+		gibs.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_5);
 		final GameweekScoreEntity gibsScore = new GameweekScoreEntity(1, 0);
 		gibs.addGameweekScore(gibsScore);
 		
@@ -633,91 +633,91 @@ public class PopulateFirstWeekScores {
 		final List<SelectedPlayerEntity> selectedPlayers = team.getSelectedPlayers();
 		
 		final SelectedPlayerEntity cech = getSelectedPlayer(14, selectedPlayers);
-		cech.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		cech.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		cech.setPointsScored(6);
 		final GameweekScoreEntity cechScore = new GameweekScoreEntity(1, 6);
 		cech.addGameweekScore(cechScore);
 		
 		final SelectedPlayerEntity zaba = getSelectedPlayer(15, selectedPlayers);
-		zaba.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		zaba.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity zabaScore = new GameweekScoreEntity(1, 0);
 		zaba.addGameweekScore(zabaScore);
 		
 		final SelectedPlayerEntity vert = getSelectedPlayer(16, selectedPlayers);
-		vert.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		vert.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity vertScore = new GameweekScoreEntity(1, 0);
 		vert.addGameweekScore(vertScore);
 		
 		final SelectedPlayerEntity baines = getSelectedPlayer(17, selectedPlayers);
-		baines.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		baines.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		baines.setPointsScored(1);
 		final GameweekScoreEntity bainesScore = new GameweekScoreEntity(1, 1);
 		baines.addGameweekScore(bainesScore);
 		
 		final SelectedPlayerEntity sagna = getSelectedPlayer(134, selectedPlayers);
-		sagna.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		sagna.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		sagna.setPointsScored(5);
 		final GameweekScoreEntity sagnaScore = new GameweekScoreEntity(1, 5);
 		sagna.addGameweekScore(sagnaScore);
 		
 		final SelectedPlayerEntity herr = getSelectedPlayer(19, selectedPlayers);
-		herr.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		herr.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity herrScore = new GameweekScoreEntity(1, 0);
 		herr.addGameweekScore(herrScore);
 		
 		final SelectedPlayerEntity nolan = getSelectedPlayer(20, selectedPlayers);
-		nolan.setSelectionStatus(SelectedPlayerStatus.CAPTAIN);
+		nolan.setSelectionStatus(SelectedPlayerStartingElevenStatus.CAPTAIN);
 		nolan.setPointsScored(20);
 		final GameweekScoreEntity nolanScore = new GameweekScoreEntity(1, 20);
 		nolan.addGameweekScore(nolanScore);
 		
 		final SelectedPlayerEntity walcott = getSelectedPlayer(21, selectedPlayers);
-		walcott.setSelectionStatus(SelectedPlayerStatus.VICE_CAPTAIN);
+		walcott.setSelectionStatus(SelectedPlayerStartingElevenStatus.VICE_CAPTAIN);
 		walcott.setPointsScored(11);
 		final GameweekScoreEntity walcottScore = new GameweekScoreEntity(1, 11);
 		walcott.addGameweekScore(walcottScore);
 		
 		final SelectedPlayerEntity lall = getSelectedPlayer(22, selectedPlayers);
-		lall.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		lall.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity lallScore = new GameweekScoreEntity(1, 0);
 		lall.addGameweekScore(lallScore);
 		
 		final SelectedPlayerEntity aguero = getSelectedPlayer(23, selectedPlayers);
-		aguero.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		aguero.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		aguero.setPointsScored(2);
 		final GameweekScoreEntity agueroScore = new GameweekScoreEntity(1, 2);
 		aguero.addGameweekScore(agueroScore);
 		
 		final SelectedPlayerEntity luk = getSelectedPlayer(109, selectedPlayers);
-		luk.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		luk.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		luk.setPointsScored(1);
 		final GameweekScoreEntity lukScore = new GameweekScoreEntity(1, 1);
 		luk.addGameweekScore(lukScore);
 		
 		final SelectedPlayerEntity court = getSelectedPlayer(13, selectedPlayers);
-		court.setSelectionStatus(SelectedPlayerStatus.SUB_1);
+		court.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_1);
 		final GameweekScoreEntity courtScore = new GameweekScoreEntity(1, 0);
 		court.addGameweekScore(courtScore);
 		
 		final SelectedPlayerEntity drog = getSelectedPlayer(86, selectedPlayers);
-		drog.setSelectionStatus(SelectedPlayerStatus.SUB_2);
+		drog.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_2);
 		final GameweekScoreEntity drogScore = new GameweekScoreEntity(1, 0);
 		drog.addGameweekScore(drogScore);
 		
 		final SelectedPlayerEntity hend = getSelectedPlayer(108, selectedPlayers);
-		hend.setSelectionStatus(SelectedPlayerStatus.SUB_3);
+		hend.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_3);
 		hend.setPointsScored(2);
 		final GameweekScoreEntity hendScore = new GameweekScoreEntity(1, 2);
 		hend.addGameweekScore(hendScore);
 		
 		final SelectedPlayerEntity camp = getSelectedPlayer(24, selectedPlayers);
-		camp.setSelectionStatus(SelectedPlayerStatus.SUB_4);
+		camp.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_4);
 		camp.setPointsScored(2);
 		final GameweekScoreEntity campScore = new GameweekScoreEntity(1, 2);
 		camp.addGameweekScore(campScore);
 		
 		final SelectedPlayerEntity gibs = getSelectedPlayer(18, selectedPlayers);
-		gibs.setSelectionStatus(SelectedPlayerStatus.SUB_5);
+		gibs.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_5);
 		gibs.setPointsScored(2);
 		final GameweekScoreEntity gibsScore = new GameweekScoreEntity(1, 2);
 		gibs.addGameweekScore(gibsScore);
@@ -730,93 +730,93 @@ public class PopulateFirstWeekScores {
 		final List<SelectedPlayerEntity> selectedPlayers = team.getSelectedPlayers();
 		
 		final SelectedPlayerEntity cech = getSelectedPlayer(6, selectedPlayers);
-		cech.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		cech.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		cech.setPointsScored(7);
 		final GameweekScoreEntity cechScore = new GameweekScoreEntity(1, 7);
 		cech.addGameweekScore(cechScore);
 		
 		final SelectedPlayerEntity zaba = getSelectedPlayer(7, selectedPlayers);
-		zaba.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		zaba.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		zaba.setPointsScored(1);
 		final GameweekScoreEntity zabaScore = new GameweekScoreEntity(1, 1);
 		zaba.addGameweekScore(zabaScore);
 		
 		final SelectedPlayerEntity vert = getSelectedPlayer(78, selectedPlayers);
-		vert.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		vert.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		vert.setPointsScored(2);
 		final GameweekScoreEntity vertScore = new GameweekScoreEntity(1, 2);
 		vert.addGameweekScore(vertScore);
 		
 		final SelectedPlayerEntity baines = getSelectedPlayer(8, selectedPlayers);
-		baines.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		baines.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		baines.setPointsScored(2);
 		final GameweekScoreEntity bainesScore = new GameweekScoreEntity(1, 2);
 		baines.addGameweekScore(bainesScore);
 		
 		final SelectedPlayerEntity sagna = getSelectedPlayer(79, selectedPlayers);
-		sagna.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		sagna.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		sagna.setPointsScored(4);
 		final GameweekScoreEntity sagnaScore = new GameweekScoreEntity(1, 4);
 		sagna.addGameweekScore(sagnaScore);
 		
 		final SelectedPlayerEntity herr = getSelectedPlayer(9, selectedPlayers);
-		herr.setSelectionStatus(SelectedPlayerStatus.VICE_CAPTAIN);
+		herr.setSelectionStatus(SelectedPlayerStartingElevenStatus.VICE_CAPTAIN);
 		herr.setPointsScored(1);
 		final GameweekScoreEntity herrScore = new GameweekScoreEntity(1, 1);
 		herr.addGameweekScore(herrScore);
 		
 		final SelectedPlayerEntity nolan = getSelectedPlayer(10, selectedPlayers);
-		nolan.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		nolan.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		nolan.setPointsScored(8);
 		final GameweekScoreEntity nolanScore = new GameweekScoreEntity(1, 8);
 		nolan.addGameweekScore(nolanScore);
 		
 		final SelectedPlayerEntity walcott = getSelectedPlayer(11, selectedPlayers);
-		walcott.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		walcott.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity walcottScore = new GameweekScoreEntity(1, 0);
 		walcott.addGameweekScore(walcottScore);
 		
 		final SelectedPlayerEntity lall = getSelectedPlayer(81, selectedPlayers);
-		lall.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		lall.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		lall.setPointsScored(2);
 		final GameweekScoreEntity lallScore = new GameweekScoreEntity(1, 2);
 		lall.addGameweekScore(lallScore);
 		
 		final SelectedPlayerEntity aguero = getSelectedPlayer(82, selectedPlayers);
-		aguero.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		aguero.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		aguero.setPointsScored(3);
 		final GameweekScoreEntity agueroScore = new GameweekScoreEntity(1, 3);
 		aguero.addGameweekScore(agueroScore);
 		
 		final SelectedPlayerEntity luk = getSelectedPlayer(12, selectedPlayers);
-		luk.setSelectionStatus(SelectedPlayerStatus.CAPTAIN);
+		luk.setSelectionStatus(SelectedPlayerStartingElevenStatus.CAPTAIN);
 		luk.setPointsScored(12);
 		final GameweekScoreEntity lukScore = new GameweekScoreEntity(1, 12);
 		luk.addGameweekScore(lukScore);
 		
 		final SelectedPlayerEntity court = getSelectedPlayer(107, selectedPlayers);
-		court.setSelectionStatus(SelectedPlayerStatus.SUB_1);
+		court.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_1);
 		final GameweekScoreEntity courtScore = new GameweekScoreEntity(1, 0);
 		court.addGameweekScore(courtScore);
 		
 		final SelectedPlayerEntity drog = getSelectedPlayer(84, selectedPlayers);
-		drog.setSelectionStatus(SelectedPlayerStatus.SUB_2);
+		drog.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_2);
 		final GameweekScoreEntity drogScore = new GameweekScoreEntity(1, 0);
 		drog.addGameweekScore(drogScore);
 		
 		final SelectedPlayerEntity hend = getSelectedPlayer(80, selectedPlayers);
-		hend.setSelectionStatus(SelectedPlayerStatus.SUB_3);
+		hend.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_3);
 		hend.setPointsScored(2);
 		final GameweekScoreEntity hendScore = new GameweekScoreEntity(1, 2);
 		hend.addGameweekScore(hendScore);
 		
 		final SelectedPlayerEntity camp = getSelectedPlayer(83, selectedPlayers);
-		camp.setSelectionStatus(SelectedPlayerStatus.SUB_4);
+		camp.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_4);
 		final GameweekScoreEntity campScore = new GameweekScoreEntity(1, 0);
 		camp.addGameweekScore(campScore);
 		
 		final SelectedPlayerEntity gibs = getSelectedPlayer(85, selectedPlayers);
-		gibs.setSelectionStatus(SelectedPlayerStatus.SUB_5);
+		gibs.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_5);
 		final GameweekScoreEntity gibsScore = new GameweekScoreEntity(1, 0);
 		gibs.addGameweekScore(gibsScore);
 		
@@ -828,91 +828,91 @@ public class PopulateFirstWeekScores {
 		final List<SelectedPlayerEntity> selectedPlayers = team.getSelectedPlayers();
 		
 		final SelectedPlayerEntity cech = getSelectedPlayer(124, selectedPlayers);
-		cech.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		cech.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity cechScore = new GameweekScoreEntity(1, 0);
 		cech.addGameweekScore(cechScore);
 		
 		final SelectedPlayerEntity zaba = getSelectedPlayer(68, selectedPlayers);
-		zaba.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		zaba.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		zaba.setPointsScored(10);
 		final GameweekScoreEntity zabaScore = new GameweekScoreEntity(1, 10);
 		zaba.addGameweekScore(zabaScore);
 		
 		final SelectedPlayerEntity vert = getSelectedPlayer(69, selectedPlayers);
-		vert.setSelectionStatus(SelectedPlayerStatus.CAPTAIN);
+		vert.setSelectionStatus(SelectedPlayerStartingElevenStatus.CAPTAIN);
 		vert.setPointsScored(10);
 		final GameweekScoreEntity vertScore = new GameweekScoreEntity(1, 10);
 		vert.addGameweekScore(vertScore);
 		
 		final SelectedPlayerEntity baines = getSelectedPlayer(141, selectedPlayers);
-		baines.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		baines.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		baines.setPointsScored(3);
 		final GameweekScoreEntity bainesScore = new GameweekScoreEntity(1, 3);
 		baines.addGameweekScore(bainesScore);
 		
 		final SelectedPlayerEntity sagna = getSelectedPlayer(70, selectedPlayers);
-		sagna.setSelectionStatus(SelectedPlayerStatus.VICE_CAPTAIN);
+		sagna.setSelectionStatus(SelectedPlayerStartingElevenStatus.VICE_CAPTAIN);
 		sagna.setPointsScored(2);
 		final GameweekScoreEntity sagnaScore = new GameweekScoreEntity(1, 2);
 		sagna.addGameweekScore(sagnaScore);
 		
 		final SelectedPlayerEntity herr = getSelectedPlayer(129, selectedPlayers);
-		herr.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		herr.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		herr.setPointsScored(1);
 		final GameweekScoreEntity herrScore = new GameweekScoreEntity(1, 1);
 		herr.addGameweekScore(herrScore);
 		
 		final SelectedPlayerEntity nolan = getSelectedPlayer(147, selectedPlayers);
-		nolan.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		nolan.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		nolan.setPointsScored(3);
 		final GameweekScoreEntity nolanScore = new GameweekScoreEntity(1, 3);
 		nolan.addGameweekScore(nolanScore);
 		
 		final SelectedPlayerEntity walcott = getSelectedPlayer(148, selectedPlayers);
-		walcott.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		walcott.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity walcottScore = new GameweekScoreEntity(1, 0);
 		walcott.addGameweekScore(walcottScore);
 		
 		final SelectedPlayerEntity lall = getSelectedPlayer(71, selectedPlayers);
-		lall.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		lall.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		lall.setPointsScored(2);
 		final GameweekScoreEntity lallScore = new GameweekScoreEntity(1, 2);
 		lall.addGameweekScore(lallScore);
 		
 		final SelectedPlayerEntity aguero = getSelectedPlayer(150, selectedPlayers);
-		aguero.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		aguero.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		final GameweekScoreEntity agueroScore = new GameweekScoreEntity(1, 0);
 		aguero.addGameweekScore(agueroScore);
 		
 		final SelectedPlayerEntity luk = getSelectedPlayer(142, selectedPlayers);
-		luk.setSelectionStatus(SelectedPlayerStatus.PICKED);
+		luk.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		luk.setPointsScored(2);
 		final GameweekScoreEntity lukScore = new GameweekScoreEntity(1, 2);
 		luk.addGameweekScore(lukScore);
 		
 		final SelectedPlayerEntity court = getSelectedPlayer(145, selectedPlayers);
-		court.setSelectionStatus(SelectedPlayerStatus.SUB_1);
+		court.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_1);
 		final GameweekScoreEntity courtScore = new GameweekScoreEntity(1, 0);
 		court.addGameweekScore(courtScore);
 		
 		final SelectedPlayerEntity drog = getSelectedPlayer(149, selectedPlayers);
-		drog.setSelectionStatus(SelectedPlayerStatus.SUB_2);
+		drog.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_2);
 		final GameweekScoreEntity drogScore = new GameweekScoreEntity(1, 0);
 		drog.addGameweekScore(drogScore);
 		
 		final SelectedPlayerEntity hend = getSelectedPlayer(131, selectedPlayers);
-		hend.setSelectionStatus(SelectedPlayerStatus.SUB_3);
+		hend.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_3);
 		final GameweekScoreEntity hendScore = new GameweekScoreEntity(1, 0);
 		hend.addGameweekScore(hendScore);
 		
 		final SelectedPlayerEntity camp = getSelectedPlayer(123, selectedPlayers);
-		camp.setSelectionStatus(SelectedPlayerStatus.SUB_4);
+		camp.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_4);
 		camp.setPointsScored(2);
 		final GameweekScoreEntity campScore = new GameweekScoreEntity(1, 2);
 		camp.addGameweekScore(campScore);
 		
 		final SelectedPlayerEntity gibs = getSelectedPlayer(146, selectedPlayers);
-		gibs.setSelectionStatus(SelectedPlayerStatus.SUB_5);
+		gibs.setSelectionStatus(SelectedPlayerStartingElevenStatus.SUB_5);
 		gibs.setPointsScored(2);
 		final GameweekScoreEntity gibsScore = new GameweekScoreEntity(1, 2);
 		gibs.addGameweekScore(gibsScore);

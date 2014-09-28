@@ -14,7 +14,7 @@ import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.player.GameweekScorePlayer;
 import net.blackcat.fantasy.draft.player.types.Position;
-import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
+import net.blackcat.fantasy.draft.player.types.SelectedPlayerStartingElevenStatus;
 import net.blackcat.fantasy.draft.team.ValidFormations;
 
 /**
@@ -198,7 +198,7 @@ public final class TeamSelectionUtils {
 	 * @return True if the given player is a substitute, false otherwise.
 	 */
 	public static boolean isPlayerASubstitute(final SelectedPlayerEntity selectedPlayer) {
-		return SelectedPlayerStatus.SUBSTITUTE_POSITIONS.contains(selectedPlayer.getSelectionStatus());
+		return SelectedPlayerStartingElevenStatus.SUBSTITUTE_POSITIONS.contains(selectedPlayer.getSelectionStatus());
 	}
 	
 	/**
@@ -269,7 +269,7 @@ public final class TeamSelectionUtils {
 			final List<SelectedPlayerEntity> playersInPosition = startingTeamForWeek.get(position);
 			
 			for (final SelectedPlayerEntity selectedPlayer : playersInPosition) {
-				if (selectedPlayer.getSelectionStatus() == SelectedPlayerStatus.CAPTAIN) {
+				if (selectedPlayer.getSelectionStatus() == SelectedPlayerStartingElevenStatus.CAPTAIN) {
 					return true;
 				}
 			}
@@ -287,9 +287,9 @@ public final class TeamSelectionUtils {
 	 * @return The weekly score for the player with any adjustments taken into account.
 	 */
 	private static int calculatePlayerScore(final boolean isCaptainInTeam, final SelectedPlayerEntity selectedPlayer, final int baseScore) {
-		if (selectedPlayer.getSelectionStatus() == SelectedPlayerStatus.CAPTAIN) {
+		if (selectedPlayer.getSelectionStatus() == SelectedPlayerStartingElevenStatus.CAPTAIN) {
 			return baseScore * 2;
-		} else if (selectedPlayer.getSelectionStatus() == SelectedPlayerStatus.VICE_CAPTAIN && !isCaptainInTeam) {
+		} else if (selectedPlayer.getSelectionStatus() == SelectedPlayerStartingElevenStatus.VICE_CAPTAIN && !isCaptainInTeam) {
 			return baseScore * 2;
 		}
 		

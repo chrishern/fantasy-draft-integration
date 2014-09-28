@@ -18,7 +18,7 @@ import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.player.GameweekScorePlayer;
 import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.player.types.Position;
-import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
+import net.blackcat.fantasy.draft.player.types.SelectedPlayerStartingElevenStatus;
 
 /**
  * Utilities for creating test data.
@@ -114,17 +114,17 @@ public final class TestDataUtil {
 	public static List<TeamEntity> createTeamEntitiesWithScore() {
 		final TeamEntity team1 = new TeamEntity(TEST_TEAM_1);
 		team1.setTotalScore(TEST_TEAM_1_SCORE);
-		team1.addSelectedPlayers(Arrays.asList(buildSelectedPlayer(PLAYER_1_ID, Position.DEFENDER, SelectedPlayerStatus.PICKED)));
+		team1.addSelectedPlayers(Arrays.asList(buildSelectedPlayer(PLAYER_1_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.PICKED)));
 		team1.addGameweekScore(new GameweekScoreEntity(1, TEST_TEAM_1_WEEK_SCORE));
 		
 		final TeamEntity team2 = new TeamEntity(TEST_TEAM_2);
 		team2.setTotalScore(TEST_TEAM_2_SCORE);
-		team2.addSelectedPlayers(Arrays.asList(buildSelectedPlayer(PLAYER_2_ID, Position.DEFENDER, SelectedPlayerStatus.PICKED)));
+		team2.addSelectedPlayers(Arrays.asList(buildSelectedPlayer(PLAYER_2_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.PICKED)));
 		team2.addGameweekScore(new GameweekScoreEntity(1, TEST_TEAM_2_WEEK_SCORE));
 		
 		final TeamEntity team3 = new TeamEntity(TEST_TEAM_3);
 		team3.setTotalScore(TEST_TEAM_3_SCORE);
-		team3.addSelectedPlayers(Arrays.asList(buildSelectedPlayer(PLAYER_14_ID, Position.DEFENDER, SelectedPlayerStatus.PICKED)));
+		team3.addSelectedPlayers(Arrays.asList(buildSelectedPlayer(PLAYER_14_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.PICKED)));
 		team3.addGameweekScore(new GameweekScoreEntity(1, TEST_TEAM_3_WEEK_SCORE));
 		
 		return Arrays.asList(team1, team2, team3);
@@ -138,7 +138,7 @@ public final class TestDataUtil {
 	 * @param selectionStatus Selection status of the player.
 	 * @return The created {@link SelectedPlayerEntity}.
 	 */
-	public static SelectedPlayerEntity buildSelectedPlayer(final int playerId, final Position position, final SelectedPlayerStatus selectionStatus) {
+	public static SelectedPlayerEntity buildSelectedPlayer(final int playerId, final Position position, final SelectedPlayerStartingElevenStatus selectionStatus) {
 		final PlayerEntity player = new PlayerEntity();
 		player.setId(playerId);
 		player.setPosition(position);
@@ -190,14 +190,14 @@ public final class TestDataUtil {
 		fullSquad.addAll(startingTeam.get(Position.STRIKER));
 		
 		for (final SelectedPlayerEntity player : fullSquad) {
-			player.setSelectionStatus(SelectedPlayerStatus.PICKED);
+			player.setSelectionStatus(SelectedPlayerStartingElevenStatus.PICKED);
 		}
 
-		updateSquadSubstitute(fullSquad, TestDataUtil.PLAYER_1_ID, Position.GOALKEEPER, SelectedPlayerStatus.SUB_5);
-		updateSquadSubstitute(fullSquad, TestDataUtil.PLAYER_2_ID, Position.DEFENDER, SelectedPlayerStatus.SUB_4);
-		updateSquadSubstitute(fullSquad, TestDataUtil.PLAYER_7_ID, Position.MIDFIEDER, SelectedPlayerStatus.SUB_2);
-		updateSquadSubstitute(fullSquad, TestDataUtil.PLAYER_13_ID, Position.STRIKER, SelectedPlayerStatus.SUB_1);
-		updateSquadSubstitute(fullSquad, TestDataUtil.PLAYER_14_ID, Position.STRIKER, SelectedPlayerStatus.SUB_3);
+		updateSquadSubstitute(fullSquad, TestDataUtil.PLAYER_1_ID, Position.GOALKEEPER, SelectedPlayerStartingElevenStatus.SUB_5);
+		updateSquadSubstitute(fullSquad, TestDataUtil.PLAYER_2_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.SUB_4);
+		updateSquadSubstitute(fullSquad, TestDataUtil.PLAYER_7_ID, Position.MIDFIEDER, SelectedPlayerStartingElevenStatus.SUB_2);
+		updateSquadSubstitute(fullSquad, TestDataUtil.PLAYER_13_ID, Position.STRIKER, SelectedPlayerStartingElevenStatus.SUB_1);
+		updateSquadSubstitute(fullSquad, TestDataUtil.PLAYER_14_ID, Position.STRIKER, SelectedPlayerStartingElevenStatus.SUB_3);
 
 		return fullSquad;
 	}
@@ -215,7 +215,7 @@ public final class TestDataUtil {
 	}
 	
 	private static void updateSquadSubstitute(final List<SelectedPlayerEntity> fullSquad, final int subListPosition, 
-			final Position subPosition, final SelectedPlayerStatus subStatus) {
+			final Position subPosition, final SelectedPlayerStartingElevenStatus subStatus) {
 		
 		final SelectedPlayerEntity selectedPlayer = fullSquad.get(subListPosition); 
 		
