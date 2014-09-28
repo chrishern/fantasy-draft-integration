@@ -61,6 +61,9 @@ public class SelectedPlayerEntity implements Serializable, Comparable<SelectedPl
 	@Column
 	private BigDecimal fplCostAtPurchase;
 	
+	@Column
+	private BigDecimal currentSellToPotPrice;
+	
 	public SelectedPlayerEntity() {
 	}
 
@@ -172,6 +175,20 @@ public class SelectedPlayerEntity implements Serializable, Comparable<SelectedPl
 	 */
 	public void setFplCostAtPurchase(BigDecimal fplCostAtPurchase) {
 		this.fplCostAtPurchase = fplCostAtPurchase;
+	}
+
+	/**
+	 * @return the currentSellToPotPrice
+	 */
+	public BigDecimal getCurrentSellToPotPrice() {
+		return currentSellToPotPrice;
+	}
+
+	/**
+	 * @param currentSellToPotPrice the currentSellToPotPrice to set
+	 */
+	public void setCurrentSellToPotPrice(BigDecimal currentSellToPotPrice) {
+		this.currentSellToPotPrice = currentSellToPotPrice;
 	}
 
 	/**

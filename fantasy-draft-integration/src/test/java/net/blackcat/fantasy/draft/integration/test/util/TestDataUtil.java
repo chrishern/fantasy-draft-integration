@@ -3,6 +3,7 @@
  */
 package net.blackcat.fantasy.draft.integration.test.util;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -26,6 +27,9 @@ import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
  *
  */
 public final class TestDataUtil {
+
+	private static final String SELECTED_PLAYER_COST = "7.0";
+	public static final String FPL_COST_AT_PURCHASE = "8.5";
 
 	public static final int POINTS_FOR_PLAYING = 2;
 	
@@ -142,6 +146,9 @@ public final class TestDataUtil {
 		final SelectedPlayerEntity selectedPlayer = new SelectedPlayerEntity();
 		selectedPlayer.setPlayer(player);
 		selectedPlayer.setSelectionStatus(selectionStatus);
+		selectedPlayer.setFplCostAtPurchase(new BigDecimal(FPL_COST_AT_PURCHASE));
+		selectedPlayer.setCost(new BigDecimal(SELECTED_PLAYER_COST));
+		selectedPlayer.setStillSelected(true);
 		
 		return selectedPlayer;
 	}
