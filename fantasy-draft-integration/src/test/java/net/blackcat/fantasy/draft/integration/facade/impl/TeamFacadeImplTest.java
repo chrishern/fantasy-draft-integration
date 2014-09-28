@@ -121,6 +121,7 @@ public class TeamFacadeImplTest {
 		assertThat(teamSummary.getTeam()).hasSize(1);
 		assertThat(teamSummary.getTeam().get(0).getPosition()).isEqualTo(Position.DEFENDER);
 		assertThat(teamSummary.getTeam().get(0).getSelectionStatus()).isEqualTo(SelectedPlayerStatus.PICKED);
+		assertThat(teamSummary.getTeam().get(0).getCurrentSellToPotPrice().doubleValue()).isEqualTo(Double.valueOf(TestDataUtil.SELECTED_PLAYER_COST));
 	}
 	
 	@Test
