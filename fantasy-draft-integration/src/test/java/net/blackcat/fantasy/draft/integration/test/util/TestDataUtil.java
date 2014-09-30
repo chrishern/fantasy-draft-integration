@@ -19,6 +19,7 @@ import net.blackcat.fantasy.draft.player.GameweekScorePlayer;
 import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.player.types.Position;
 import net.blackcat.fantasy.draft.player.types.SelectedPlayerStartingElevenStatus;
+import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
 
 /**
  * Utilities for creating test data.
@@ -149,7 +150,7 @@ public final class TestDataUtil {
 		selectedPlayer.setFplCostAtPurchase(new BigDecimal(FPL_COST_AT_PURCHASE));
 		selectedPlayer.setCost(new BigDecimal(SELECTED_PLAYER_COST));
 		selectedPlayer.setCurrentSellToPotPrice(new BigDecimal(SELECTED_PLAYER_COST));
-		selectedPlayer.setStillSelected(true);
+		selectedPlayer.setStillSelected(SelectedPlayerStatus.STILL_SELECTED);
 		
 		return selectedPlayer;
 	}

@@ -20,6 +20,7 @@ import net.blackcat.fantasy.draft.player.FplCostPlayer;
 import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
 import net.blackcat.fantasy.draft.player.types.Position;
+import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,7 +124,7 @@ public class PlayerFacadeImpl implements PlayerFacade {
 		for (final LeagueEntity league : leagueDataService.getLeagues()) {
 			for (final TeamEntity team : league.getTeams()) {
 				for (final SelectedPlayerEntity selectedPlayer : team.getSelectedPlayers()) {
-					if (selectedPlayer.isStillSelected()) {
+					if (selectedPlayer.getSelectedPlayerStatus() == SelectedPlayerStatus.STILL_SELECTED) {
 						final BigDecimal purchasePrice = selectedPlayer.getCost();
 						final BigDecimal priceAdjustmentFactor = purchasePrice.multiply(new BigDecimal(PRICE_CHANGE_MULTIPLIER));
 						

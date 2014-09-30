@@ -22,6 +22,7 @@ import javax.persistence.Table;
 
 import net.blackcat.fantasy.draft.player.SelectedPlayer;
 import net.blackcat.fantasy.draft.player.types.SelectedPlayerStartingElevenStatus;
+import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
 
 /**
  * Entity representing a player who has been picked by a team within the game.
@@ -46,7 +47,8 @@ public class SelectedPlayerEntity implements Serializable, Comparable<SelectedPl
 	private int pointsScored;
 	
 	@Column(nullable = false)
-	private boolean stillSelected;
+	@Enumerated(EnumType.STRING)
+	private SelectedPlayerStatus stillSelected;
 	
 	@Column
 	private BigDecimal cost;
@@ -69,7 +71,7 @@ public class SelectedPlayerEntity implements Serializable, Comparable<SelectedPl
 
 	public SelectedPlayerEntity(final PlayerEntity player) {
 		this.player = player;
-		this.stillSelected = true;
+		this.stillSelected = SelectedPlayerStatus.STILL_SELECTED;
 	}
 
 	/**
@@ -103,14 +105,14 @@ public class SelectedPlayerEntity implements Serializable, Comparable<SelectedPl
 	/**
 	 * @return the stillSelected
 	 */
-	public boolean isStillSelected() {
+	public SelectedPlayerStatus getSelectedPlayerStatus() {
 		return stillSelected;
 	}
 
 	/**
 	 * @param stillSelected the stillSelected to set
 	 */
-	public void setStillSelected(boolean stillSelected) {
+	public void setStillSelected(SelectedPlayerStatus stillSelected) {
 		this.stillSelected = stillSelected;
 	}
 
