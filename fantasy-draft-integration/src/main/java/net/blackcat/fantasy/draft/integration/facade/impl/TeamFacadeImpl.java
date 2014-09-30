@@ -153,6 +153,7 @@ public class TeamFacadeImpl implements TeamFacade {
 		
 		teamSummary.setTeamName(teamEntity.getName());
 		teamSummary.setTotalPoints(teamEntity.getTotalScore());
+		teamSummary.setRemainingBudget(teamEntity.getRemainingBudget());
 		
 		final List<SelectedPlayer> selectedPlayerModelList = new ArrayList<SelectedPlayer>();
 		for (final SelectedPlayerEntity selectedPlayerEntity : teamEntity.getSelectedPlayers()) {

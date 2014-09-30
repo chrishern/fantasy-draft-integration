@@ -4,6 +4,7 @@
 package net.blackcat.fantasy.draft.integration.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +53,9 @@ public class TeamEntity implements Serializable {
 	@Column
 	@Enumerated(EnumType.STRING)
 	private TeamStatus status;
+	
+	@Column
+	private BigDecimal remainingBudget;
 	
 	public TeamEntity() {
 		
@@ -135,6 +139,20 @@ public class TeamEntity implements Serializable {
 	 */
 	public List<GameweekScoreEntity> getGameweekScores() {
 		return gameweekScores;
+	}
+
+	/**
+	 * @return the remainingBudget
+	 */
+	public BigDecimal getRemainingBudget() {
+		return remainingBudget;
+	}
+
+	/**
+	 * @param remainingBudget the remainingBudget to set
+	 */
+	public void setRemainingBudget(BigDecimal remainingBudget) {
+		this.remainingBudget = remainingBudget;
 	}
 
 	/**

@@ -118,6 +118,7 @@ public class TeamFacadeImplTest {
 		// assert
 		assertThat(teamSummary.getTeamName()).isEqualTo(TestDataUtil.TEST_TEAM_1);
 		assertThat(teamSummary.getTotalPoints()).isEqualTo(TestDataUtil.TEST_TEAM_1_SCORE);
+		assertThat(teamSummary.getRemainingBudget().doubleValue()).isEqualTo(Double.valueOf(TestDataUtil.TEST_TEAM_1_REMAINING_BUDGET));
 		assertThat(teamSummary.getTeam()).hasSize(1);
 		assertThat(teamSummary.getTeam().get(0).getPosition()).isEqualTo(Position.DEFENDER);
 		assertThat(teamSummary.getTeam().get(0).getSelectionStatus()).isEqualTo(SelectedPlayerStartingElevenStatus.PICKED);

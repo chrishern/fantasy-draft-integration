@@ -67,6 +67,8 @@ public final class TestDataUtil {
 	public static final int TEST_TEAM_1_WEEK_SCORE = 54;
 	public static final int TEST_TEAM_2_WEEK_SCORE = 14;
 	public static final int TEST_TEAM_3_WEEK_SCORE = 32;
+
+	public static final String TEST_TEAM_1_REMAINING_BUDGET = "45.5";
 	
 	public static final String LEAGUE_NAME = "New League";
 	
@@ -117,6 +119,7 @@ public final class TestDataUtil {
 		team1.setTotalScore(TEST_TEAM_1_SCORE);
 		team1.addSelectedPlayers(Arrays.asList(buildSelectedPlayer(PLAYER_1_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.PICKED)));
 		team1.addGameweekScore(new GameweekScoreEntity(1, TEST_TEAM_1_WEEK_SCORE));
+		team1.setRemainingBudget(new BigDecimal(TEST_TEAM_1_REMAINING_BUDGET));
 		
 		final TeamEntity team2 = new TeamEntity(TEST_TEAM_2);
 		team2.setTotalScore(TEST_TEAM_2_SCORE);
