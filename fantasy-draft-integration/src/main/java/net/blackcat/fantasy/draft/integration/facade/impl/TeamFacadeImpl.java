@@ -151,6 +151,7 @@ public class TeamFacadeImpl implements TeamFacade {
 	private TeamSummary getTeamSummaryFromEntity(final TeamEntity teamEntity) {
 		final TeamSummary teamSummary = new TeamSummary();
 		
+		teamSummary.setId(teamEntity.getId());
 		teamSummary.setTeamName(teamEntity.getName());
 		teamSummary.setTotalPoints(teamEntity.getTotalScore());
 		teamSummary.setRemainingBudget(teamEntity.getRemainingBudget());

@@ -116,6 +116,7 @@ public class TeamFacadeImplTest {
 		final TeamSummary teamSummary = teamFacade.getTeamSummary(1);
 		
 		// assert
+		assertThat(teamSummary.getId()).isEqualTo(0);
 		assertThat(teamSummary.getTeamName()).isEqualTo(TestDataUtil.TEST_TEAM_1);
 		assertThat(teamSummary.getTotalPoints()).isEqualTo(TestDataUtil.TEST_TEAM_1_SCORE);
 		assertThat(teamSummary.getRemainingBudget().doubleValue()).isEqualTo(Double.valueOf(TestDataUtil.TEST_TEAM_1_REMAINING_BUDGET));
