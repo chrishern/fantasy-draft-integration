@@ -186,7 +186,7 @@ public class TransferWindowDataServiceJpaTest {
 		draftRound.setStatus(DraftRoundStatus.OPEN);
 		dataService.createTransferWindow(draftRound);
 		
-		final TransferWindowEntity openTransferWindow = dataService.getOpenTransferWindow(1);
+		final TransferWindowEntity openTransferWindow = dataService.getOpenTransferWindow(league.getId());
 		assertThat(openTransferWindow.getTransfers()).isNull();
 
 		// act
@@ -197,7 +197,7 @@ public class TransferWindowDataServiceJpaTest {
 		dataService.updateTransferWindow(openTransferWindow);
 		
 		// assert
-		final TransferWindowEntity updatedTransferWindow = dataService.getOpenTransferWindow(1);
+		final TransferWindowEntity updatedTransferWindow = dataService.getOpenTransferWindow(league.getId());
 
 		assertThat(updatedTransferWindow.getTransfers()).isNotEmpty();
 	}
