@@ -35,4 +35,13 @@ public interface TransferWindowFacade {
 	 * @throws FantasyDraftIntegrationException
 	 */
 	void addTransfer(Transfer transfer) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Sell a given player from a given team to the pot.
+	 * 
+	 * @param teamId The ID of the team selling the player to the pot.
+	 * @param playerId The ID of the player being sold to the pot.
+	 * @throws FantasyDraftIntegrationException
+	 */
+	void sellPlayerToPot(int teamId, int playerId) throws FantasyDraftIntegrationException;
 }

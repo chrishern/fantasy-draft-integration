@@ -51,4 +51,15 @@ public class TransferWindowController {
 	public void addTransfer(final Transfer transfer) throws FantasyDraftIntegrationException {
 		transferWindowFacade.addTransfer(transfer);
 	}
+	
+	/**
+	 * Sell a given player from a given team to the pot.
+	 * 
+	 * @param teamId The ID of the team selling the player to the pot.
+	 * @param playerId The ID of the player being sold to the pot.
+	 * @throws FantasyDraftIntegrationException
+	 */
+	public void sellPlayerToPot(final int teamId, final int playerId) throws FantasyDraftIntegrationException {
+		transferWindowFacade.sellPlayerToPot(teamId, playerId);
+	}
 }

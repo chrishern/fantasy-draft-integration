@@ -51,4 +51,15 @@ public class TransferWindowControllerTest {
 		// assert
 		verify(transferWindowFacade).addTransfer(transfer);
 	}
+	
+	@Test
+	public void testSellPlayerToPot() throws Exception {
+		// arrange
+		
+		// act
+		transferWindowController.sellPlayerToPot(1, 2);
+		
+		// assert
+		verify(transferWindowFacade).sellPlayerToPot(1, 2);
+	}
 }

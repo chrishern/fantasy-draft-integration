@@ -28,6 +28,7 @@ import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationE
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.test.util.CustomIntegrationExceptionMatcher;
 import net.blackcat.fantasy.draft.integration.test.util.TestDataUtil;
+import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
 import net.blackcat.fantasy.draft.round.types.DraftRoundPhase;
 import net.blackcat.fantasy.draft.round.types.DraftRoundStatus;
 import net.blackcat.fantasy.draft.transfer.Transfer;
@@ -79,6 +80,9 @@ public class TransferWindowFacadeImplTest {
 	
 	@Captor
 	private ArgumentCaptor<TransferWindowEntity> transferWindowCaptor;
+	
+	@Captor
+	private ArgumentCaptor<TeamEntity> teamCaptor;
 	
 	private LeagueEntity league;
 	
@@ -209,6 +213,23 @@ public class TransferWindowFacadeImplTest {
 		assertThat(transferWindowCaptor.getValue().getTransfers()).hasSize(2);
 		assertThat(transferWindowCaptor.getValue().getTransfers().get(0).getStatus()).isEqualTo(TransferStatus.CONFIRMED);
 		assertThat(transferWindowCaptor.getValue().getTransfers().get(1).getStatus()).isEqualTo(TransferStatus.CONFIRMED);
+	}
+	
+	@Test
+	public void testSellPlayerToPot() throws Exception {
+		// arrange
+		final List<TeamEntity> teamEntities = TestDataUtil.createTeamEntitiesWithScore();
+
+		when(teamDataService.getTeam(anyInt())).thenReturn(teamEntities.get(0));
+		
+		// act
+		transferWindowFacade.sellPlayerToPot(1, TestDataUtil.PLAYER_1_ID);
+		
+		// assert
+		verify(teamDataService).updateTeam(teamCaptor.capture());
+		
+		assertThat(teamCaptor.getValue().getSelectedPlayers().get(0).getSelectedPlayerStatus()).isEqualTo(SelectedPlayerStatus.PENDING_SALE_TO_POT);
+		assertThat(teamCaptor.getValue().getRemainingBudget().doubleValue()).isEqualTo(52.5d);
 	}
 
 }

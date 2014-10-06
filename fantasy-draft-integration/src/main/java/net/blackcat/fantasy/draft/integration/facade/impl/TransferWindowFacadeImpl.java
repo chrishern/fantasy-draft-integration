@@ -84,6 +84,24 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 		updateBuyingTeamData(transfer, buyingTeam, exchangedPlayers);
 		transferWindowDataService.updateTransferWindow(openWindow);
 	}
+	
+	@Override
+	public void sellPlayerToPot(final int teamId, final int playerId) throws FantasyDraftIntegrationException {
+		final TeamEntity sellingTeam = teamDataService.getTeam(teamId);
+		
+		for (final SelectedPlayerEntity selectedPlayer : sellingTeam.getSelectedPlayers()) {
+			if (selectedPlayer.getPlayer().getId() == playerId) {
+				selectedPlayer.setStillSelected(SelectedPlayerStatus.PENDING_SALE_TO_POT);
+				
+				final BigDecimal newTeamRemainingBudget = sellingTeam.getRemainingBudget().add(selectedPlayer.getCurrentSellToPotPrice());
+				sellingTeam.setRemainingBudget(newTeamRemainingBudget);
+				
+				teamDataService.updateTeam(sellingTeam);
+				
+				break;
+			}
+		}
+	}
 
 	/**
 	 * Update the details for the team who has bought the players.
