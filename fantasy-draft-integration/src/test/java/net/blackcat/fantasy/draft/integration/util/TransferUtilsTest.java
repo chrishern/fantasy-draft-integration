@@ -10,9 +10,11 @@ import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
+import net.blackcat.fantasy.draft.integration.entity.ExchangedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.integration.entity.TransferEntity;
+import net.blackcat.fantasy.draft.integration.entity.TransferredPlayerEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.test.util.CustomIntegrationExceptionMatcher;
@@ -70,7 +72,7 @@ public class TransferUtilsTest {
 		transferEntity.setBuyingTeam(buyingTeamEntity);
 		transferEntity.setSellingTeam(sellingTeamEntity);
 		transferEntity.setAmount(THREE_MILLION_TRANSFER_AMOUNT);
-		transferEntity.setPlayers(Arrays.asList(player1));
+		transferEntity.setPlayers(Arrays.asList(new TransferredPlayerEntity(player1)));
 		
 		// act
 		final TransferEntity equivalentTransfer = TransferUtils.getEquivalentTransfer(transfer, Arrays.asList(transferEntity));
@@ -90,7 +92,7 @@ public class TransferUtilsTest {
 		transferEntity.setBuyingTeam(buyingTeamEntity);
 		transferEntity.setSellingTeam(sellingTeamEntity);
 		transferEntity.setAmount(THREE_MILLION_TRANSFER_AMOUNT);
-		transferEntity.setPlayers(Arrays.asList(player1, player2));
+		transferEntity.setPlayers(Arrays.asList(new TransferredPlayerEntity(player1), new TransferredPlayerEntity(player2)));
 		
 		// act
 		final TransferEntity equivalentTransfer = TransferUtils.getEquivalentTransfer(transfer, Arrays.asList(transferEntity));
@@ -110,8 +112,8 @@ public class TransferUtilsTest {
 		transferEntity.setBuyingTeam(buyingTeamEntity);
 		transferEntity.setSellingTeam(sellingTeamEntity);
 		transferEntity.setAmount(THREE_MILLION_TRANSFER_AMOUNT);
-		transferEntity.setPlayers(Arrays.asList(player1));
-		transferEntity.setExchangedPlayers(Arrays.asList(player2));
+		transferEntity.setPlayers(Arrays.asList(new TransferredPlayerEntity(player1)));
+		transferEntity.setExchangedPlayers(Arrays.asList(new ExchangedPlayerEntity(player2)));
 		
 		// act
 		final TransferEntity equivalentTransfer = TransferUtils.getEquivalentTransfer(transfer, Arrays.asList(transferEntity));
@@ -131,8 +133,8 @@ public class TransferUtilsTest {
 		transferEntity.setBuyingTeam(buyingTeamEntity);
 		transferEntity.setSellingTeam(sellingTeamEntity);
 		transferEntity.setAmount(THREE_MILLION_TRANSFER_AMOUNT);
-		transferEntity.setPlayers(Arrays.asList(player1));
-		transferEntity.setExchangedPlayers(Arrays.asList(player2, player3));
+		transferEntity.setPlayers(Arrays.asList(new TransferredPlayerEntity(player1)));
+		transferEntity.setExchangedPlayers(Arrays.asList(new ExchangedPlayerEntity(player2), new ExchangedPlayerEntity(player3)));
 		
 		// act
 		final TransferEntity equivalentTransfer = TransferUtils.getEquivalentTransfer(transfer, Arrays.asList(transferEntity));
@@ -151,13 +153,13 @@ public class TransferUtilsTest {
 		nonMatchingTransferEntity.setBuyingTeam(buyingTeamEntity);
 		nonMatchingTransferEntity.setSellingTeam(sellingTeamEntity);
 		nonMatchingTransferEntity.setAmount(THREE_MILLION_TRANSFER_AMOUNT);
-		nonMatchingTransferEntity.setPlayers(Arrays.asList(player2));
+		nonMatchingTransferEntity.setPlayers(Arrays.asList(new TransferredPlayerEntity(player2)));
 		
 		final TransferEntity matchingTransferEntity = new TransferEntity();
 		matchingTransferEntity.setBuyingTeam(buyingTeamEntity);
 		matchingTransferEntity.setSellingTeam(sellingTeamEntity);
 		matchingTransferEntity.setAmount(THREE_MILLION_TRANSFER_AMOUNT);
-		matchingTransferEntity.setPlayers(Arrays.asList(player1));
+		matchingTransferEntity.setPlayers(Arrays.asList(new TransferredPlayerEntity(player1)));
 		
 		// act
 		final TransferEntity equivalentTransfer = TransferUtils.getEquivalentTransfer(transfer, Arrays.asList(matchingTransferEntity));
@@ -176,7 +178,7 @@ public class TransferUtilsTest {
 		transferEntity.setBuyingTeam(buyingTeamEntity);
 		transferEntity.setSellingTeam(sellingTeamEntity);
 		transferEntity.setAmount(THREE_MILLION_TRANSFER_AMOUNT);
-		transferEntity.setPlayers(Arrays.asList(player1));
+		transferEntity.setPlayers(Arrays.asList(new TransferredPlayerEntity(player1)));
 		
 		thrownException.expect(FantasyDraftIntegrationException.class);
 		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.MATCHING_TRANSFER_NOT_FOUND));
@@ -197,7 +199,7 @@ public class TransferUtilsTest {
 		transferEntity.setBuyingTeam(buyingTeamEntity);
 		transferEntity.setSellingTeam(sellingTeamEntity);
 		transferEntity.setAmount(THREE_MILLION_TRANSFER_AMOUNT);
-		transferEntity.setPlayers(Arrays.asList(player1));
+		transferEntity.setPlayers(Arrays.asList(new TransferredPlayerEntity(player1)));
 		
 		thrownException.expect(FantasyDraftIntegrationException.class);
 		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.MATCHING_TRANSFER_NOT_FOUND));
@@ -219,7 +221,7 @@ public class TransferUtilsTest {
 		transferEntity.setBuyingTeam(buyingTeamEntity);
 		transferEntity.setSellingTeam(sellingTeamEntity);
 		transferEntity.setAmount(THREE_MILLION_TRANSFER_AMOUNT);
-		transferEntity.setPlayers(Arrays.asList(player1));
+		transferEntity.setPlayers(Arrays.asList(new TransferredPlayerEntity(player1)));
 		
 		thrownException.expect(FantasyDraftIntegrationException.class);
 		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.MATCHING_TRANSFER_NOT_FOUND));
@@ -241,7 +243,7 @@ public class TransferUtilsTest {
 		transferEntity.setBuyingTeam(buyingTeamEntity);
 		transferEntity.setSellingTeam(sellingTeamEntity);
 		transferEntity.setAmount(THREE_MILLION_TRANSFER_AMOUNT);
-		transferEntity.setPlayers(Arrays.asList(player1, player2));
+		transferEntity.setPlayers(Arrays.asList(new TransferredPlayerEntity(player1), new TransferredPlayerEntity(player2)));
 		
 		thrownException.expect(FantasyDraftIntegrationException.class);
 		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.MATCHING_TRANSFER_NOT_FOUND));
@@ -263,7 +265,7 @@ public class TransferUtilsTest {
 		transferEntity.setBuyingTeam(buyingTeamEntity);
 		transferEntity.setSellingTeam(sellingTeamEntity);
 		transferEntity.setAmount(FIVE_MILLION_TRANSFER_AMOUNT);
-		transferEntity.setPlayers(Arrays.asList(player1));
+		transferEntity.setPlayers(Arrays.asList(new TransferredPlayerEntity(player1)));
 		
 		thrownException.expect(FantasyDraftIntegrationException.class);
 		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.MATCHING_TRANSFER_NOT_FOUND));
@@ -285,8 +287,8 @@ public class TransferUtilsTest {
 		transferEntity.setBuyingTeam(buyingTeamEntity);
 		transferEntity.setSellingTeam(sellingTeamEntity);
 		transferEntity.setAmount(FIVE_MILLION_TRANSFER_AMOUNT);
-		transferEntity.setPlayers(Arrays.asList(player1));
-		transferEntity.setExchangedPlayers(Arrays.asList(player3));
+		transferEntity.setPlayers(Arrays.asList(new TransferredPlayerEntity(player1)));
+		transferEntity.setExchangedPlayers(Arrays.asList(new ExchangedPlayerEntity(player3)));
 		
 		thrownException.expect(FantasyDraftIntegrationException.class);
 		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.MATCHING_TRANSFER_NOT_FOUND));
@@ -308,8 +310,8 @@ public class TransferUtilsTest {
 		transferEntity.setBuyingTeam(buyingTeamEntity);
 		transferEntity.setSellingTeam(sellingTeamEntity);
 		transferEntity.setAmount(FIVE_MILLION_TRANSFER_AMOUNT);
-		transferEntity.setPlayers(Arrays.asList(player1));
-		transferEntity.setExchangedPlayers(Arrays.asList(player3));
+		transferEntity.setPlayers(Arrays.asList(new TransferredPlayerEntity(player1)));
+		transferEntity.setExchangedPlayers(Arrays.asList(new ExchangedPlayerEntity(player3)));
 		
 		thrownException.expect(FantasyDraftIntegrationException.class);
 		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.MATCHING_TRANSFER_NOT_FOUND));
@@ -331,8 +333,8 @@ public class TransferUtilsTest {
 		transferEntity.setBuyingTeam(buyingTeamEntity);
 		transferEntity.setSellingTeam(sellingTeamEntity);
 		transferEntity.setAmount(FIVE_MILLION_TRANSFER_AMOUNT);
-		transferEntity.setPlayers(Arrays.asList(player1));
-		transferEntity.setExchangedPlayers(Arrays.asList(player2, player3));
+		transferEntity.setPlayers(Arrays.asList(new TransferredPlayerEntity(player1)));
+		transferEntity.setExchangedPlayers(Arrays.asList(new ExchangedPlayerEntity(player2), new ExchangedPlayerEntity(player3)));
 		
 		thrownException.expect(FantasyDraftIntegrationException.class);
 		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.MATCHING_TRANSFER_NOT_FOUND));

@@ -24,6 +24,7 @@ import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.integration.entity.TransferEntity;
 import net.blackcat.fantasy.draft.integration.entity.TransferWindowEntity;
+import net.blackcat.fantasy.draft.integration.entity.TransferredPlayerEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.test.util.CustomIntegrationExceptionMatcher;
@@ -179,10 +180,11 @@ public class TransferWindowFacadeImplTest {
 		final LeagueEntity leagueEntity = new LeagueEntity();
 		final TransferWindowEntity transferWindow = new TransferWindowEntity(1, leagueEntity);
 		final PlayerEntity entityPlayer = TestDataUtil.createEntityPlayer(TestDataUtil.PLAYER_1_ID);
+		final TransferredPlayerEntity transferredPlayer = new TransferredPlayerEntity(entityPlayer);
 		final int buyingTeamId = 1;
 		final int sellingTeamId = 2;
 		
-		final TransferEntity transferEntity = new TransferEntity(Arrays.asList(entityPlayer), buyingTeam, sellingTeam, null, new BigDecimal("3.5"));
+		final TransferEntity transferEntity = new TransferEntity(Arrays.asList(transferredPlayer), buyingTeam, sellingTeam, null, new BigDecimal("3.5"));
 		transferEntity.setStatus(TransferStatus.PENDING);
 		transferWindow.addTransfer(transferEntity);
 		

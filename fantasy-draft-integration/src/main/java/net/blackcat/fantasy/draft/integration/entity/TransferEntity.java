@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -36,8 +37,8 @@ public class TransferEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	
-	@OneToMany
-	private List<PlayerEntity> players;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<TransferredPlayerEntity> players;
 	
 	@OneToOne
 	private TeamEntity sellingTeam;
@@ -45,8 +46,8 @@ public class TransferEntity implements Serializable {
 	@OneToOne
 	private TeamEntity buyingTeam;
 	
-	@OneToMany
-	private List<PlayerEntity> exchangedPlayers;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<ExchangedPlayerEntity> exchangedPlayers;
 	
 	@Column(nullable = false)
 	private BigDecimal amount;
@@ -58,8 +59,8 @@ public class TransferEntity implements Serializable {
 	public TransferEntity() {
 	}
 
-	public TransferEntity(final List<PlayerEntity> players, final TeamEntity sellingTeam, final TeamEntity buyingTeam, final List<PlayerEntity> exchangedPlayers,
-			final BigDecimal amount) {
+	public TransferEntity(final List<TransferredPlayerEntity> players, final TeamEntity sellingTeam, final TeamEntity buyingTeam, 
+			final List<ExchangedPlayerEntity> exchangedPlayers, final BigDecimal amount) {
 		this.players = players;
 		this.sellingTeam = sellingTeam;
 		this.buyingTeam = buyingTeam;
@@ -84,14 +85,14 @@ public class TransferEntity implements Serializable {
 	/**
 	 * @return the players
 	 */
-	public List<PlayerEntity> getPlayers() {
+	public List<TransferredPlayerEntity> getPlayers() {
 		return players;
 	}
 
 	/**
 	 * @param players the players to set
 	 */
-	public void setPlayers(final List<PlayerEntity> players) {
+	public void setPlayers(final List<TransferredPlayerEntity> players) {
 		this.players = players;
 	}
 
@@ -140,14 +141,14 @@ public class TransferEntity implements Serializable {
 	/**
 	 * @return the exchangedPlayers
 	 */
-	public List<PlayerEntity> getExchangedPlayers() {
+	public List<ExchangedPlayerEntity> getExchangedPlayers() {
 		return exchangedPlayers;
 	}
 
 	/**
 	 * @param exchangedPlayers the exchangedPlayers to set
 	 */
-	public void setExchangedPlayers(List<PlayerEntity> exchangedPlayers) {
+	public void setExchangedPlayers(List<ExchangedPlayerEntity> exchangedPlayers) {
 		this.exchangedPlayers = exchangedPlayers;
 	}
 

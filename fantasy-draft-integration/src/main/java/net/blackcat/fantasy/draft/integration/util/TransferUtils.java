@@ -5,8 +5,9 @@ package net.blackcat.fantasy.draft.integration.util;
 
 import java.util.List;
 
-import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
+import net.blackcat.fantasy.draft.integration.entity.ExchangedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TransferEntity;
+import net.blackcat.fantasy.draft.integration.entity.TransferredPlayerEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.transfer.Transfer;
@@ -130,8 +131,8 @@ public final class TransferUtils {
 	 * @return True if the player existing in the existing transfer, false otherwise.
 	 */
 	private static boolean equivalentPlayerExistsInExistingTransfer(final int newPlayerId, final TransferEntity existingTransfer) {
-		for (final PlayerEntity existingPlayer : existingTransfer.getPlayers()) {
-			if (existingPlayer.getId() == newPlayerId) {
+		for (final TransferredPlayerEntity existingPlayer : existingTransfer.getPlayers()) {
+			if (existingPlayer.getPlayer().getId() == newPlayerId) {
 				return true;
 			}
 		}
@@ -195,8 +196,8 @@ public final class TransferUtils {
 	 * @return True if the player exist as an exchanged player in the existing transfer, false otherwise.
 	 */
 	private static boolean equivalentExchangedPlayerExistsInExistingTransfer(final int newPlayerId, final TransferEntity existingTransfer) {
-		for (final PlayerEntity existingPlayer : existingTransfer.getExchangedPlayers()) {
-			if (existingPlayer.getId() == newPlayerId) {
+		for (final ExchangedPlayerEntity existingPlayer : existingTransfer.getExchangedPlayers()) {
+			if (existingPlayer.getPlayer().getId() == newPlayerId) {
 				return true;
 			}
 		}
