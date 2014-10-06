@@ -49,6 +49,10 @@ public final class TestDataUtil {
 	public static final String PLAYER_2_FORENAME = "Test2";
 	
 	public static final int PLAYER_3_ID = 3;
+	public static final int PLAYER_3_POINTS = 65;
+	public static final String PLAYER_3_SURNAME = "Player3";
+	public static final String PLAYER_3_FORENAME = "Test3";
+	
 	public static final int PLAYER_4_ID = 4;
 	public static final int PLAYER_5_ID = 5;
 	public static final int PLAYER_6_ID = 6;
@@ -69,6 +73,8 @@ public final class TestDataUtil {
 	public static final int TEST_TEAM_3_WEEK_SCORE = 32;
 
 	public static final String TEST_TEAM_1_REMAINING_BUDGET = "45.5";
+	public static final String TEST_TEAM_2_REMAINING_BUDGET = "1.0";
+	public static final String TEST_TEAM_3_REMAINING_BUDGET = "4.5";
 	
 	public static final String LEAGUE_NAME = "New League";
 	
@@ -95,9 +101,11 @@ public final class TestDataUtil {
 	public static PlayerEntity createEntityPlayer(final int playerNumber) {
 		if (playerNumber == 1) {
 			return new PlayerEntity(PLAYER_1_ID, PLAYER_1_FORENAME, PLAYER_1_SURNAME, TEST_TEAM_1, Position.DEFENDER, PLAYER_1_POINTS);
+		} else if (playerNumber == 2) {
+			return new PlayerEntity(PLAYER_2_ID, PLAYER_2_FORENAME, PLAYER_2_SURNAME, TEST_TEAM_1, Position.STRIKER, PLAYER_2_POINTS);
 		}
 		
-		return new PlayerEntity(PLAYER_2_ID, PLAYER_2_FORENAME, PLAYER_2_SURNAME, TEST_TEAM_1, Position.STRIKER, PLAYER_2_POINTS);
+		return new PlayerEntity(PLAYER_3_ID, PLAYER_3_FORENAME, PLAYER_3_SURNAME, TEST_TEAM_1, Position.MIDFIEDER, PLAYER_3_POINTS);
 	}
 	
 	/**
@@ -125,11 +133,13 @@ public final class TestDataUtil {
 		team2.setTotalScore(TEST_TEAM_2_SCORE);
 		team2.addSelectedPlayers(Arrays.asList(buildSelectedPlayer(PLAYER_2_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.PICKED)));
 		team2.addGameweekScore(new GameweekScoreEntity(1, TEST_TEAM_2_WEEK_SCORE));
+		team2.setRemainingBudget(new BigDecimal(TEST_TEAM_2_REMAINING_BUDGET));
 		
 		final TeamEntity team3 = new TeamEntity(TEST_TEAM_3);
 		team3.setTotalScore(TEST_TEAM_3_SCORE);
 		team3.addSelectedPlayers(Arrays.asList(buildSelectedPlayer(PLAYER_14_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.PICKED)));
 		team3.addGameweekScore(new GameweekScoreEntity(1, TEST_TEAM_3_WEEK_SCORE));
+		team3.setRemainingBudget(new BigDecimal(TEST_TEAM_3_REMAINING_BUDGET));
 		
 		return Arrays.asList(team1, team2, team3);
 	}

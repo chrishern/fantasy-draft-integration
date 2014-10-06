@@ -5,12 +5,24 @@ package net.blackcat.fantasy.draft.integration.facade.impl;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
+
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
+import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
+import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
 import net.blackcat.fantasy.draft.integration.data.service.TransferWindowDataService;
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
+import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
+import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
+import net.blackcat.fantasy.draft.integration.entity.TransferEntity;
 import net.blackcat.fantasy.draft.integration.entity.TransferWindowEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
@@ -18,6 +30,9 @@ import net.blackcat.fantasy.draft.integration.test.util.CustomIntegrationExcepti
 import net.blackcat.fantasy.draft.integration.test.util.TestDataUtil;
 import net.blackcat.fantasy.draft.round.types.DraftRoundPhase;
 import net.blackcat.fantasy.draft.round.types.DraftRoundStatus;
+import net.blackcat.fantasy.draft.transfer.Transfer;
+import net.blackcat.fantasy.draft.transfer.types.TransferStatus;
+import net.blackcat.fantasy.draft.transfer.types.TransferType;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -40,6 +55,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class TransferWindowFacadeImplTest {
 
+	private static final BigDecimal REMAINING_BUDGET = new BigDecimal("0.5");
+
 	private static final int LEAGUE_ID = 1;
 	
 	@Rule
@@ -47,6 +64,12 @@ public class TransferWindowFacadeImplTest {
 	
 	@Mock
 	private LeagueDataService leagueDataService;
+	
+	@Mock
+	private TeamDataService teamDataService;
+	
+	@Mock
+	private PlayerDataService playerDataService;
 	
 	@Mock
 	private TransferWindowDataService transferWindowDataService;
@@ -111,6 +134,81 @@ public class TransferWindowFacadeImplTest {
 		
 		// assert
 		Assert.fail("Exception expected");
+	}
+	
+	@Test
+	public void testAddTransfer_Pending() throws Exception {
+		// arrange
+		final List<TeamEntity> teamEntities = TestDataUtil.createTeamEntitiesWithScore();
+		final LeagueEntity leagueEntity = new LeagueEntity();
+		final TransferWindowEntity transferWindow = new TransferWindowEntity(1, leagueEntity);
+		final int buyingTeamId = 1;
+		final int sellingTeamId = 2;
+		
+		final Transfer transfer = new Transfer(buyingTeamId, sellingTeamId, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID), new BigDecimal("3.5"));
+
+		when(teamDataService.getTeam(buyingTeamId)).thenReturn(teamEntities.get(0));
+		when(teamDataService.getTeam(sellingTeamId)).thenReturn(teamEntities.get(1));
+
+		when(playerDataService.getPlayer(TestDataUtil.PLAYER_1_ID)).thenReturn(TestDataUtil.createEntityPlayer(TestDataUtil.PLAYER_1_ID));
+		
+		when(leagueDataService.getLeagueForTeam(anyInt())).thenReturn(leagueEntity);
+		
+		when(transferWindowDataService.getOpenTransferWindow(anyInt())).thenReturn(transferWindow);
+		
+		// act
+		transferWindowFacade.addTransfer(transfer);
+		
+		// assert
+		verify(transferWindowDataService).updateTransferWindow(transferWindowCaptor.capture());
+		
+		assertThat(transferWindowCaptor.getValue().getTransfers()).hasSize(1);
+		assertThat(transferWindowCaptor.getValue().getTransfers().get(0).getStatus()).isEqualTo(TransferStatus.PENDING);
+	}
+	
+	@Test
+	public void testAddTransfer_Confirmed() throws Exception {
+		// arrange
+		final TeamEntity buyingTeam = mock(TeamEntity.class);
+		final TeamEntity sellingTeam = mock(TeamEntity.class);
+		
+		final LeagueEntity leagueEntity = new LeagueEntity();
+		final TransferWindowEntity transferWindow = new TransferWindowEntity(1, leagueEntity);
+		final PlayerEntity entityPlayer = TestDataUtil.createEntityPlayer(TestDataUtil.PLAYER_1_ID);
+		final int buyingTeamId = 1;
+		final int sellingTeamId = 2;
+		
+		final TransferEntity transferEntity = new TransferEntity(Arrays.asList(entityPlayer), buyingTeam, sellingTeam, null, new BigDecimal("3.5"));
+		transferEntity.setStatus(TransferStatus.PENDING);
+		transferWindow.addTransfer(transferEntity);
+		
+		final Transfer transfer = new Transfer(buyingTeamId, sellingTeamId, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID), new BigDecimal("3.5"));
+
+		when(buyingTeam.getId()).thenReturn(buyingTeamId);
+		when(sellingTeam.getId()).thenReturn(sellingTeamId);
+		when(buyingTeam.getRemainingBudget()).thenReturn(REMAINING_BUDGET);
+		when(sellingTeam.getRemainingBudget()).thenReturn(REMAINING_BUDGET);
+		
+		when(teamDataService.getTeam(buyingTeamId)).thenReturn(buyingTeam);
+		when(teamDataService.getTeam(sellingTeamId)).thenReturn(sellingTeam);
+
+		when(playerDataService.getPlayer(TestDataUtil.PLAYER_1_ID)).thenReturn(entityPlayer);
+		
+		when(leagueDataService.getLeagueForTeam(anyInt())).thenReturn(leagueEntity);
+		
+		when(transferWindowDataService.getOpenTransferWindow(anyInt())).thenReturn(transferWindow);
+		
+		// act
+		transferWindowFacade.addTransfer(transfer);
+		
+		// assert
+		verify(teamDataService).updateTeam(sellingTeam);
+		verify(teamDataService).updateTeam(buyingTeam);
+		verify(transferWindowDataService).updateTransferWindow(transferWindowCaptor.capture());
+		
+		assertThat(transferWindowCaptor.getValue().getTransfers()).hasSize(2);
+		assertThat(transferWindowCaptor.getValue().getTransfers().get(0).getStatus()).isEqualTo(TransferStatus.CONFIRMED);
+		assertThat(transferWindowCaptor.getValue().getTransfers().get(1).getStatus()).isEqualTo(TransferStatus.CONFIRMED);
 	}
 
 }

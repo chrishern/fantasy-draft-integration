@@ -4,6 +4,7 @@
 package net.blackcat.fantasy.draft.integration.facade;
 
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
+import net.blackcat.fantasy.draft.transfer.Transfer;
 
 /**
  * Facade for performing transfer window related operations.
@@ -26,4 +27,12 @@ public interface TransferWindowFacade {
 	 * 		</ul>
 	 */
 	void startTransferWindow(int leagueId, final int phase) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Add a given transfer to a window.
+	 * 
+	 * @param transfer Transfer to add.
+	 * @throws FantasyDraftIntegrationException
+	 */
+	void addTransfer(Transfer transfer) throws FantasyDraftIntegrationException;
 }

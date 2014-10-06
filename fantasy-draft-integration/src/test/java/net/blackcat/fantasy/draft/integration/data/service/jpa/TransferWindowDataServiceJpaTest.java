@@ -5,12 +5,14 @@ package net.blackcat.fantasy.draft.integration.data.service.jpa;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
+import net.blackcat.fantasy.draft.integration.entity.TransferEntity;
 import net.blackcat.fantasy.draft.integration.entity.TransferWindowEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
@@ -123,5 +125,80 @@ public class TransferWindowDataServiceJpaTest {
 		// assert
 		Assert.fail("Exception expected");
 	}
+	
+	@Test
+	public void testGetOpenTransferWindow_Success() throws Exception {
+		// arrange
+		final TransferWindowEntity draftRound = new TransferWindowEntity(1, league);
+		draftRound.setStatus(DraftRoundStatus.OPEN);
+		dataService.createTransferWindow(draftRound);
+		
+		// act
+		final TransferWindowEntity openTransferWindow = dataService.getOpenTransferWindow(league.getId());
+		
+		// assert
+		assertThat(openTransferWindow.getLeague()).isEqualTo(league);
+	}
+	
+	@Test
+	public void testGetOpenTransferWindow_OnlyClosedWindowExists() throws Exception {
+		// arrange
+		final TransferWindowEntity draftRound = new TransferWindowEntity(1, league);
+		draftRound.setStatus(DraftRoundStatus.CLOSED);
+		dataService.createTransferWindow(draftRound);
 
+		thrownException.expect(FantasyDraftIntegrationException.class);
+		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.OPEN_TRANSFER_DOES_NOT_EXIST_FOR_LEAGUE));
+		
+		// act
+		dataService.getOpenTransferWindow(league.getId());
+		
+		// assert
+		Assert.fail("Exception expected");
+	}
+
+	@Test
+	public void testGetOpenTransferWindow_WindowForLeagueDoesNotExist() throws Exception {
+		// arrange
+		final TransferWindowEntity draftRound = new TransferWindowEntity(1, league);
+		draftRound.setStatus(DraftRoundStatus.CLOSED);
+		dataService.createTransferWindow(draftRound);
+		
+		final LeagueEntity league2 = new LeagueEntity();
+		final TransferWindowEntity draftRound2 = new TransferWindowEntity(1, league2);
+		draftRound2.setStatus(DraftRoundStatus.OPEN);
+		dataService.createTransferWindow(draftRound2);
+
+		thrownException.expect(FantasyDraftIntegrationException.class);
+		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.OPEN_TRANSFER_DOES_NOT_EXIST_FOR_LEAGUE));
+		
+		// act
+		dataService.getOpenTransferWindow(league.getId());
+		
+		// assert
+		Assert.fail("Exception expected");
+	}
+	
+	@Test
+	public void testUpdateTransferWindow() throws Exception {
+		// arrange
+		final TransferWindowEntity draftRound = new TransferWindowEntity(1, league);
+		draftRound.setStatus(DraftRoundStatus.OPEN);
+		dataService.createTransferWindow(draftRound);
+		
+		final TransferWindowEntity openTransferWindow = dataService.getOpenTransferWindow(1);
+		assertThat(openTransferWindow.getTransfers()).isNull();
+
+		// act
+		final TransferEntity transfer = new TransferEntity();
+		transfer.setAmount(new BigDecimal("4"));
+		openTransferWindow.addTransfer(transfer);
+		
+		dataService.updateTransferWindow(openTransferWindow);
+		
+		// assert
+		final TransferWindowEntity updatedTransferWindow = dataService.getOpenTransferWindow(1);
+
+		assertThat(updatedTransferWindow.getTransfers()).isNotEmpty();
+	}
 }

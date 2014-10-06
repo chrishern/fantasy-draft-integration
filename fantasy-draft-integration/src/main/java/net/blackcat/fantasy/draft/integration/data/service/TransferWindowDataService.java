@@ -22,4 +22,20 @@ public interface TransferWindowDataService {
 	 * or the transfer window trying to be created already exists for the league.
 	 */
 	void createTransferWindow(TransferWindowEntity transferWindow) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Get the open transfer window for a league.
+	 * 
+	 * @param leagueId ID of the league to get the open transfer window for.
+	 * @return The open {@link TransferWindowEntity}.
+	 * @throws FantasyDraftIntegrationException If an open transfer window for the given league does not exist,
+	 */
+	TransferWindowEntity getOpenTransferWindow(int leagueId) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Update the given transfer window entity.
+	 *
+	 * @param transferWindow The {@link TransferWindowEntity} to update.
+	 */
+	void updateTransferWindow(TransferWindowEntity transferWindow);
 }

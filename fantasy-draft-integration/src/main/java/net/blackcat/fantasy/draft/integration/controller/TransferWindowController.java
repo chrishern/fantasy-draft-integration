@@ -5,6 +5,7 @@ package net.blackcat.fantasy.draft.integration.controller;
 
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.facade.TransferWindowFacade;
+import net.blackcat.fantasy.draft.transfer.Transfer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,7 +38,17 @@ public class TransferWindowController {
 	 * 			<li><b>TRANSFER_WINDOW_ALREADY_EXISTS_FOR_LEAGUE</b> - If a transfer window for the given phase number already exists.</li>
 	 * 		</ul>
 	 */
-	public void startTransferWindow(int leagueId, final int phase) throws FantasyDraftIntegrationException {
+	public void startTransferWindow(final int leagueId, final int phase) throws FantasyDraftIntegrationException {
 		transferWindowFacade.startTransferWindow(leagueId, phase);
+	}
+	
+	/**
+	 * Add a given transfer to a window.
+	 * 
+	 * @param transfer Transfer to add.
+	 * @throws FantasyDraftIntegrationException
+	 */
+	public void addTransfer(final Transfer transfer) throws FantasyDraftIntegrationException {
+		transferWindowFacade.addTransfer(transfer);
 	}
 }

@@ -44,6 +44,29 @@ public class TransferWindowDataServiceJpa implements TransferWindowDataService {
 		}
 	}
 
+	@Override
+	public TransferWindowEntity getOpenTransferWindow(final int leagueId) throws FantasyDraftIntegrationException {
+		return getTransferWindow(leagueId, DraftRoundStatus.OPEN);
+	}
+
+	@Override
+	public void updateTransferWindow(final TransferWindowEntity transferWindow) {
+		entityManager.merge(transferWindow);
+	}
+	
+	private TransferWindowEntity getTransferWindow(final int leagueId, final DraftRoundStatus status) throws FantasyDraftIntegrationException {
+		final TypedQuery<TransferWindowEntity> query = entityManager.createQuery(
+				"SELECT d FROM TransferWindowEntity d WHERE d.key.leagueId = :leagueId AND d.status = :status", TransferWindowEntity.class);
+		query.setParameter("leagueId", leagueId);
+		query.setParameter("status", status);
+		
+		try {
+			return query.getSingleResult();
+		} catch (final NoResultException e) {
+			throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.OPEN_TRANSFER_DOES_NOT_EXIST_FOR_LEAGUE);
+		}
+	}
+	
 	/**
 	 * Determine if a given league has an open draft round or not.
 	 * 
@@ -51,15 +74,10 @@ public class TransferWindowDataServiceJpa implements TransferWindowDataService {
 	 * @return True if the league has an open draft round, false otherwise.
 	 */
 	private boolean doesLeagueHaveOpenTransferWindow(final LeagueEntity league) {
-		final TypedQuery<TransferWindowEntity> query = entityManager.createQuery(
-				"SELECT d FROM TransferWindowEntity d WHERE d.key.leagueId = :leagueId AND d.status = :status", TransferWindowEntity.class);
-		query.setParameter("leagueId", league.getId());
-		query.setParameter("status", DraftRoundStatus.OPEN);
-		
 		try {
-			query.getSingleResult();
+			getTransferWindow(league.getId(), DraftRoundStatus.OPEN);
 			return true;
-		} catch (final NoResultException e) {
+		} catch (final FantasyDraftIntegrationException e) {
 			return false;
 		}
 	}

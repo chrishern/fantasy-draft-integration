@@ -5,14 +5,20 @@ package net.blackcat.fantasy.draft.integration.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import net.blackcat.fantasy.draft.transfer.types.TransferStatus;
 
 /**
  * Entity representing a transfer that has been agreed in a transfer window.
@@ -21,8 +27,8 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "PendingTransfer")
-public class PendingTransferEntity implements Serializable {
+@Table(name = "Transfer")
+public class TransferEntity implements Serializable {
 
 	private static final long serialVersionUID = 5955391693448404160L;
 
@@ -30,8 +36,8 @@ public class PendingTransferEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	
-	@OneToOne
-	private SelectedPlayerEntity player;
+	@OneToMany
+	private List<PlayerEntity> players;
 	
 	@OneToOne
 	private TeamEntity sellingTeam;
@@ -39,8 +45,27 @@ public class PendingTransferEntity implements Serializable {
 	@OneToOne
 	private TeamEntity buyingTeam;
 	
+	@OneToMany
+	private List<PlayerEntity> exchangedPlayers;
+	
 	@Column(nullable = false)
 	private BigDecimal amount;
+	
+	@Column
+	@Enumerated(EnumType.STRING)
+	private TransferStatus status;
+
+	public TransferEntity() {
+	}
+
+	public TransferEntity(final List<PlayerEntity> players, final TeamEntity sellingTeam, final TeamEntity buyingTeam, final List<PlayerEntity> exchangedPlayers,
+			final BigDecimal amount) {
+		this.players = players;
+		this.sellingTeam = sellingTeam;
+		this.buyingTeam = buyingTeam;
+		this.exchangedPlayers = exchangedPlayers;
+		this.amount = amount;
+	}
 
 	/**
 	 * @return the id
@@ -57,17 +82,17 @@ public class PendingTransferEntity implements Serializable {
 	}
 
 	/**
-	 * @return the player
+	 * @return the players
 	 */
-	public SelectedPlayerEntity getPlayer() {
-		return player;
+	public List<PlayerEntity> getPlayers() {
+		return players;
 	}
 
 	/**
-	 * @param player the player to set
+	 * @param players the players to set
 	 */
-	public void setPlayer(SelectedPlayerEntity player) {
-		this.player = player;
+	public void setPlayers(final List<PlayerEntity> players) {
+		this.players = players;
 	}
 
 	/**
@@ -110,5 +135,33 @@ public class PendingTransferEntity implements Serializable {
 	 */
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
+	}
+
+	/**
+	 * @return the exchangedPlayers
+	 */
+	public List<PlayerEntity> getExchangedPlayers() {
+		return exchangedPlayers;
+	}
+
+	/**
+	 * @param exchangedPlayers the exchangedPlayers to set
+	 */
+	public void setExchangedPlayers(List<PlayerEntity> exchangedPlayers) {
+		this.exchangedPlayers = exchangedPlayers;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public TransferStatus getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(TransferStatus status) {
+		this.status = status;
 	}
 }

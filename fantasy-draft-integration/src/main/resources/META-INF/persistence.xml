@@ -11,7 +11,7 @@
 		<class>net.blackcat.fantasy.draft.integration.entity.GameweekScoreEntity</class>
 		<class>net.blackcat.fantasy.draft.integration.entity.LeagueEntity</class>
 		<class>net.blackcat.fantasy.draft.integration.entity.ManagerEntity</class>
-		<class>net.blackcat.fantasy.draft.integration.entity.PendingTransferEntity</class>
+		<class>net.blackcat.fantasy.draft.integration.entity.TransferEntity</class>
 		<class>net.blackcat.fantasy.draft.integration.entity.PlayerEntity</class>
 		<class>net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity</class>
 		<class>net.blackcat.fantasy.draft.integration.entity.TeamEntity</class>

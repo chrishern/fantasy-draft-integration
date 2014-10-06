@@ -3,8 +3,10 @@
  */
 package net.blackcat.fantasy.draft.integration.controller;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import net.blackcat.fantasy.draft.integration.facade.TransferWindowFacade;
+import net.blackcat.fantasy.draft.transfer.Transfer;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,4 +40,15 @@ public class TransferWindowControllerTest {
 		verify(transferWindowFacade).startTransferWindow(1, 1);
 	}
 
+	@Test
+	public void testAddTransfer() throws Exception {
+		// arrange
+		final Transfer transfer = mock(Transfer.class);
+		
+		// act
+		transferWindowController.addTransfer(transfer);
+		
+		// assert
+		verify(transferWindowFacade).addTransfer(transfer);
+	}
 }

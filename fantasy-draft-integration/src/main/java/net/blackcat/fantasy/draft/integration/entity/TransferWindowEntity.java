@@ -49,7 +49,7 @@ public class TransferWindowEntity implements Serializable {
 	private List<BidEntity> auctionRoundBids;
 	
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<PendingTransferEntity> pendingTransfers;
+	private List<TransferEntity> transfers;
 	
 	public TransferWindowEntity() {
 		
@@ -116,8 +116,8 @@ public class TransferWindowEntity implements Serializable {
 	/**
 	 * @return the pendingTransfers
 	 */
-	public List<PendingTransferEntity> getPendingTransfers() {
-		return pendingTransfers;
+	public List<TransferEntity> getTransfers() {
+		return transfers;
 	}
 	
 	/**
@@ -134,15 +134,15 @@ public class TransferWindowEntity implements Serializable {
 	}
 	
 	/**
-	 * Add a new pending transfer to the draft round.
+	 * Add a new transfer to the draft round.
 	 * 
-	 * @param newPendingTransfer Pending transfer to add.
+	 * @param newTransfer Transfer to add.
 	 */
-	public void addPendingTransfer(final PendingTransferEntity newPendingTransfer) {
-		if (pendingTransfers == null) {
-			pendingTransfers = new ArrayList<PendingTransferEntity>();
+	public void addTransfer(final TransferEntity newTransfer) {
+		if (transfers == null) {
+			transfers = new ArrayList<TransferEntity>();
 		}
 		
-		pendingTransfers.add(newPendingTransfer);
+		transfers.add(newTransfer);
 	}
 }
