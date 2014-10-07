@@ -81,8 +81,6 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 		
 		setTransferStatus(transfer, openWindow, newTransfer);
 		
-		openWindow.addTransfer(newTransfer);
-		
 		updateSellingTeamData(transfer, sellingTeam, players);
 		updateBuyingTeamData(transfer, buyingTeam, exchangedPlayers);
 		transferWindowDataService.updateTransferWindow(openWindow);
@@ -214,9 +212,9 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 			final TransferEntity equivalentTransfer = TransferUtils.getEquivalentTransfer(transfer, openWindow.getTransfers());
 			equivalentTransfer.setStatus(TransferStatus.CONFIRMED);
 			
-			newTransfer.setStatus(TransferStatus.CONFIRMED);
-		} catch(final FantasyDraftIntegrationException e) {
+		} catch (final FantasyDraftIntegrationException e) {
 			newTransfer.setStatus(TransferStatus.PENDING);
+			openWindow.addTransfer(newTransfer);
 		}
 	}
 

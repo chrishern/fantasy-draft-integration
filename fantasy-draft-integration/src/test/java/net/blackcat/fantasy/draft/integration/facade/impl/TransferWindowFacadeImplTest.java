@@ -212,9 +212,8 @@ public class TransferWindowFacadeImplTest {
 		verify(teamDataService).updateTeam(buyingTeam);
 		verify(transferWindowDataService).updateTransferWindow(transferWindowCaptor.capture());
 		
-		assertThat(transferWindowCaptor.getValue().getTransfers()).hasSize(2);
+		assertThat(transferWindowCaptor.getValue().getTransfers()).hasSize(1);
 		assertThat(transferWindowCaptor.getValue().getTransfers().get(0).getStatus()).isEqualTo(TransferStatus.CONFIRMED);
-		assertThat(transferWindowCaptor.getValue().getTransfers().get(1).getStatus()).isEqualTo(TransferStatus.CONFIRMED);
 	}
 	
 	@Test
