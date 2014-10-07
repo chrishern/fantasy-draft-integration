@@ -63,8 +63,8 @@ public final class TransferUtils {
 	 * @return True if the two are between the same teams, false otherwise.
 	 */
 	private static boolean transferIsBetweenSameTeams(final Transfer newTransfer, final TransferEntity existingTransfer) {
-		return newTransfer.getBuyingTeam() == existingTransfer.getSellingTeam().getId() &&
-				newTransfer.getSellingTeam() == existingTransfer.getBuyingTeam().getId();
+		return newTransfer.getBuyingTeam() == existingTransfer.getBuyingTeam().getId() &&
+				newTransfer.getSellingTeam() == existingTransfer.getSellingTeam().getId();
 	}
 	
 	/**

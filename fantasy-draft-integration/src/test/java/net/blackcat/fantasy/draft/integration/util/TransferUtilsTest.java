@@ -44,7 +44,6 @@ public class TransferUtilsTest {
 	
 	private static final int TEAM_1 = 1;
 	private static final int TEAM_2 = 2;
-	private static final int TEAM_3 = 3;
 
 	private TeamEntity buyingTeamEntity;
 	private TeamEntity sellingTeamEntity;
@@ -66,7 +65,7 @@ public class TransferUtilsTest {
 	@Test
 	public void testGetEquivalentTransfer_Success_SinglePlayer_PriceOnly() throws Exception {
 		// arrange
-		final Transfer transfer = new Transfer(TEAM_1, TEAM_2, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID), THREE_MILLION_TRANSFER_AMOUNT);
+		final Transfer transfer = new Transfer(TEAM_2, TEAM_1, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID), THREE_MILLION_TRANSFER_AMOUNT);
 
 		final TransferEntity transferEntity = new TransferEntity();
 		transferEntity.setBuyingTeam(buyingTeamEntity);
@@ -86,7 +85,7 @@ public class TransferUtilsTest {
 	public void testGetEquivalentTransfer_Success_MultiplePlayers_PriceOnly() throws Exception {
 		// arrange
 		final Transfer transfer = new Transfer(
-				TEAM_1, TEAM_2, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID, TestDataUtil.PLAYER_2_ID), THREE_MILLION_TRANSFER_AMOUNT);
+				TEAM_2, TEAM_1, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID, TestDataUtil.PLAYER_2_ID), THREE_MILLION_TRANSFER_AMOUNT);
 
 		final TransferEntity transferEntity = new TransferEntity();
 		transferEntity.setBuyingTeam(buyingTeamEntity);
@@ -106,7 +105,7 @@ public class TransferUtilsTest {
 	public void testGetEquivalentTransfer_Success_SinglePlayer_ExchangedPlayer() throws Exception {
 		// arrange
 		final Transfer transfer = new Transfer(
-				TEAM_1, TEAM_2, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID), Arrays.asList(TestDataUtil.PLAYER_2_ID), THREE_MILLION_TRANSFER_AMOUNT);
+				TEAM_2, TEAM_1, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID), Arrays.asList(TestDataUtil.PLAYER_2_ID), THREE_MILLION_TRANSFER_AMOUNT);
 
 		final TransferEntity transferEntity = new TransferEntity();
 		transferEntity.setBuyingTeam(buyingTeamEntity);
@@ -126,7 +125,7 @@ public class TransferUtilsTest {
 	@Test
 	public void testGetEquivalentTransfer_Success_SinglePlayer_ExchangedPlayers() throws Exception {
 		// arrange
-		final Transfer transfer = new Transfer(TEAM_1, TEAM_2, TransferType.BUY, 
+		final Transfer transfer = new Transfer(TEAM_2, TEAM_1, TransferType.BUY, 
 				Arrays.asList(TestDataUtil.PLAYER_1_ID), Arrays.asList(TestDataUtil.PLAYER_2_ID, TestDataUtil.PLAYER_3_ID), THREE_MILLION_TRANSFER_AMOUNT);
 
 		final TransferEntity transferEntity = new TransferEntity();
@@ -147,7 +146,7 @@ public class TransferUtilsTest {
 	@Test
 	public void testGetEquivalentTransfer_Success_AlsoANonMatchingTransferBetweenTeams() throws Exception {
 		// arrange
-		final Transfer transfer = new Transfer(TEAM_1, TEAM_2, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID), THREE_MILLION_TRANSFER_AMOUNT);
+		final Transfer transfer = new Transfer(TEAM_2, TEAM_1, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID), THREE_MILLION_TRANSFER_AMOUNT);
 
 		final TransferEntity nonMatchingTransferEntity = new TransferEntity();
 		nonMatchingTransferEntity.setBuyingTeam(buyingTeamEntity);
@@ -172,7 +171,7 @@ public class TransferUtilsTest {
 	@Test
 	public void testGetEquivalentTransfer_NotFound_TeamsDontMatch() throws Exception {
 		// arrange
-		final Transfer transfer = new Transfer(TEAM_1, TEAM_3, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID), THREE_MILLION_TRANSFER_AMOUNT);
+		final Transfer transfer = new Transfer(TEAM_1, TEAM_2, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID), THREE_MILLION_TRANSFER_AMOUNT);
 
 		final TransferEntity transferEntity = new TransferEntity();
 		transferEntity.setBuyingTeam(buyingTeamEntity);
@@ -193,7 +192,7 @@ public class TransferUtilsTest {
 	@Test
 	public void testGetEquivalentTransfer_NotFound_PlayersDontMatchSinglePlayer() throws Exception {
 		// arrange
-		final Transfer transfer = new Transfer(TEAM_1, TEAM_2, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_2_ID), THREE_MILLION_TRANSFER_AMOUNT);
+		final Transfer transfer = new Transfer(TEAM_2, TEAM_1, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_2_ID), THREE_MILLION_TRANSFER_AMOUNT);
 
 		final TransferEntity transferEntity = new TransferEntity();
 		transferEntity.setBuyingTeam(buyingTeamEntity);
@@ -215,7 +214,7 @@ public class TransferUtilsTest {
 	public void testGetEquivalentTransfer_NotFound_PlayerDoesntExistInSeller() throws Exception {
 		// arrange
 		final Transfer transfer = new Transfer(
-				TEAM_1, TEAM_2, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID, TestDataUtil.PLAYER_2_ID), THREE_MILLION_TRANSFER_AMOUNT);
+				TEAM_2, TEAM_1, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID, TestDataUtil.PLAYER_2_ID), THREE_MILLION_TRANSFER_AMOUNT);
 
 		final TransferEntity transferEntity = new TransferEntity();
 		transferEntity.setBuyingTeam(buyingTeamEntity);
@@ -237,7 +236,7 @@ public class TransferUtilsTest {
 	public void testGetEquivalentTransfer_NotFound_PlayerDoesntExistInBuyer() throws Exception {
 		// arrange
 		final Transfer transfer = new Transfer(
-				TEAM_1, TEAM_2, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID), THREE_MILLION_TRANSFER_AMOUNT);
+				TEAM_2, TEAM_1, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID), THREE_MILLION_TRANSFER_AMOUNT);
 
 		final TransferEntity transferEntity = new TransferEntity();
 		transferEntity.setBuyingTeam(buyingTeamEntity);
@@ -259,7 +258,7 @@ public class TransferUtilsTest {
 	public void testGetEquivalentTransfer_NotFound_PriceDoesntMatch() throws Exception{
 		// arrange
 		final Transfer transfer = new Transfer(
-				TEAM_1, TEAM_2, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID), THREE_MILLION_TRANSFER_AMOUNT);
+				TEAM_2, TEAM_1, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID), THREE_MILLION_TRANSFER_AMOUNT);
 
 		final TransferEntity transferEntity = new TransferEntity();
 		transferEntity.setBuyingTeam(buyingTeamEntity);
@@ -281,7 +280,7 @@ public class TransferUtilsTest {
 	public void testGetEquivalentTransfer_NotFound_ExchangedPlayersDontMatchSinglePlayer() throws Exception {
 		// arrange
 		final Transfer transfer = new Transfer(
-				TEAM_1, TEAM_2, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID), Arrays.asList(TestDataUtil.PLAYER_2_ID), THREE_MILLION_TRANSFER_AMOUNT);
+				TEAM_2, TEAM_1, TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID), Arrays.asList(TestDataUtil.PLAYER_2_ID), THREE_MILLION_TRANSFER_AMOUNT);
 
 		final TransferEntity transferEntity = new TransferEntity();
 		transferEntity.setBuyingTeam(buyingTeamEntity);
@@ -303,7 +302,7 @@ public class TransferUtilsTest {
 	@Test
 	public void testGetEquivalentTransfer_NotFound_ExchangedPlayerDoesntExistInSeller() throws Exception {
 		// arrange
-		final Transfer transfer = new Transfer(TEAM_1, TEAM_2, 
+		final Transfer transfer = new Transfer(TEAM_2, TEAM_1, 
 				TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID), Arrays.asList(TestDataUtil.PLAYER_2_ID, TestDataUtil.PLAYER_3_ID), THREE_MILLION_TRANSFER_AMOUNT);
 
 		final TransferEntity transferEntity = new TransferEntity();
@@ -326,7 +325,7 @@ public class TransferUtilsTest {
 	@Test
 	public void testGetEquivalentTransfer_NotFound_ExchangedPlayerDoesntExistInBuyer() throws Exception {
 		// arrange
-		final Transfer transfer = new Transfer(TEAM_1, TEAM_2, 
+		final Transfer transfer = new Transfer(TEAM_2, TEAM_1, 
 				TransferType.BUY, Arrays.asList(TestDataUtil.PLAYER_1_ID), Arrays.asList(TestDataUtil.PLAYER_2_ID), THREE_MILLION_TRANSFER_AMOUNT);
 
 		final TransferEntity transferEntity = new TransferEntity();

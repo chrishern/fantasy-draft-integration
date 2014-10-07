@@ -184,7 +184,7 @@ public class TransferWindowFacadeImplTest {
 		final int buyingTeamId = 1;
 		final int sellingTeamId = 2;
 		
-		final TransferEntity transferEntity = new TransferEntity(Arrays.asList(transferredPlayer), buyingTeam, sellingTeam, null, new BigDecimal("3.5"));
+		final TransferEntity transferEntity = new TransferEntity(Arrays.asList(transferredPlayer), sellingTeam, buyingTeam, null, new BigDecimal("3.5"));
 		transferEntity.setStatus(TransferStatus.PENDING);
 		transferWindow.addTransfer(transferEntity);
 		
