@@ -86,10 +86,14 @@ public class TransferWindowFacadeImplTest {
 	private ArgumentCaptor<TeamEntity> teamCaptor;
 	
 	private LeagueEntity league;
+
+	private TransferWindowEntity transferWindow;
 	
 	@Before
 	public void setup() {
 		league = new LeagueEntity(TestDataUtil.LEAGUE_NAME);
+		
+		transferWindow = new TransferWindowEntity(1, league);
 	}
 	
 	@Test
@@ -145,8 +149,6 @@ public class TransferWindowFacadeImplTest {
 	public void testAddTransfer_Pending() throws Exception {
 		// arrange
 		final List<TeamEntity> teamEntities = TestDataUtil.createTeamEntitiesWithScore();
-		final LeagueEntity leagueEntity = new LeagueEntity();
-		final TransferWindowEntity transferWindow = new TransferWindowEntity(1, leagueEntity);
 		final int buyingTeamId = 1;
 		final int sellingTeamId = 2;
 		
@@ -157,7 +159,7 @@ public class TransferWindowFacadeImplTest {
 
 		when(playerDataService.getPlayer(TestDataUtil.PLAYER_1_ID)).thenReturn(TestDataUtil.createEntityPlayer(TestDataUtil.PLAYER_1_ID));
 		
-		when(leagueDataService.getLeagueForTeam(anyInt())).thenReturn(leagueEntity);
+		when(leagueDataService.getLeagueForTeam(anyInt())).thenReturn(league);
 		
 		when(transferWindowDataService.getOpenTransferWindow(anyInt())).thenReturn(transferWindow);
 		
@@ -177,8 +179,6 @@ public class TransferWindowFacadeImplTest {
 		final TeamEntity buyingTeam = mock(TeamEntity.class);
 		final TeamEntity sellingTeam = mock(TeamEntity.class);
 		
-		final LeagueEntity leagueEntity = new LeagueEntity();
-		final TransferWindowEntity transferWindow = new TransferWindowEntity(1, leagueEntity);
 		final PlayerEntity entityPlayer = TestDataUtil.createEntityPlayer(TestDataUtil.PLAYER_1_ID);
 		final TransferredPlayerEntity transferredPlayer = new TransferredPlayerEntity(entityPlayer);
 		final int buyingTeamId = 1;
@@ -200,7 +200,7 @@ public class TransferWindowFacadeImplTest {
 
 		when(playerDataService.getPlayer(TestDataUtil.PLAYER_1_ID)).thenReturn(entityPlayer);
 		
-		when(leagueDataService.getLeagueForTeam(anyInt())).thenReturn(leagueEntity);
+		when(leagueDataService.getLeagueForTeam(anyInt())).thenReturn(league);
 		
 		when(transferWindowDataService.getOpenTransferWindow(anyInt())).thenReturn(transferWindow);
 		
@@ -223,6 +223,8 @@ public class TransferWindowFacadeImplTest {
 		final List<TeamEntity> teamEntities = TestDataUtil.createTeamEntitiesWithScore();
 
 		when(teamDataService.getTeam(anyInt())).thenReturn(teamEntities.get(0));
+		when(leagueDataService.getLeagueForTeam(anyInt())).thenReturn(league);
+		when(transferWindowDataService.getOpenTransferWindow(anyInt())).thenReturn(transferWindow);
 		
 		// act
 		transferWindowFacade.sellPlayerToPot(1, TestDataUtil.PLAYER_1_ID);
@@ -232,6 +234,20 @@ public class TransferWindowFacadeImplTest {
 		
 		assertThat(teamCaptor.getValue().getSelectedPlayers().get(0).getSelectedPlayerStatus()).isEqualTo(SelectedPlayerStatus.PENDING_SALE_TO_POT);
 		assertThat(teamCaptor.getValue().getRemainingBudget().doubleValue()).isEqualTo(52.5d);
+		
+		verify(transferWindowDataService).updateTransferWindow(transferWindowCaptor.capture());
+		
+		assertThat(transferWindowCaptor.getValue().getTransfers()).hasSize(1);
+		
+		final TransferEntity transfer = transferWindowCaptor.getValue().getTransfers().get(0);
+		
+		assertThat(transfer.getBuyingTeam()).isNull();
+		assertThat(transfer.getExchangedPlayers()).isNull();
+		assertThat(transfer.getAmount().doubleValue()).isEqualTo(7.0d);
+		assertThat(transfer.getSellingTeam()).isEqualTo(teamEntities.get(0));
+		assertThat(transfer.getPlayers()).hasSize(1);
+		assertThat(transfer.getPlayers().get(0).getPlayer()).isEqualTo(teamEntities.get(0).getSelectedPlayers().get(0).getPlayer());
+		assertThat(transfer.getStatus()).isEqualTo(TransferStatus.CONFIRMED);
 	}
 
 }

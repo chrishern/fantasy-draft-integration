@@ -5,6 +5,7 @@ package net.blackcat.fantasy.draft.integration.facade.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
@@ -93,16 +94,48 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 		
 		for (final SelectedPlayerEntity selectedPlayer : sellingTeam.getSelectedPlayers()) {
 			if (selectedPlayer.getPlayer().getId() == playerId) {
-				selectedPlayer.setStillSelected(SelectedPlayerStatus.PENDING_SALE_TO_POT);
 				
-				final BigDecimal newTeamRemainingBudget = sellingTeam.getRemainingBudget().add(selectedPlayer.getCurrentSellToPotPrice());
-				sellingTeam.setRemainingBudget(newTeamRemainingBudget);
-				
-				teamDataService.updateTeam(sellingTeam);
+				updateTeamDataForSaleToPot(sellingTeam, selectedPlayer);
+				updateTransferWindowDataForSaleToPot(sellingTeam, selectedPlayer);
 				
 				break;
 			}
 		}
+	}
+
+	/**
+	 * Update transfer window data to reflect a player has been sold to the pot.
+	 * 
+	 * @param sellingTeam Team selling the player to the pot.
+	 * @param selectedPlayer Player who has been sold to the pot.
+	 * @throws FantasyDraftIntegrationException
+	 */
+	private void updateTransferWindowDataForSaleToPot(final TeamEntity sellingTeam, final SelectedPlayerEntity selectedPlayer) throws FantasyDraftIntegrationException {
+		final TransferredPlayerEntity transferredPlayer = new TransferredPlayerEntity(selectedPlayer.getPlayer());
+		final TransferEntity transfer = new TransferEntity(Arrays.asList(transferredPlayer), sellingTeam, null, null, selectedPlayer.getCurrentSellToPotPrice());
+		transfer.setStatus(TransferStatus.CONFIRMED);
+		
+		final LeagueEntity league = leagueDataService.getLeagueForTeam(sellingTeam.getId());
+		final TransferWindowEntity openWindow = transferWindowDataService.getOpenTransferWindow(league.getId());
+		
+		openWindow.addTransfer(transfer);
+		
+		transferWindowDataService.updateTransferWindow(openWindow);
+	}
+
+	/**
+	 * Update team data for a player that has been sold to the pot.
+	 * 
+	 * @param sellingTeam Team selling the player.
+	 * @param selectedPlayer Player who has been sold to the pot.
+	 */
+	private void updateTeamDataForSaleToPot(final TeamEntity sellingTeam, final SelectedPlayerEntity selectedPlayer) {
+		selectedPlayer.setStillSelected(SelectedPlayerStatus.PENDING_SALE_TO_POT);
+		
+		final BigDecimal newTeamRemainingBudget = sellingTeam.getRemainingBudget().add(selectedPlayer.getCurrentSellToPotPrice());
+		sellingTeam.setRemainingBudget(newTeamRemainingBudget);
+		
+		teamDataService.updateTeam(sellingTeam);
 	}
 
 	/**
