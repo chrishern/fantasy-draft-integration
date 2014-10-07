@@ -22,6 +22,7 @@ import net.blackcat.fantasy.draft.integration.test.util.CustomIntegrationExcepti
 import net.blackcat.fantasy.draft.integration.test.util.TestDataUtil;
 import net.blackcat.fantasy.draft.player.types.Position;
 import net.blackcat.fantasy.draft.player.types.SelectedPlayerStartingElevenStatus;
+import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
 import net.blackcat.fantasy.draft.team.Team;
 import net.blackcat.fantasy.draft.team.TeamSummary;
 
@@ -124,6 +125,7 @@ public class TeamFacadeImplTest {
 		assertThat(teamSummary.getTeam().get(0).getPosition()).isEqualTo(Position.DEFENDER);
 		assertThat(teamSummary.getTeam().get(0).getSelectionStatus()).isEqualTo(SelectedPlayerStartingElevenStatus.PICKED);
 		assertThat(teamSummary.getTeam().get(0).getCurrentSellToPotPrice().doubleValue()).isEqualTo(Double.valueOf(TestDataUtil.SELECTED_PLAYER_COST));
+		assertThat(teamSummary.getTeam().get(0).getSquadStatus()).isEqualTo(SelectedPlayerStatus.STILL_SELECTED);
 	}
 	
 	@Test

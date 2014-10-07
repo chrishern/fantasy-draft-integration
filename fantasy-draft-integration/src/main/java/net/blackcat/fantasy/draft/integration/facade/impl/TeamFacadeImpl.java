@@ -171,6 +171,7 @@ public class TeamFacadeImpl implements TeamFacade {
 			selectedPlayerModel.setSurname(playerEntity.getSurname());
 			selectedPlayerModel.setTeam(playerEntity.getTeam());
 			selectedPlayerModel.setCurrentSellToPotPrice(selectedPlayerEntity.getCurrentSellToPotPrice());
+			selectedPlayerModel.setSquadStatus(selectedPlayerEntity.getSelectedPlayerStatus());
 			
 			selectedPlayerModelList.add(selectedPlayerModel);
 		}
