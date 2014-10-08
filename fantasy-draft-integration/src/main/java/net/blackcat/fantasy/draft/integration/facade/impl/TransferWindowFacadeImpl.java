@@ -27,6 +27,8 @@ import net.blackcat.fantasy.draft.integration.util.TransferUtils;
 import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
 import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
+import net.blackcat.fantasy.draft.transfer.LeagueTransferSummary;
+import net.blackcat.fantasy.draft.transfer.LeagueTransferWindowSummary;
 import net.blackcat.fantasy.draft.transfer.Transfer;
 import net.blackcat.fantasy.draft.transfer.TransferSummary;
 import net.blackcat.fantasy.draft.transfer.types.TransferStatus;
@@ -156,6 +158,55 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 		transferWindowDataService.updateTransferWindow(openWindow);
 	}
 
+	@Override
+	public LeagueTransferWindowSummary getLeagueTransferWindowSummary(final int leagueId) throws FantasyDraftIntegrationException {
+		final LeagueTransferWindowSummary windowSummary = new LeagueTransferWindowSummary();
+		final List<LeagueTransferSummary> transferSummaries = new ArrayList<LeagueTransferSummary>();
+		
+		final TransferWindowEntity openWindow = transferWindowDataService.getOpenTransferWindow(leagueId);
+		
+		for (final TransferEntity transferEntity : openWindow.getTransfers()) {
+			final LeagueTransferSummary transferSummary = new LeagueTransferSummary();
+			
+			if (transferEntity.getBuyingTeam() == null) {
+				transferSummary.setBuyingTeam("Pot");
+			} else {
+				transferSummary.setBuyingTeam(transferEntity.getBuyingTeam().getName());
+			}
+			
+			transferSummary.setSellingTeam(transferEntity.getSellingTeam().getName());
+			transferSummary.setCost(transferEntity.getAmount());
+			
+			final List<Player> transferredPlayers = new ArrayList<Player>();
+			for (final TransferredPlayerEntity transferredPlayer : transferEntity.getPlayers()) {
+				final Player player = new Player();
+				
+				player.setForename(transferredPlayer.getPlayer().getForename());
+				player.setSurname(transferredPlayer.getPlayer().getSurname());
+				
+				transferredPlayers.add(player);
+			}
+			transferSummary.setPlayers(transferredPlayers);
+			
+			final List<Player> exchangedPlayers = new ArrayList<Player>();
+			for (final ExchangedPlayerEntity exchangedPlayer : transferEntity.getExchangedPlayers()) {
+				final Player player = new Player();
+				
+				player.setForename(exchangedPlayer.getPlayer().getForename());
+				player.setSurname(exchangedPlayer.getPlayer().getSurname());
+				
+				exchangedPlayers.add(player);
+			}
+			transferSummary.setExchangedPlayers(exchangedPlayers);
+			
+			transferSummaries.add(transferSummary);
+		}
+		
+		windowSummary.setTransfers(transferSummaries);
+		
+		return windowSummary;
+	}
+	
 	/**
 	 * @param openWindow
 	 * @param transferEntity

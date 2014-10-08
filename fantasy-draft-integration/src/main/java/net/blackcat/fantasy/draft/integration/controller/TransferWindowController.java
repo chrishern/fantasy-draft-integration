@@ -7,6 +7,7 @@ import java.util.List;
 
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.facade.TransferWindowFacade;
+import net.blackcat.fantasy.draft.transfer.LeagueTransferWindowSummary;
 import net.blackcat.fantasy.draft.transfer.Transfer;
 import net.blackcat.fantasy.draft.transfer.TransferSummary;
 
@@ -86,5 +87,15 @@ public class TransferWindowController {
 	 */
 	public void moveTransferWindowOntoAuction(int leagueId) throws FantasyDraftIntegrationException {
 		transferWindowFacade.moveTransferWindowOntoAuction(leagueId);
+	}
+	
+	/**
+	 * Get the transfer window summary for a given league.
+	 * 
+	 * @param leagueId ID of the league to get the transfer window summary for.
+	 * @return Transfer window summary for the league,
+	 */
+	public LeagueTransferWindowSummary getLeagueTransferWindowSummary(int leagueId) throws FantasyDraftIntegrationException {
+		return transferWindowFacade.getLeagueTransferWindowSummary(leagueId);
 	}
 }

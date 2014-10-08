@@ -6,6 +6,7 @@ package net.blackcat.fantasy.draft.integration.facade;
 import java.util.List;
 
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
+import net.blackcat.fantasy.draft.transfer.LeagueTransferWindowSummary;
 import net.blackcat.fantasy.draft.transfer.Transfer;
 import net.blackcat.fantasy.draft.transfer.TransferSummary;
 
@@ -65,4 +66,12 @@ public interface TransferWindowFacade {
 	 * @throws FantasyDraftIntegrationException
 	 */
 	void moveTransferWindowOntoAuction(int leagueId) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Get the transfer window summary for a given league.
+	 * 
+	 * @param leagueId ID of the league to get the transfer window summary for.
+	 * @return Transfer window summary for the league,
+	 */
+	LeagueTransferWindowSummary getLeagueTransferWindowSummary(int leagueId) throws FantasyDraftIntegrationException;
 }
