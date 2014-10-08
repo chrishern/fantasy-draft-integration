@@ -6,6 +6,7 @@ package net.blackcat.fantasy.draft.integration.controller;
 import java.util.List;
 import java.util.Map;
 
+import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.facade.PlayerFacade;
 import net.blackcat.fantasy.draft.player.FplCostPlayer;
 import net.blackcat.fantasy.draft.player.Player;
@@ -67,6 +68,10 @@ public class PlayerController {
 	 */
 	public List<Player> getPlayers(final Position position, final PlayerSelectionStatus selectionStatus) {
 		return playerFacade.getPlayers(position, selectionStatus);
+	}
+	
+	public List<Player> getPlayers(final Position position, final PlayerSelectionStatus selectionStatus, final int teamId) throws FantasyDraftIntegrationException {
+		return playerFacade.getPlayers(position, selectionStatus, teamId);
 	}
 	
 	/**

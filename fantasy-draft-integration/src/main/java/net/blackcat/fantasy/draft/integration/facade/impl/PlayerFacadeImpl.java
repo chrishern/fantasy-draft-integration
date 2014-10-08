@@ -15,6 +15,7 @@ import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
+import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.facade.PlayerFacade;
 import net.blackcat.fantasy.draft.player.FplCostPlayer;
 import net.blackcat.fantasy.draft.player.Player;
@@ -103,6 +104,30 @@ public class PlayerFacadeImpl implements PlayerFacade {
 			final Player modelPlayer = new Player();
 			BeanUtils.copyProperties(entityPlayer, modelPlayer);
 			modelPlayers.add(modelPlayer);
+		}
+		
+		return modelPlayers;
+	}
+	
+	@Override
+	public List<Player> getPlayers(final Position position, final PlayerSelectionStatus selectionStatus, final int teamId) throws FantasyDraftIntegrationException {
+		final TeamEntity team = teamDataService.getTeam(teamId);
+		final List<Integer> previouslySelectedPlayers = new ArrayList<Integer>();
+		
+		for (final SelectedPlayerEntity selectedPlayer : team.getSelectedPlayers()) {
+			if (selectedPlayer.getSelectedPlayerStatus() != SelectedPlayerStatus.STILL_SELECTED) {
+				previouslySelectedPlayers.add(selectedPlayer.getPlayer().getId());
+			}
+		}
+		
+		final List<Player> modelPlayers = new ArrayList<Player>();
+		
+		for (final PlayerEntity entityPlayer : playerDataService.getPlayers(position, selectionStatus)) {
+			if (!previouslySelectedPlayers.contains(entityPlayer.getId())) {
+				final Player modelPlayer = new Player();
+				BeanUtils.copyProperties(entityPlayer, modelPlayer);
+				modelPlayers.add(modelPlayer);
+			}
 		}
 		
 		return modelPlayers;
