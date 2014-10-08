@@ -3,9 +3,12 @@
  */
 package net.blackcat.fantasy.draft.integration.controller;
 
+import java.util.List;
+
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.facade.TransferWindowFacade;
 import net.blackcat.fantasy.draft.transfer.Transfer;
+import net.blackcat.fantasy.draft.transfer.TransferSummary;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -61,5 +64,16 @@ public class TransferWindowController {
 	 */
 	public void sellPlayerToPot(final int teamId, final int playerId) throws FantasyDraftIntegrationException {
 		transferWindowFacade.sellPlayerToPot(teamId, playerId);
+	}
+	
+	/**
+	 * Get the transfers for a given team in the open transfer window.
+	 * 
+	 * @param teamId ID of the team we want the transfers for.
+	 * @return Transfers for the given team.
+	 * @throws FantasyDraftIntegrationException
+	 */
+	public List<TransferSummary> getTransfersForTeamInOpenWindow(int teamId) throws FantasyDraftIntegrationException {
+		return transferWindowFacade.getTransfersForTeamInOpenWindow(teamId);
 	}
 }

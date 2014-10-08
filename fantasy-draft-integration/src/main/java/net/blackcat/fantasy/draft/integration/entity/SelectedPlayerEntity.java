@@ -72,6 +72,14 @@ public class SelectedPlayerEntity implements Serializable, Comparable<SelectedPl
 	public SelectedPlayerEntity(final PlayerEntity player) {
 		this.player = player;
 		this.stillSelected = SelectedPlayerStatus.STILL_SELECTED;
+		this.fplCostAtPurchase = player.getCurrentPrice();
+	}
+	
+	public SelectedPlayerEntity(final PlayerEntity player, final BigDecimal cost) {
+		this.player = player;
+		this.stillSelected = SelectedPlayerStatus.STILL_SELECTED;
+		this.fplCostAtPurchase = player.getCurrentPrice();
+		this.cost = cost;
 	}
 
 	/**

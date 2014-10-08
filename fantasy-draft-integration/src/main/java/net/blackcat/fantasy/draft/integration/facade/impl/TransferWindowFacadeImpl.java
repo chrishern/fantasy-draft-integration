@@ -23,9 +23,12 @@ import net.blackcat.fantasy.draft.integration.entity.TransferredPlayerEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.facade.TransferWindowFacade;
 import net.blackcat.fantasy.draft.integration.util.TransferUtils;
+import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
 import net.blackcat.fantasy.draft.transfer.Transfer;
+import net.blackcat.fantasy.draft.transfer.TransferSummary;
 import net.blackcat.fantasy.draft.transfer.types.TransferStatus;
+import net.blackcat.fantasy.draft.transfer.types.TransferType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -79,10 +82,10 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 		
 		final TransferEntity newTransfer = new TransferEntity(players, sellingTeam, buyingTeam, exchangedPlayers, transfer.getAmount());
 		
-		setTransferStatus(transfer, openWindow, newTransfer);
+		final TransferStatus transferStatus = setTransferStatus(transfer, openWindow, newTransfer);
 		
-		updateSellingTeamData(transfer, sellingTeam, players);
-		updateBuyingTeamData(transfer, buyingTeam, exchangedPlayers);
+		updateSellingTeamData(transfer, sellingTeam, players, transferStatus);
+		updateBuyingTeamData(transfer, buyingTeam, exchangedPlayers, transferStatus);
 		transferWindowDataService.updateTransferWindow(openWindow);
 	}
 	
@@ -98,6 +101,106 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 				
 				break;
 			}
+		}
+	}
+	
+	@Override
+	public List<TransferSummary> getTransfersForTeamInOpenWindow(final int teamId) throws FantasyDraftIntegrationException {
+		final List<TransferSummary> transfers = new ArrayList<TransferSummary>();
+		
+		final LeagueEntity league = leagueDataService.getLeagueForTeam(teamId);
+		final TransferWindowEntity openWindow = transferWindowDataService.getOpenTransferWindow(league.getId());
+		
+		for (final TransferEntity transferEntity : transferWindowDataService.getTransfers(openWindow, teamId)) {
+			final TransferSummary modelTransfer = new TransferSummary();
+			
+			modelTransfer.setStatus(transferEntity.getStatus());
+			
+			if (isTeamSellingTeam(teamId, transferEntity)) {
+				modelTransfer.setType(TransferType.SELL);
+				modelTransfer.setCost(transferEntity.getAmount());
+
+				setOpposingTeamForTransfer(transferEntity, modelTransfer);
+				setTransferSummaryPlayers(transferEntity, modelTransfer);
+				setTransferSummaryExchangedPlayers(transferEntity, modelTransfer);
+			} else if (isTeamBuyingTeam(teamId, transferEntity)) {
+				modelTransfer.setType(TransferType.BUY);
+				modelTransfer.setCost(transferEntity.getAmount());
+				modelTransfer.setOpposingTeam(transferEntity.getSellingTeam().getName());
+
+				setTransferSummaryPlayers(transferEntity, modelTransfer);
+				setTransferSummaryExchangedPlayers(transferEntity, modelTransfer);
+			}
+			
+			transfers.add(modelTransfer);
+		}
+		
+		return transfers;
+	}
+	
+	/**
+	 * @param teamId
+	 * @param transferEntity
+	 * @return
+	 */
+	private boolean isTeamSellingTeam(final int teamId, final TransferEntity transferEntity) {
+		return transferEntity.getSellingTeam().getId() == teamId;
+	}
+
+	/**
+	 * @param teamId
+	 * @param transferEntity
+	 * @return
+	 */
+	private boolean isTeamBuyingTeam(final int teamId, final TransferEntity transferEntity) {
+		return transferEntity.getBuyingTeam() != null && transferEntity.getBuyingTeam().getId() == teamId;
+	}
+
+	/**
+	 * @param transferEntity
+	 * @param modelTransfer
+	 */
+	private void setTransferSummaryExchangedPlayers(final TransferEntity transferEntity, final TransferSummary modelTransfer) {
+		final List<Player> exchangedPlayers = new ArrayList<Player>();
+		for (final ExchangedPlayerEntity entity : transferEntity.getExchangedPlayers()) {
+			final Player player = new Player();
+			
+			player.setForename(entity.getPlayer().getForename());
+			player.setSurname(entity.getPlayer().getSurname());
+			
+			exchangedPlayers.add(player);
+		}
+		
+		modelTransfer.setExchangedPlayers(exchangedPlayers);
+	}
+
+	/**
+	 * @param transferEntity
+	 * @param modelTransfer
+	 */
+	private void setTransferSummaryPlayers(final TransferEntity transferEntity, final TransferSummary modelTransfer) {
+		final List<Player> players = new ArrayList<Player>();
+		for (final TransferredPlayerEntity entity : transferEntity.getPlayers()) {
+			final Player player = new Player();
+			
+			player.setForename(entity.getPlayer().getForename());
+			player.setSurname(entity.getPlayer().getSurname());
+			
+			players.add(player);
+		}
+		
+		modelTransfer.setPlayers(players);
+	}
+
+	/**
+	 * @param transferEntity
+	 * @param modelTransfer
+	 */
+	private void setOpposingTeamForTransfer(final TransferEntity transferEntity, final TransferSummary modelTransfer) {
+		if (transferEntity.getBuyingTeam() == null) {
+			modelTransfer.setOpposingTeam("Pot");
+		} else {
+			modelTransfer.setOpposingTeam(transferEntity.getBuyingTeam().getName());
 		}
 	}
 
@@ -143,9 +246,11 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 	 * @param buyingTeam Team buying the players.
 	 * @param exchangedPlayers Any players the buying team is exchanging.
 	 */
-	private void updateBuyingTeamData(final Transfer transfer, final TeamEntity buyingTeam, final List<ExchangedPlayerEntity> exchangedPlayers) {
-		final BigDecimal newRemainingBudget = buyingTeam.getRemainingBudget().subtract(transfer.getAmount());
-		buyingTeam.setRemainingBudget(newRemainingBudget);
+	private void updateBuyingTeamData(final Transfer transfer, final TeamEntity buyingTeam, final List<ExchangedPlayerEntity> exchangedPlayers, final TransferStatus transferStatus) {
+		if (transferStatus == TransferStatus.CONFIRMED) {
+			final BigDecimal newRemainingBudget = buyingTeam.getRemainingBudget().subtract(transfer.getAmount());
+			buyingTeam.setRemainingBudget(newRemainingBudget);
+		}
 		
 		updateExchangedPlayerSelectionStatus(buyingTeam, exchangedPlayers);
 		
@@ -159,9 +264,11 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 	 * @param sellingTeam Team buying the players.
 	 * @param soldPlayers Any players the buying team is exchanging.
 	 */
-	private void updateSellingTeamData(final Transfer transfer, final TeamEntity sellingTeam, final List<TransferredPlayerEntity> soldPlayers) {
-		final BigDecimal newRemainingBudget = sellingTeam.getRemainingBudget().add(transfer.getAmount());
-		sellingTeam.setRemainingBudget(newRemainingBudget);
+	private void updateSellingTeamData(final Transfer transfer, final TeamEntity sellingTeam, final List<TransferredPlayerEntity> soldPlayers, final TransferStatus transferStatus) {
+		if (transferStatus == TransferStatus.CONFIRMED) {
+			final BigDecimal newRemainingBudget = sellingTeam.getRemainingBudget().add(transfer.getAmount());
+			sellingTeam.setRemainingBudget(newRemainingBudget);
+		}
 		
 		updateSoldPlayerSelectionStatus(sellingTeam, soldPlayers);
 		
@@ -207,14 +314,16 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 	 * @param openWindow The open transfer window object of the league in question.
 	 * @param newTransfer New transfer entity object to set the status of. 
 	 */
-	private void setTransferStatus(final Transfer transfer, final TransferWindowEntity openWindow, final TransferEntity newTransfer) {
+	private TransferStatus setTransferStatus(final Transfer transfer, final TransferWindowEntity openWindow, final TransferEntity newTransfer) {
 		try {
 			final TransferEntity equivalentTransfer = TransferUtils.getEquivalentTransfer(transfer, openWindow.getTransfers());
 			equivalentTransfer.setStatus(TransferStatus.CONFIRMED);
+			return TransferStatus.CONFIRMED;
 			
 		} catch (final FantasyDraftIntegrationException e) {
 			newTransfer.setStatus(TransferStatus.PENDING);
 			openWindow.addTransfer(newTransfer);
+			return TransferStatus.PENDING;
 		}
 	}
 

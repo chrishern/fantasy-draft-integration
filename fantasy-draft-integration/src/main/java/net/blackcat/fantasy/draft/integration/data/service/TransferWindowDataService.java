@@ -1,5 +1,8 @@
 package net.blackcat.fantasy.draft.integration.data.service;
 
+import java.util.List;
+
+import net.blackcat.fantasy.draft.integration.entity.TransferEntity;
 import net.blackcat.fantasy.draft.integration.entity.TransferWindowEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.round.types.DraftRoundStatus;
@@ -38,4 +41,13 @@ public interface TransferWindowDataService {
 	 * @param transferWindow The {@link TransferWindowEntity} to update.
 	 */
 	void updateTransferWindow(TransferWindowEntity transferWindow);
+	
+	/**
+	 * Get all transfers that a given team is involved in the given window.
+	 * 
+	 * @param transferWindow The transfer window to look for transfers in.
+	 * @param teamId ID of the team to get the transfers for.
+	 * @return List of all transfers the team is involved in.
+	 */
+	List<TransferEntity> getTransfers(TransferWindowEntity transferWindow, int teamId);
 }

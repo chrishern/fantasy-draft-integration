@@ -4,6 +4,8 @@
 package net.blackcat.fantasy.draft.integration.data.service.jpa;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
+import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.integration.entity.TransferEntity;
 import net.blackcat.fantasy.draft.integration.entity.TransferWindowEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
@@ -200,5 +203,48 @@ public class TransferWindowDataServiceJpaTest {
 		final TransferWindowEntity updatedTransferWindow = dataService.getOpenTransferWindow(league.getId());
 
 		assertThat(updatedTransferWindow.getTransfers()).isNotEmpty();
+	}
+	
+	@Test
+	public void testGetTransfers() {
+		// arrange
+		final TeamEntity team1 = mock(TeamEntity.class);
+		final TeamEntity team2 = mock(TeamEntity.class);
+		final TeamEntity team3 = mock(TeamEntity.class);
+		
+		when(team1.getId()).thenReturn(1);
+		when(team2.getId()).thenReturn(2);
+		when(team3.getId()).thenReturn(3);
+		
+		final TransferEntity transfer1 = new TransferEntity();
+		transfer1.setSellingTeam(team1);
+		
+		final TransferEntity transfer2 = new TransferEntity();
+		transfer2.setSellingTeam(team2);
+		transfer2.setBuyingTeam(team1);
+		
+		final TransferEntity transfer3 = new TransferEntity();
+		transfer3.setSellingTeam(team1);
+		transfer3.setBuyingTeam(team2);
+		
+		final TransferEntity transfer4 = new TransferEntity();
+		transfer4.setSellingTeam(team3);
+		transfer4.setBuyingTeam(team2);
+		
+		final TransferEntity transfer5 = new TransferEntity();
+		transfer5.setSellingTeam(team3);
+		
+		final TransferWindowEntity transferWindow = new TransferWindowEntity();
+		transferWindow.addTransfer(transfer1);
+		transferWindow.addTransfer(transfer2);
+		transferWindow.addTransfer(transfer3);
+		transferWindow.addTransfer(transfer4);
+		transferWindow.addTransfer(transfer5);
+		
+		// act
+		final List<TransferEntity> transfersForTeam = dataService.getTransfers(transferWindow, 1);
+		
+		// assert
+		assertThat(transfersForTeam).hasSize(3);
 	}
 }

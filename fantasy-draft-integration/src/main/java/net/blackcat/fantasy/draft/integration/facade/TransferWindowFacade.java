@@ -3,8 +3,11 @@
  */
 package net.blackcat.fantasy.draft.integration.facade;
 
+import java.util.List;
+
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.transfer.Transfer;
+import net.blackcat.fantasy.draft.transfer.TransferSummary;
 
 /**
  * Facade for performing transfer window related operations.
@@ -44,4 +47,13 @@ public interface TransferWindowFacade {
 	 * @throws FantasyDraftIntegrationException
 	 */
 	void sellPlayerToPot(int teamId, int playerId) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Get the transfers for a given team in the open transfer window.
+	 * 
+	 * @param teamId ID of the team we want the transfers for.
+	 * @return Transfers for the given team.
+	 * @throws FantasyDraftIntegrationException
+	 */
+	List<TransferSummary> getTransfersForTeamInOpenWindow(int teamId) throws FantasyDraftIntegrationException;
 }

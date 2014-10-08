@@ -145,4 +145,8 @@ public class TransferWindowEntity implements Serializable {
 		
 		transfers.add(newTransfer);
 	}
+	
+	public void removeTransfer(final TransferEntity transfer) {
+		transfers.remove(transfer);
+	}
 }

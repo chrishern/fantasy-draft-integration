@@ -3,6 +3,9 @@
  */
 package net.blackcat.fantasy.draft.integration.data.service.jpa;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -11,6 +14,7 @@ import javax.persistence.TypedQuery;
 
 import net.blackcat.fantasy.draft.integration.data.service.TransferWindowDataService;
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
+import net.blackcat.fantasy.draft.integration.entity.TransferEntity;
 import net.blackcat.fantasy.draft.integration.entity.TransferWindowEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
@@ -52,6 +56,37 @@ public class TransferWindowDataServiceJpa implements TransferWindowDataService {
 	@Override
 	public void updateTransferWindow(final TransferWindowEntity transferWindow) {
 		entityManager.merge(transferWindow);
+	}
+	
+	@Override
+	public List<TransferEntity> getTransfers(final TransferWindowEntity transferWindow, final int teamId) {
+		final List<TransferEntity> teamTransfers = new ArrayList<TransferEntity>();
+		
+		for (final TransferEntity transfer : transferWindow.getTransfers()) {
+			if (teamIsBuyingTeam(teamId, transfer) || teamIsSellingTeam(teamId, transfer)) {
+				teamTransfers.add(transfer);
+			}
+		}
+		
+		return teamTransfers;
+	}
+
+	/**
+	 * @param teamId
+	 * @param transfer
+	 * @return
+	 */
+	private boolean teamIsSellingTeam(final int teamId, final TransferEntity transfer) {
+		return transfer.getSellingTeam().getId() == teamId;
+	}
+
+	/**
+	 * @param teamId
+	 * @param transfer
+	 * @return
+	 */
+	private boolean teamIsBuyingTeam(final int teamId, final TransferEntity transfer) {
+		return transfer.getBuyingTeam() != null && transfer.getBuyingTeam().getId() == teamId;
 	}
 	
 	private TransferWindowEntity getTransferWindow(final int leagueId, final DraftRoundStatus status) throws FantasyDraftIntegrationException {
