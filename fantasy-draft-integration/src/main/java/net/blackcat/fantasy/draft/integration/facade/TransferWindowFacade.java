@@ -56,4 +56,13 @@ public interface TransferWindowFacade {
 	 * @throws FantasyDraftIntegrationException
 	 */
 	List<TransferSummary> getTransfersForTeamInOpenWindow(int teamId) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Move the transfer window status onto auction phase.  This involves moving all players in and out of the
+	 * respective teams based on all transfers in the window.
+	 * 
+	 * @param leagueId ID of the league to move the transfer window phase on for.
+	 * @throws FantasyDraftIntegrationException
+	 */
+	void moveTransferWindowOntoAuction(int leagueId) throws FantasyDraftIntegrationException;
 }

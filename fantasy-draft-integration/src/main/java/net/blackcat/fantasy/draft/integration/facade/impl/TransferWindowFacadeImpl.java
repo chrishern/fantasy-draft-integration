@@ -21,9 +21,11 @@ import net.blackcat.fantasy.draft.integration.entity.TransferEntity;
 import net.blackcat.fantasy.draft.integration.entity.TransferWindowEntity;
 import net.blackcat.fantasy.draft.integration.entity.TransferredPlayerEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
+import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.facade.TransferWindowFacade;
 import net.blackcat.fantasy.draft.integration.util.TransferUtils;
 import net.blackcat.fantasy.draft.player.Player;
+import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
 import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
 import net.blackcat.fantasy.draft.transfer.Transfer;
 import net.blackcat.fantasy.draft.transfer.TransferSummary;
@@ -136,6 +138,136 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 		}
 		
 		return transfers;
+	}
+	
+	@Override
+	public void moveTransferWindowOntoAuction(final int leagueId) throws FantasyDraftIntegrationException {
+		final TransferWindowEntity openWindow = transferWindowDataService.getOpenTransferWindow(leagueId);
+		
+		for (final TransferEntity transferEntity : openWindow.getTransfers()) {
+			if (transferEntity.getStatus() == TransferStatus.CONFIRMED) {
+				processTransferredPlayers(transferEntity);
+				processExchangedPlayers(transferEntity);
+			} else {
+				processNonConfirmedTransfer(openWindow, transferEntity);
+			}
+		}
+		
+		transferWindowDataService.updateTransferWindow(openWindow);
+	}
+
+	/**
+	 * @param openWindow
+	 * @param transferEntity
+	 * @throws FantasyDraftIntegrationException
+	 */
+	private void processNonConfirmedTransfer(final TransferWindowEntity openWindow, final TransferEntity transferEntity) throws FantasyDraftIntegrationException {
+		openWindow.removeTransfer(transferEntity);
+		
+		// Set the selected player status' back to 'STILL_SELECTED'
+		final TeamEntity sellingTeam = transferEntity.getSellingTeam();
+		final TeamEntity buyingTeam = transferEntity.getBuyingTeam();
+		
+		for (final TransferredPlayerEntity transferredPlayer : transferEntity.getPlayers()) {
+			final SelectedPlayerEntity selectedPlayer = getSelectedPlayerFromTeam(sellingTeam, transferredPlayer.getPlayer().getId());
+			
+			selectedPlayer.setStillSelected(SelectedPlayerStatus.STILL_SELECTED);
+			
+		}
+		
+		for (final ExchangedPlayerEntity exchangedPlayer : transferEntity.getExchangedPlayers()) {
+			final SelectedPlayerEntity selectedPlayer = getSelectedPlayerFromTeam(buyingTeam, exchangedPlayer.getPlayer().getId());
+			
+			selectedPlayer.setStillSelected(SelectedPlayerStatus.STILL_SELECTED);
+			
+		}
+		
+		teamDataService.updateTeam(sellingTeam);
+		teamDataService.updateTeam(buyingTeam);
+	}
+
+	/**
+	 * @param transferEntity
+	 * @throws FantasyDraftIntegrationException
+	 */
+	private void processTransferredPlayers(final TransferEntity transferEntity) throws FantasyDraftIntegrationException {
+		for (final TransferredPlayerEntity transferredPlayer : transferEntity.getPlayers()) {
+			final TeamEntity sellingTeam = transferEntity.getSellingTeam();
+			
+			final SelectedPlayerEntity selectedPlayer = getSelectedPlayerFromTeam(sellingTeam, transferredPlayer.getPlayer().getId());
+			final PlayerEntity soldPlayer = selectedPlayer.getPlayer();
+			
+			setNewPlayerSelectionStatusAfterTransferOut(selectedPlayer);
+			
+			teamDataService.updateTeam(sellingTeam);
+			
+			if (transferEntity.getBuyingTeam() != null) {
+				final TeamEntity buyingTeam = transferEntity.getBuyingTeam();
+				final SelectedPlayerEntity boughtSelectedPlayer = new SelectedPlayerEntity(soldPlayer, transferEntity.getAmount());
+				
+				buyingTeam.addSelectedPlayers(Arrays.asList(boughtSelectedPlayer));
+				
+				teamDataService.updateTeam(buyingTeam);
+			} else {
+				// update player
+				soldPlayer.setSelectionStatus(PlayerSelectionStatus.NOT_SELECTED);
+				
+				playerDataService.updatePlayer(soldPlayer);
+			}
+			
+		}
+	}
+	
+	/**
+	 * @param transferEntity
+	 * @throws FantasyDraftIntegrationException
+	 */
+	private void processExchangedPlayers(final TransferEntity transferEntity) throws FantasyDraftIntegrationException {
+		for (final ExchangedPlayerEntity transferredPlayer : transferEntity.getExchangedPlayers()) {
+			final TeamEntity sellingTeam = transferEntity.getSellingTeam();
+			
+			final SelectedPlayerEntity selectedPlayer = getSelectedPlayerFromTeam(sellingTeam, transferredPlayer.getPlayer().getId());
+			final PlayerEntity soldPlayer = selectedPlayer.getPlayer();
+			
+			setNewPlayerSelectionStatusAfterTransferOut(selectedPlayer);
+			
+			teamDataService.updateTeam(sellingTeam);
+			
+			if (transferEntity.getBuyingTeam() != null) {
+				final TeamEntity buyingTeam = transferEntity.getBuyingTeam();
+				final SelectedPlayerEntity boughtSelectedPlayer = new SelectedPlayerEntity(soldPlayer, transferEntity.getAmount());
+				
+				buyingTeam.addSelectedPlayers(Arrays.asList(boughtSelectedPlayer));
+				
+				teamDataService.updateTeam(buyingTeam);
+			} else {
+				// update player
+				soldPlayer.setSelectionStatus(PlayerSelectionStatus.NOT_SELECTED);
+				
+				playerDataService.updatePlayer(soldPlayer);
+			}
+			
+		}
+	}
+	
+	private void setNewPlayerSelectionStatusAfterTransferOut(final SelectedPlayerEntity selectedPlayer) {
+		if (selectedPlayer.getSelectedPlayerStatus() == SelectedPlayerStatus.PENDING_SALE_TO_POT) {
+			selectedPlayer.setStillSelected(SelectedPlayerStatus.SOLD_TO_POT);
+		} else if (selectedPlayer.getSelectedPlayerStatus() == SelectedPlayerStatus.PENDING_TRANSFER_OUT) {
+			selectedPlayer.setStillSelected(SelectedPlayerStatus.TRANSFERRED_OUT);
+		}
+		
+		selectedPlayer.setSelectionStatus(null);
+	}
+	
+	private SelectedPlayerEntity getSelectedPlayerFromTeam(final TeamEntity team, final int playerId) throws FantasyDraftIntegrationException {
+		for (final SelectedPlayerEntity selectedPlayer : team.getSelectedPlayers()) {
+			if (selectedPlayer.getPlayer().getId() == playerId) {
+				return selectedPlayer;
+			}
+		}
+		
+		throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.PLAYER_DOES_NOT_EXIST);
 	}
 	
 	/**
