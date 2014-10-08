@@ -6,12 +6,19 @@ package net.blackcat.fantasy.draft.integration.facade.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import net.blackcat.fantasy.draft.auction.AuctionPlayerBid;
+import net.blackcat.fantasy.draft.auction.AuctionPlayerResult;
+import net.blackcat.fantasy.draft.auction.AuctionRoundResults;
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
 import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
 import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
 import net.blackcat.fantasy.draft.integration.data.service.TransferWindowDataService;
+import net.blackcat.fantasy.draft.integration.entity.BidEntity;
 import net.blackcat.fantasy.draft.integration.entity.ExchangedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
@@ -27,6 +34,11 @@ import net.blackcat.fantasy.draft.integration.util.TransferUtils;
 import net.blackcat.fantasy.draft.player.Player;
 import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
 import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
+import net.blackcat.fantasy.draft.round.Bid;
+import net.blackcat.fantasy.draft.round.TeamBids;
+import net.blackcat.fantasy.draft.round.types.DraftRoundStatus;
+import net.blackcat.fantasy.draft.team.Team;
+import net.blackcat.fantasy.draft.team.types.TeamStatus;
 import net.blackcat.fantasy.draft.transfer.LeagueTransferSummary;
 import net.blackcat.fantasy.draft.transfer.LeagueTransferWindowSummary;
 import net.blackcat.fantasy.draft.transfer.Transfer;
@@ -34,6 +46,7 @@ import net.blackcat.fantasy.draft.transfer.TransferSummary;
 import net.blackcat.fantasy.draft.transfer.types.TransferStatus;
 import net.blackcat.fantasy.draft.transfer.types.TransferType;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -71,6 +84,239 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 		
 		final TransferWindowEntity draftRound = new TransferWindowEntity(phase, league);
 		transferWindowDataService.createTransferWindow(draftRound);
+	}
+	
+	@Override
+	public AuctionRoundResults closeTransferWindow(final int leagueId) throws FantasyDraftIntegrationException {
+		final TransferWindowEntity openWindow = transferWindowDataService.getOpenTransferWindow(leagueId);
+		
+		final AuctionRoundResults auctionRoundResults = new AuctionRoundResults(openWindow.getKey().getSequenceNumber());
+		final List<AuctionPlayerResult> playerAuctionResults = new ArrayList<AuctionPlayerResult>();
+		auctionRoundResults.setPlayerResults(playerAuctionResults);
+
+		// Create a map of player id to BidEntity
+		final Map<Integer, List<BidEntity>> playerBids = createPlayerBidLists(openWindow);
+		
+		// Go through each entity in the map and decide who had the winning bid, creating the AuctionPlayerResults as we go
+		processAuctionRoundResults(playerAuctionResults, playerBids);
+		
+		// Update the draft round entity to show that it is CLOSED and also set the successful status on each BidEntity
+		openWindow.setStatus(DraftRoundStatus.CLOSED);
+		transferWindowDataService.updateTransferWindow(openWindow);
+		
+		// Move all the bids of successful players into the appropriate team.
+		moveSuccessfulPlayerBidsToTeam(openWindow);
+		
+		return auctionRoundResults;
+		
+	}
+	
+	/**
+	 * Build up a map of the teams who had successful auction bids and their successful bids.
+	 * 
+	 * @param draftRound Draft round results.
+	 * @param selectedPlayersMap Map of teams who had successful auction bids and their successful bids.
+	 */
+	private void buildSuccessfulBidsForTeams(final TransferWindowEntity draftRound, final Map<TeamEntity, List<BidEntity>> selectedPlayersMap) {
+		for (final BidEntity bid : draftRound.getAuctionRoundBids()) {
+			if (bid.isSuccessful()) {
+				
+				List<BidEntity> teamBidList = selectedPlayersMap.get(bid.getTeam());
+				
+				if (teamBidList == null) {
+					teamBidList = new ArrayList<BidEntity>();
+					selectedPlayersMap.put(bid.getTeam(), teamBidList);
+				}
+				
+				teamBidList.add(bid);
+			}
+		}
+	}
+
+	/**
+	 * Update each team entity with the successful player bids.
+	 * 
+	 * @param selectedPlayersMap Map of teams and their successful bids.
+	 */
+	private void updateTeamsWithSuccessfulBids(final Map<TeamEntity, List<BidEntity>> selectedPlayersMap) {
+		for (final TeamEntity teamToUpdate : selectedPlayersMap.keySet()) {
+			final List<SelectedPlayerEntity> selectedPlayers = new ArrayList<SelectedPlayerEntity>();
+			BigDecimal costOfSuccessfulBids = BigDecimal.ZERO;
+			
+			for (final BidEntity successfulBid : selectedPlayersMap.get(teamToUpdate)) {
+				final SelectedPlayerEntity selectedPlayer = new SelectedPlayerEntity(successfulBid.getPlayer());
+				selectedPlayer.setCost(successfulBid.getAmount());
+				selectedPlayers.add(selectedPlayer);
+				
+				costOfSuccessfulBids = costOfSuccessfulBids.add(successfulBid.getAmount());
+			}
+			
+			teamToUpdate.setRemainingBudget(teamToUpdate.getRemainingBudget().subtract(costOfSuccessfulBids));
+			teamToUpdate.addSelectedPlayers(selectedPlayers);
+			
+			if (getNumberOfSelectedPlayers(teamToUpdate.getSelectedPlayers()) == 16) {
+				teamToUpdate.setStatus(TeamStatus.COMPLETE);
+			}
+			
+			teamDataService.updateTeam(teamToUpdate);
+		}
+	}
+	
+	private int getNumberOfSelectedPlayers(final List<SelectedPlayerEntity> selectedPlayers) {
+		int noOfSelectedPlayers = 0;
+		
+		for (final SelectedPlayerEntity selectedPlayer : selectedPlayers) {
+			if (selectedPlayer.getSelectedPlayerStatus() == SelectedPlayerStatus.STILL_SELECTED) {
+				noOfSelectedPlayers++;
+			}
+		}
+		
+		return noOfSelectedPlayers;
+	}
+	
+	/**
+	 * Move all of the successful bids for players to be selected players within the appropriate team.
+	 * 
+	 * @param draftRound Draft round containing all bid results.
+	 */
+	private void moveSuccessfulPlayerBidsToTeam(final TransferWindowEntity draftRound) {
+		final Map<TeamEntity, List<BidEntity>> selectedPlayersMap = new HashMap<TeamEntity, List<BidEntity>>();
+		
+		buildSuccessfulBidsForTeams(draftRound, selectedPlayersMap);
+		updateTeamsWithSuccessfulBids(selectedPlayersMap);
+	}
+	
+	/**
+	 * Process the auction round updates, updating any entities and building up the {@link AuctionPlayerResult} list as we go.
+	 * 
+	 * @param playerAuctionResults List of {@link AuctionPlayerResult} object to record the results of the player bids on.
+	 * @param playerBids List of player bids made in this auction round.
+	 */
+	private void processAuctionRoundResults(final List<AuctionPlayerResult> playerAuctionResults, final Map<Integer, List<BidEntity>> playerBids) {
+		for (final List<BidEntity> bids : playerBids.values()) {
+			final PlayerEntity playerEntity = bids.get(0).getPlayer();
+			final Player modelPlayer = new Player();
+			BeanUtils.copyProperties(playerEntity, modelPlayer);
+			
+			final AuctionPlayerResult playerResults = new AuctionPlayerResult(modelPlayer);
+			playerAuctionResults.add(playerResults);
+			
+			Collections.sort(bids);
+			
+			final BidEntity firstBid = bids.get(0);
+			
+			if (bids.size() == 1) {
+				processSuccessfulBid(playerResults, firstBid);
+			} else {
+				processMultipleBidPlayer(bids, playerResults, firstBid);
+			}
+		}
+	}
+	
+	/**
+	 * Processes the auction bids for a player who has had multiple bids against them.
+	 * 
+	 * @param bids The bids for the player.
+	 * @param playerResults Auction results object to update with the processed results.
+	 * @param firstBid The first bid that was made on the player.
+	 */
+	private void processMultipleBidPlayer(final List<BidEntity> bids, final AuctionPlayerResult playerResults, final BidEntity firstBid) {
+		// If there are any matching bids, update the player selection status to restricted and make a note of the teams who can bid
+		if (isMatchingHighestBid(bids, firstBid)) {
+			processPlayerWithMatchingHighestBid(bids, playerResults, firstBid);
+		} else {
+			processSuccessfulBid(playerResults, firstBid);
+			
+			final List<AuctionPlayerBid> unsuccessfulBids = new ArrayList<AuctionPlayerBid>();
+			for (int i = 1; i < bids.size(); i++) {
+				bids.get(i).setSuccessful(false);
+				
+				final Team unsuccessfulModelTeam = new Team(bids.get(i).getTeam().getName());
+				final AuctionPlayerBid unsuccesfulAuctionBid = new AuctionPlayerBid(unsuccessfulModelTeam, bids.get(i).getAmount());
+				unsuccessfulBids.add(unsuccesfulAuctionBid);
+			}
+			
+			playerResults.setUnsuccessfulBids(unsuccessfulBids);
+		}
+	}
+
+	/**
+	 * Determine if there is a matching highest bid for a player.
+	 * 
+	 * @param bids Bids for a certain player.
+	 * @param firstBid The first bid for the player.
+	 * @return True if there are matching highest bids, false otherwise.
+	 */
+	private boolean isMatchingHighestBid(final List<BidEntity> bids, final BidEntity firstBid) {
+		return firstBid.getAmount().equals(bids.get(1).getAmount());
+	}
+
+	/**
+	 * Process the bids for a player who has joint highest bids.
+	 * 
+	 * @param bids The bids for the player.
+	 * @param playerResults Auction results object to update with the processed results.
+	 * @param firstBid The first bid that was made on the player.
+	 */
+	private void processPlayerWithMatchingHighestBid(final List<BidEntity> bids, final AuctionPlayerResult playerResults, final BidEntity firstBid) {
+		final BigDecimal highestBid = firstBid.getAmount();
+		
+		final List<AuctionPlayerBid> unsuccessfulBids = new ArrayList<AuctionPlayerBid>();
+		final List<AuctionPlayerBid> matchingHighBids = new ArrayList<AuctionPlayerBid>();
+		
+		for (final BidEntity playerBid : bids) {
+			playerBid.setSuccessful(false);
+
+			final Team modelTeam = new Team(playerBid.getTeam().getName());
+			final AuctionPlayerBid auctionBid = new AuctionPlayerBid(modelTeam, playerBid.getAmount());
+
+			if (playerBid.getAmount().equals(highestBid)) {
+				matchingHighBids.add(auctionBid);
+			} else {
+				unsuccessfulBids.add(auctionBid);
+			}
+		}
+		
+		playerResults.setUnsuccessfulBids(unsuccessfulBids);
+		playerResults.setMatchingHighBids(matchingHighBids);
+	}
+
+	/**
+	 * Process the successful bid for a player.
+	 * 
+	 * @param playerResults Auction results object to update with the processed results.
+	 * @param successfulBid The successful bid.
+	 */
+	private void processSuccessfulBid(final AuctionPlayerResult playerResults, final BidEntity successfulBid) {
+		successfulBid.setSuccessful(true);
+		successfulBid.getPlayer().setSelectionStatus(PlayerSelectionStatus.SELECTED);
+		
+		final Team modelTeam = new Team(successfulBid.getTeam().getName());
+		final AuctionPlayerBid auctionBid = new AuctionPlayerBid(modelTeam, successfulBid.getAmount());
+		playerResults.setSuccessfulBid(auctionBid);
+	}
+	
+	/**
+	 * Create a map containing a player id mapped to the list of bids for that player in a given draft round.
+	 * 
+	 * @param draftRound Draft round to create the player bid list for.
+	 * @return Map containing a player id mapped to the list of bids for that player.
+	 */
+	private Map<Integer, List<BidEntity>> createPlayerBidLists(final TransferWindowEntity draftRound) {
+		final Map<Integer, List<BidEntity>> playerBids = new HashMap<Integer, List<BidEntity>>();
+		
+		for (final BidEntity bid : draftRound.getAuctionRoundBids()) {
+			List<BidEntity> bidList = playerBids.get(bid.getPlayer().getId());
+			
+			if (bidList == null) {
+				bidList = new ArrayList<BidEntity>();
+			} 
+			
+			bidList.add(bid);
+			playerBids.put(bid.getPlayer().getId(), bidList);
+		}
+		
+		return playerBids;
 	}
 
 	@Override
@@ -162,9 +408,78 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 	public LeagueTransferWindowSummary getLeagueTransferWindowSummary(final int leagueId) throws FantasyDraftIntegrationException {
 		final LeagueTransferWindowSummary windowSummary = new LeagueTransferWindowSummary();
 		final List<LeagueTransferSummary> transferSummaries = new ArrayList<LeagueTransferSummary>();
+		final List<AuctionRoundResults> auctionSummaries = new ArrayList<AuctionRoundResults>();
 		
-		final TransferWindowEntity openWindow = transferWindowDataService.getOpenTransferWindow(leagueId);
+		for (final TransferWindowEntity window : transferWindowDataService.getTransferWindows(leagueId)) {
+			createTransfersSummary(transferSummaries, window);
+			createAuctionsSummary(auctionSummaries, window);
+		}
 		
+		windowSummary.setTransfers(transferSummaries);
+		windowSummary.setAuctions(auctionSummaries);
+		
+		return windowSummary;
+	}
+
+	/**
+	 * @param auctionSummaries
+	 * @param window
+	 */
+	private void createAuctionsSummary(final List<AuctionRoundResults> auctionSummaries, final TransferWindowEntity window) {
+		if (window.getStatus() == DraftRoundStatus.CLOSED) {
+			final AuctionRoundResults auctionRoundResults = new AuctionRoundResults(window.getKey().getSequenceNumber());
+			final List<AuctionPlayerResult> playerAuctionResults = new ArrayList<AuctionPlayerResult>();
+			auctionRoundResults.setPlayerResults(playerAuctionResults);
+			
+			// Create a map of player id to BidEntity
+			final Map<Integer, List<BidEntity>> playerBids = createPlayerBidLists(window);
+			
+			for (final List<BidEntity> bids : playerBids.values()) {
+				final PlayerEntity playerEntity = bids.get(0).getPlayer();
+				final Player modelPlayer = new Player();
+				BeanUtils.copyProperties(playerEntity, modelPlayer);
+				
+				final AuctionPlayerResult playerResults = new AuctionPlayerResult(modelPlayer);
+				playerAuctionResults.add(playerResults);
+				
+				Collections.sort(bids);
+				
+				final BidEntity firstBid = bids.get(0);
+				
+				if (bids.size() == 1) {
+					final Team modelTeam = new Team(firstBid.getTeam().getName());
+					final AuctionPlayerBid auctionBid = new AuctionPlayerBid(modelTeam, firstBid.getAmount());
+					playerResults.setSuccessfulBid(auctionBid);
+				} else {
+					if (isMatchingHighestBid(bids, firstBid)) {
+						processPlayerWithMatchingHighestBid(bids, playerResults, firstBid);
+					} else {
+						final Team modelTeam = new Team(firstBid.getTeam().getName());
+						final AuctionPlayerBid auctionBid = new AuctionPlayerBid(modelTeam, firstBid.getAmount());
+						playerResults.setSuccessfulBid(auctionBid);
+						
+						final List<AuctionPlayerBid> unsuccessfulBids = new ArrayList<AuctionPlayerBid>();
+						for (int i = 1; i < bids.size(); i++) {
+							final Team unsuccessfulModelTeam = new Team(bids.get(i).getTeam().getName());
+							final AuctionPlayerBid unsuccesfulAuctionBid = new AuctionPlayerBid(unsuccessfulModelTeam, bids.get(i).getAmount());
+							unsuccessfulBids.add(unsuccesfulAuctionBid);
+						}
+						
+						playerResults.setUnsuccessfulBids(unsuccessfulBids);
+					}
+				}
+			}
+			
+			auctionSummaries.add(auctionRoundResults);
+		}
+	}
+
+	/**
+	 * @param windowSummary
+	 * @param transferSummaries
+	 * @param openWindow
+	 */
+	private void createTransfersSummary(final List<LeagueTransferSummary> transferSummaries, final TransferWindowEntity openWindow) {
 		for (final TransferEntity transferEntity : openWindow.getTransfers()) {
 			final LeagueTransferSummary transferSummary = new LeagueTransferSummary();
 			
@@ -201,10 +516,26 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 			
 			transferSummaries.add(transferSummary);
 		}
+	}
+	
+	@Override
+	public void makeBids(final TeamBids teamBids) throws FantasyDraftIntegrationException {
+		final TeamEntity teamEntity = teamDataService.getTeam(teamBids.getTeamId());
+		final LeagueEntity leagueEntity = leagueDataService.getLeagueForTeam(teamBids.getTeamId());
+		final TransferWindowEntity openTransferWindow = transferWindowDataService.getOpenTransferWindow(leagueEntity.getId());
 		
-		windowSummary.setTransfers(transferSummaries);
+		// Add the bids to the draft round
+		final List<BidEntity> bidEntities = new ArrayList<BidEntity>();
+		for (final Bid modelBid : teamBids.getBids()) {
+			final PlayerEntity playerBiddedFor = playerDataService.getPlayer(modelBid.getPlayerId());
+			final BidEntity entityBid = new BidEntity(teamEntity, playerBiddedFor, modelBid.getAmount());
+			
+			bidEntities.add(entityBid);
+		}
 		
-		return windowSummary;
+		openTransferWindow.addBids(bidEntities);
+		
+		transferWindowDataService.updateTransferWindow(openTransferWindow);
 	}
 	
 	/**

@@ -229,6 +229,7 @@ public class SelectedPlayerEntity implements Serializable, Comparable<SelectedPl
 		selectedPlayerModel.setSurname(this.player.getSurname());
 		selectedPlayerModel.setTeam(this.player.getTeam());
 		selectedPlayerModel.setPosition(this.player.getPosition());
+		selectedPlayerModel.setSquadStatus(this.stillSelected);
 		
 		return selectedPlayerModel;
 	}

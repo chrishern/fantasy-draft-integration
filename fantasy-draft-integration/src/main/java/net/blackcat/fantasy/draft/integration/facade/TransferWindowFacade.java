@@ -5,7 +5,9 @@ package net.blackcat.fantasy.draft.integration.facade;
 
 import java.util.List;
 
+import net.blackcat.fantasy.draft.auction.AuctionRoundResults;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
+import net.blackcat.fantasy.draft.round.TeamBids;
 import net.blackcat.fantasy.draft.transfer.LeagueTransferWindowSummary;
 import net.blackcat.fantasy.draft.transfer.Transfer;
 import net.blackcat.fantasy.draft.transfer.TransferSummary;
@@ -31,6 +33,8 @@ public interface TransferWindowFacade {
 	 * 		</ul>
 	 */
 	void startTransferWindow(int leagueId, final int phase) throws FantasyDraftIntegrationException;
+	
+	AuctionRoundResults closeTransferWindow(int leagueId) throws FantasyDraftIntegrationException;
 	
 	/**
 	 * Add a given transfer to a window.
@@ -74,4 +78,13 @@ public interface TransferWindowFacade {
 	 * @return Transfer window summary for the league,
 	 */
 	LeagueTransferWindowSummary getLeagueTransferWindowSummary(int leagueId) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Make a list of bids for a team.
+	 * 
+	 * @param teamId Team the bids are being made for.
+	 * @param teamBids List of bids the team wants to make.
+	 * @throws FantasyDraftIntegrationException for the following reasons:
+	 */
+	void makeBids(TeamBids teamBids) throws FantasyDraftIntegrationException;
 }

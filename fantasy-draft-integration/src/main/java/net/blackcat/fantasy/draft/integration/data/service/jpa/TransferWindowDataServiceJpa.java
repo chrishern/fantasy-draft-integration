@@ -70,6 +70,15 @@ public class TransferWindowDataServiceJpa implements TransferWindowDataService {
 		
 		return teamTransfers;
 	}
+	
+	@Override
+	public List<TransferWindowEntity> getTransferWindows(final int leagueId) throws FantasyDraftIntegrationException {
+		final TypedQuery<TransferWindowEntity> query = entityManager.createQuery(
+				"SELECT d FROM TransferWindowEntity d WHERE d.key.leagueId = :leagueId", TransferWindowEntity.class);
+		query.setParameter("leagueId", leagueId);
+		
+		return query.getResultList();
+	}
 
 	/**
 	 * @param teamId

@@ -36,6 +36,15 @@ public interface TransferWindowDataService {
 	TransferWindowEntity getOpenTransferWindow(int leagueId) throws FantasyDraftIntegrationException;
 	
 	/**
+	 * Get the transfer windows for a league.
+	 * 
+	 * @param leagueId ID of the league to get the transfer windows for.
+	 * @return The {@link TransferWindowEntity} objects for the league.
+	 * @throws FantasyDraftIntegrationException If an open transfer window for the given league does not exist,
+	 */
+	List<TransferWindowEntity> getTransferWindows(int leagueId) throws FantasyDraftIntegrationException;
+	
+	/**
 	 * Update the given transfer window entity.
 	 *
 	 * @param transferWindow The {@link TransferWindowEntity} to update.
