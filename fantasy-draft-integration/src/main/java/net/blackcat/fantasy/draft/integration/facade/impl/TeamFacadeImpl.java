@@ -13,11 +13,11 @@ import net.blackcat.fantasy.draft.integration.data.service.DraftRoundDataService
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
 import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
-import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.facade.TeamFacade;
+import net.blackcat.fantasy.draft.integration.factory.TeamSummaryFactory;
 import net.blackcat.fantasy.draft.player.FplCostPlayer;
 import net.blackcat.fantasy.draft.player.SelectedPlayer;
 import net.blackcat.fantasy.draft.team.Team;
@@ -112,7 +112,7 @@ public class TeamFacadeImpl implements TeamFacade {
 	public TeamSummary getTeamSummary(final int teamId) throws FantasyDraftIntegrationException {
 		final TeamEntity teamEntity = teamDataService.getTeam(teamId);
 		
-		return getTeamSummaryFromEntity(teamEntity);
+		return TeamSummaryFactory.createTeamSummary(teamEntity);
 	}
 	
 	@Override
@@ -122,7 +122,7 @@ public class TeamFacadeImpl implements TeamFacade {
 		final LeagueEntity league = leagueDataService.getLeague(leagueId);
 		
 		for (final TeamEntity teamEntity : league.getTeams()) {
-			teamSummaries.add(getTeamSummaryFromEntity(teamEntity));
+			teamSummaries.add(TeamSummaryFactory.createTeamSummary(teamEntity));
 		}
 		
 		return teamSummaries;
@@ -140,45 +140,5 @@ public class TeamFacadeImpl implements TeamFacade {
 				teamDataService.updateTeam(team);
 			}
 		}
-	}
-
-	/**
-	 * Convert a {@link TeamEntity} into a {@link TeamSummary}.
-	 * 
-	 * @param teamEntity {@link TeamEntity} to convert.
-	 * @return {@link TeamSummary} Converted {@link TeamSummary}.
-	 */
-	private TeamSummary getTeamSummaryFromEntity(final TeamEntity teamEntity) {
-		final TeamSummary teamSummary = new TeamSummary();
-		
-		teamSummary.setId(teamEntity.getId());
-		teamSummary.setTeamName(teamEntity.getName());
-		teamSummary.setTotalPoints(teamEntity.getTotalScore());
-		teamSummary.setRemainingBudget(teamEntity.getRemainingBudget());
-		
-		final List<SelectedPlayer> selectedPlayerModelList = new ArrayList<SelectedPlayer>();
-		for (final SelectedPlayerEntity selectedPlayerEntity : teamEntity.getSelectedPlayers()) {
-			
-			final SelectedPlayer selectedPlayerModel = new SelectedPlayer();
-			
-			final PlayerEntity playerEntity = selectedPlayerEntity.getPlayer();
-			selectedPlayerModel.setCost(selectedPlayerEntity.getCost());
-			selectedPlayerModel.setForename(playerEntity.getForename());
-			selectedPlayerModel.setId(playerEntity.getId());
-			selectedPlayerModel.setPointsScored(selectedPlayerEntity.getPointsScored());
-			selectedPlayerModel.setPosition(playerEntity.getPosition());
-			selectedPlayerModel.setSelectionStatus(selectedPlayerEntity.getSelectionStatus());
-			selectedPlayerModel.setSurname(playerEntity.getSurname());
-			selectedPlayerModel.setTeam(playerEntity.getTeam());
-			selectedPlayerModel.setCurrentSellToPotPrice(selectedPlayerEntity.getCurrentSellToPotPrice());
-			selectedPlayerModel.setSquadStatus(selectedPlayerEntity.getSelectedPlayerStatus());
-			
-			selectedPlayerModelList.add(selectedPlayerModel);
-		}
-		
-		Collections.sort(selectedPlayerModelList);
-		teamSummary.setTeam(selectedPlayerModelList);
-		
-		return teamSummary;
 	}
 }

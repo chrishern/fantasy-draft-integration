@@ -156,6 +156,8 @@ public final class TestDataUtil {
 		final PlayerEntity player = new PlayerEntity();
 		player.setId(playerId);
 		player.setPosition(position);
+		player.setForename(PLAYER_1_FORENAME);
+		player.setSurname(PLAYER_1_SURNAME);
 		
 		final SelectedPlayerEntity selectedPlayer = new SelectedPlayerEntity();
 		selectedPlayer.setPlayer(player);
@@ -164,6 +166,7 @@ public final class TestDataUtil {
 		selectedPlayer.setCost(new BigDecimal(SELECTED_PLAYER_COST));
 		selectedPlayer.setCurrentSellToPotPrice(new BigDecimal(SELECTED_PLAYER_COST));
 		selectedPlayer.setStillSelected(SelectedPlayerStatus.STILL_SELECTED);
+		selectedPlayer.setPointsScored(PLAYER_1_POINTS);
 		
 		return selectedPlayer;
 	}
