@@ -63,6 +63,7 @@ public class PlayerFacadeImpl implements PlayerFacade {
 			
 			BeanUtils.copyProperties(modelPlayer, entityPlayer);
 			entityPlayer.setSelectionStatus(PlayerSelectionStatus.NOT_SELECTED);
+			entityPlayer.setCurrentPrice(modelPlayer.getFplCost());
 			
 			entityPlayers.add(entityPlayer);
 		}
