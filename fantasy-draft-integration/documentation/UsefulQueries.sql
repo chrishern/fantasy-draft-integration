@@ -22,19 +22,19 @@ WHERE Team_SelectedPlayer.Team_id = 2
 
 DELETE FROM `Team_SelectedPlayer` WHERE `selectedPlayers_id` = 176;
 
-UPDATE SelectedPlayer SET selectionStatus = 'PICKED' WHERE id = 7;
-UPDATE SelectedPlayer SET selectionStatus = 'PICKED' WHERE id = 8;
-UPDATE SelectedPlayer SET selectionStatus = 'PICKED' WHERE id = 9;
-UPDATE SelectedPlayer SET selectionStatus = 'PICKED' WHERE id = 10;
-UPDATE SelectedPlayer SET selectionStatus = 'PICKED' WHERE id = 80;
-UPDATE SelectedPlayer SET selectionStatus = 'PICKED' WHERE id = 81;
-UPDATE SelectedPlayer SET selectionStatus = 'PICKED' WHERE id = 82;
-UPDATE SelectedPlayer SET selectionStatus = 'PICKED' WHERE id = 83;
-UPDATE SelectedPlayer SET selectionStatus = 'PICKED' WHERE id = 175;
-UPDATE SelectedPlayer SET selectionStatus = 'CAPTAIN' WHERE id = 12;
-UPDATE SelectedPlayer SET selectionStatus = 'VICE_CAPTAIN' WHERE id = 6;
-UPDATE SelectedPlayer SET selectionStatus = 'SUB_1' WHERE id = 160;
-UPDATE SelectedPlayer SET selectionStatus = 'SUB_2' WHERE id = 79;
-UPDATE SelectedPlayer SET selectionStatus = 'SUB_3' WHERE id = 78;
-UPDATE SelectedPlayer SET selectionStatus = 'SUB_4' WHERE id = 85;
-UPDATE SelectedPlayer SET selectionStatus = 'SUB_5' WHERE id = 107;
+UPDATE SelectedPlayer SET selectionStatus = 'PICKED' WHERE id = ;
+UPDATE SelectedPlayer SET selectionStatus = 'PICKED' WHERE id = ;
+UPDATE SelectedPlayer SET selectionStatus = 'PICKED' WHERE id = ;
+UPDATE SelectedPlayer SET selectionStatus = 'PICKED' WHERE id = ;
+UPDATE SelectedPlayer SET selectionStatus = 'PICKED' WHERE id = ;
+UPDATE SelectedPlayer SET selectionStatus = 'PICKED' WHERE id = ;
+UPDATE SelectedPlayer SET selectionStatus = 'PICKED' WHERE id = ;
+UPDATE SelectedPlayer SET selectionStatus = 'PICKED' WHERE id = ;
+UPDATE SelectedPlayer SET selectionStatus = 'PICKED' WHERE id = ;
+UPDATE SelectedPlayer SET selectionStatus = 'CAPTAIN' WHERE id = ;
+UPDATE SelectedPlayer SET selectionStatus = 'VICE_CAPTAIN' WHERE id = ;
+UPDATE SelectedPlayer SET selectionStatus = 'SUB_1' WHERE id = ;
+UPDATE SelectedPlayer SET selectionStatus = 'SUB_2' WHERE id = 146;
+UPDATE SelectedPlayer SET selectionStatus = 'SUB_3' WHERE id = 131;
+UPDATE SelectedPlayer SET selectionStatus = 'SUB_4' WHERE id = 71;
+UPDATE SelectedPlayer SET selectionStatus = 'SUB_5' WHERE id = ;
