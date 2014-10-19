@@ -10,8 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 import net.blackcat.fantasy.draft.integration.data.service.DraftRoundDataService;
+import net.blackcat.fantasy.draft.integration.data.service.GameweekDataService;
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
 import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
+import net.blackcat.fantasy.draft.integration.entity.GameweekEntity;
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
 import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
@@ -49,6 +51,10 @@ public class TeamFacadeImpl implements TeamFacade {
 	@Autowired
 	@Qualifier(value = "draftRoundDataServiceJpa")
 	private DraftRoundDataService draftRoundDataService;
+	
+	@Autowired
+	@Qualifier(value = "gameweekDataServiceJpa")
+	private GameweekDataService gameweekDataService;
 	
 	@Override
 	public void createTeam(final String teamName) {
@@ -111,8 +117,9 @@ public class TeamFacadeImpl implements TeamFacade {
 	@Override
 	public TeamSummary getTeamSummary(final int teamId) throws FantasyDraftIntegrationException {
 		final TeamEntity teamEntity = teamDataService.getTeam(teamId);
+		final GameweekEntity gameweekEntity = gameweekDataService.getGameweekData();
 		
-		return TeamSummaryFactory.createTeamSummary(teamEntity);
+		return TeamSummaryFactory.createTeamSummary(teamEntity, gameweekEntity.getPreviousGameweek());
 	}
 	
 	@Override
@@ -120,9 +127,11 @@ public class TeamFacadeImpl implements TeamFacade {
 		final List<TeamSummary> teamSummaries = new ArrayList<TeamSummary>();
 		
 		final LeagueEntity league = leagueDataService.getLeague(leagueId);
+		final GameweekEntity gameweekEntity = gameweekDataService.getGameweekData();
+		final int previousGameweek = gameweekEntity.getPreviousGameweek();
 		
 		for (final TeamEntity teamEntity : league.getTeams()) {
-			teamSummaries.add(TeamSummaryFactory.createTeamSummary(teamEntity));
+			teamSummaries.add(TeamSummaryFactory.createTeamSummary(teamEntity, previousGameweek));
 		}
 		
 		return teamSummaries;

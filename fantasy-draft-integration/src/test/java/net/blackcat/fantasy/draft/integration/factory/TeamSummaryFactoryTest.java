@@ -7,6 +7,7 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.Arrays;
 
+import net.blackcat.fantasy.draft.integration.entity.GameweekScoreEntity;
 import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.integration.test.util.TestDataUtil;
@@ -25,21 +26,31 @@ import org.junit.Test;
  */
 public class TeamSummaryFactoryTest {
 
+	private static final int PREVIOUS_GAMEWEEK_NUMBER = 1;
+	private static final int CURRENT_GAMEWEEK_NUMBER = 2;
+	
 	@Test
 	public void testCreateTeamSummaryFromTeamEntity() {
 		// arrange
 		final SelectedPlayerEntity secondSelectedPlayer = 
 				TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_2_ID, Position.GOALKEEPER, SelectedPlayerStartingElevenStatus.PICKED);
+		secondSelectedPlayer.addGameweekScore(createGameweekScoreEntity(PREVIOUS_GAMEWEEK_NUMBER, 4));
+		secondSelectedPlayer.addGameweekScore(createGameweekScoreEntity(CURRENT_GAMEWEEK_NUMBER, 2));
 		
 		final SelectedPlayerEntity soldToPotPlayer = 
 				TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_3_ID, Position.DEFENDER, null);
+		soldToPotPlayer.addGameweekScore(createGameweekScoreEntity(PREVIOUS_GAMEWEEK_NUMBER, 1));
 		soldToPotPlayer.setStillSelected(SelectedPlayerStatus.SOLD_TO_POT);
 		
 		final TeamEntity teamEntity = TestDataUtil.createTeamEntitiesWithScore().get(0);
+		
+		final SelectedPlayerEntity firstSelectedPlayer = teamEntity.getSelectedPlayers().get(0);
+		firstSelectedPlayer.addGameweekScore(createGameweekScoreEntity(PREVIOUS_GAMEWEEK_NUMBER, 0));
+		
 		teamEntity.addSelectedPlayers(Arrays.asList(secondSelectedPlayer, soldToPotPlayer));
 		
 		// act
-		final TeamSummary teamSummary = TeamSummaryFactory.createTeamSummary(teamEntity);
+		final TeamSummary teamSummary = TeamSummaryFactory.createTeamSummary(teamEntity, CURRENT_GAMEWEEK_NUMBER);
 		
 		// assert
 		assertThat(teamSummary.getId()).isEqualTo(0);
@@ -48,7 +59,10 @@ public class TeamSummaryFactoryTest {
 		assertThat(teamSummary.getRemainingBudget().doubleValue()).isEqualTo(Double.valueOf(TestDataUtil.TEST_TEAM_1_REMAINING_BUDGET));
 		
 		assertThat(teamSummary.getTeam()).hasSize(2);
+		
 		assertThat(teamSummary.getTeam().get(0).getPosition()).isEqualTo(Position.GOALKEEPER);
+		assertThat(teamSummary.getTeam().get(0).getCurrentWeeklyPoints()).isEqualTo(2);
+		
 		assertThat(teamSummary.getTeam().get(1).getCost().doubleValue()).isEqualTo(Double.valueOf(TestDataUtil.SELECTED_PLAYER_COST));
 		assertThat(teamSummary.getTeam().get(1).getForename()).isEqualTo(TestDataUtil.PLAYER_1_FORENAME);
 		assertThat(teamSummary.getTeam().get(1).getId()).isEqualTo(TestDataUtil.PLAYER_1_ID);
@@ -58,9 +72,14 @@ public class TeamSummaryFactoryTest {
 		assertThat(teamSummary.getTeam().get(1).getSurname()).isEqualTo(TestDataUtil.PLAYER_1_SURNAME);
 		assertThat(teamSummary.getTeam().get(1).getCurrentSellToPotPrice().doubleValue()).isEqualTo(Double.valueOf(TestDataUtil.SELECTED_PLAYER_COST));
 		assertThat(teamSummary.getTeam().get(1).getSquadStatus()).isEqualTo(SelectedPlayerStatus.STILL_SELECTED);
+		assertThat(teamSummary.getTeam().get(1).getCurrentWeeklyPoints()).isNull();
 		
 		assertThat(teamSummary.getSoldPlayers()).hasSize(1);
 		assertThat(teamSummary.getSoldPlayers().get(0).getId()).isEqualTo(TestDataUtil.PLAYER_3_ID);
+		assertThat(teamSummary.getSoldPlayers().get(0).getCurrentWeeklyPoints()).isNull();
 	}
 
+	private GameweekScoreEntity createGameweekScoreEntity(final int gameweekNumber, final int pointsScored) {
+		return new GameweekScoreEntity(gameweekNumber, pointsScored);
+	}
 }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import net.blackcat.fantasy.draft.integration.entity.GameweekScoreEntity;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
@@ -24,7 +25,14 @@ public final class TeamSummaryFactory {
 
 	private TeamSummaryFactory() {}
 	
-	public static TeamSummary createTeamSummary(final TeamEntity teamEntity) {
+	/**
+	 * Create the team summary for a given team.
+	 * 
+	 * @param teamEntity {@link TeamEntity} to create the summary for.
+	 * @param weeklyScoreWeekNumber The number of the gameweek to get the player weekly score for.
+	 * @return {@link TeamSummary} for the given team.
+	 */
+	public static TeamSummary createTeamSummary(final TeamEntity teamEntity, final int weeklyScoreWeekNumber) {
 		final TeamSummary teamSummary = new TeamSummary();
 		
 		teamSummary.setId(teamEntity.getId());
@@ -36,7 +44,7 @@ public final class TeamSummaryFactory {
 		final List<SelectedPlayer> soldPlayerList = new ArrayList<SelectedPlayer>();
 		
 		for (final SelectedPlayerEntity selectedPlayerEntity : teamEntity.getSelectedPlayers()) {
-			final SelectedPlayer selectedPlayerModel = createSelectedPlayerFromEntity(selectedPlayerEntity);
+			final SelectedPlayer selectedPlayerModel = createSelectedPlayerFromEntity(selectedPlayerEntity, weeklyScoreWeekNumber);
 			addSelectedPlayerToAppropriateTeamList(teamList, soldPlayerList, selectedPlayerEntity, selectedPlayerModel);
 		}
 		
@@ -51,9 +59,10 @@ public final class TeamSummaryFactory {
 	 * Create a {@link SelectedPlayer} object from a {@link SelectedPlayerEntity}.
 	 * 
 	 * @param selectedPlayerEntity Entity to create the {@link SelectedPlayer} from.
+	 * @param weeklyScoreWeekNumber The number of the gameweek to get the player weekly score for.
 	 * @return Create {@link SelectedPlayer}.
 	 */
-	private static SelectedPlayer createSelectedPlayerFromEntity(final SelectedPlayerEntity selectedPlayerEntity) {
+	private static SelectedPlayer createSelectedPlayerFromEntity(final SelectedPlayerEntity selectedPlayerEntity, final int weeklyScoreWeekNumber) {
 		final SelectedPlayer selectedPlayerModel = new SelectedPlayer();
 		final PlayerEntity playerEntity = selectedPlayerEntity.getPlayer();
 
@@ -67,10 +76,39 @@ public final class TeamSummaryFactory {
 		selectedPlayerModel.setTeam(playerEntity.getTeam());
 		selectedPlayerModel.setCurrentSellToPotPrice(selectedPlayerEntity.getCurrentSellToPotPrice());
 		selectedPlayerModel.setSquadStatus(selectedPlayerEntity.getSelectedPlayerStatus());
+		setGameweekScore(selectedPlayerEntity, weeklyScoreWeekNumber, selectedPlayerModel);
 		
 		return selectedPlayerModel;
 	}
 
+	/**
+	 * Set the gameweek score for a given gameweek into the model player.
+	 * 
+	 * @param selectedPlayerEntity Entity containing all selected player data.
+	 * @param gameweekNumber The number of the gameweek to get the score for. 
+	 * @param selectedPlayerModel Model object to set the score in.
+	 */
+	private static void setGameweekScore(final SelectedPlayerEntity selectedPlayerEntity, final int gameweekNumber, final SelectedPlayer selectedPlayerModel) {
+		if (playerHasGameweekScores(selectedPlayerEntity)) {
+			for (final GameweekScoreEntity gameweekScoreEntity : selectedPlayerEntity.getGameweekScores()) {
+				if (gameweekScoreEntity.getGameweek() == gameweekNumber) {
+					selectedPlayerModel.setCurrentWeeklyPoints(gameweekScoreEntity.getScore());
+					break;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Determine if the given player has some gameweek scores.
+	 * 
+	 * @param selectedPlayerEntity Selected player to check if it has gameweek scores associated with it.
+	 * @return True if the player has gameweek scores, false otherwise.
+	 */
+	private static boolean playerHasGameweekScores(final SelectedPlayerEntity selectedPlayerEntity) {
+		return selectedPlayerEntity.getGameweekScores() != null;
+	}
+	
 	/**
 	 * Add a {@link SelectedPlayer} to the appropriate team list, either the team or the list of sold players depending on
 	 * whether they are still part of the team or not.

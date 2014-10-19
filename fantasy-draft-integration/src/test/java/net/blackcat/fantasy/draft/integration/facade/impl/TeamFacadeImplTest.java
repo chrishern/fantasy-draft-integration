@@ -10,8 +10,10 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 
+import net.blackcat.fantasy.draft.integration.data.service.GameweekDataService;
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
 import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
+import net.blackcat.fantasy.draft.integration.entity.GameweekEntity;
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
@@ -27,6 +29,7 @@ import net.blackcat.fantasy.draft.team.Team;
 import net.blackcat.fantasy.draft.team.TeamSummary;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,6 +48,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class TeamFacadeImplTest {
 
+	private static final int CURRENT_GAMEWEEK = 3;
+	private static final int PREVIOUS_GAMEWEEK = 2;
+
 	@Rule
 	public ExpectedException thrownException = ExpectedException.none();
 	
@@ -54,8 +60,21 @@ public class TeamFacadeImplTest {
 	@Mock
 	private LeagueDataService leagueDataService;
 	
+	@Mock
+	private GameweekDataService gameweekDataService;
+	
 	@InjectMocks
 	private TeamFacadeImpl teamFacade = new TeamFacadeImpl();
+	
+	@Before
+	public void setup() {
+		final GameweekEntity gameweekEntity = new GameweekEntity();
+		
+		gameweekEntity.setCurrentGameweek(CURRENT_GAMEWEEK);
+		gameweekEntity.setPreviousGameweek(PREVIOUS_GAMEWEEK);
+		
+		when(gameweekDataService.getGameweekData()).thenReturn(gameweekEntity);
+	}
 	
 	@Test
 	public void testCreateTeam() {
@@ -117,6 +136,8 @@ public class TeamFacadeImplTest {
 		final TeamSummary teamSummary = teamFacade.getTeamSummary(1);
 		
 		// assert
+		verify(gameweekDataService).getGameweekData();
+		
 		assertThat(teamSummary.getId()).isEqualTo(0);
 		assertThat(teamSummary.getTeamName()).isEqualTo(TestDataUtil.TEST_TEAM_1);
 		assertThat(teamSummary.getTotalPoints()).isEqualTo(TestDataUtil.TEST_TEAM_1_SCORE);
