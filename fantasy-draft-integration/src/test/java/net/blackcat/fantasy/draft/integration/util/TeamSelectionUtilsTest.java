@@ -16,7 +16,9 @@ import net.blackcat.fantasy.draft.integration.test.util.TestDataUtil;
 import net.blackcat.fantasy.draft.player.GameweekScorePlayer;
 import net.blackcat.fantasy.draft.player.types.Position;
 import net.blackcat.fantasy.draft.player.types.SelectedPlayerStartingElevenStatus;
+import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
 
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -27,6 +29,30 @@ import org.junit.Test;
  */
 public class TeamSelectionUtilsTest {
 
+	private Map<Integer, GameweekScorePlayer> gameweekScores;
+	private TeamEntity teamWithSelectedPlayers;
+
+	@Before
+	public void setup () {
+		gameweekScores = new HashMap<Integer, GameweekScorePlayer>();
+
+		gameweekScores.put(TestDataUtil.PLAYER_1_ID, TestDataUtil.buildGameweekScorePlayer(TestDataUtil.PLAYER_1_ID, true));
+		gameweekScores.put(TestDataUtil.PLAYER_2_ID, TestDataUtil.buildGameweekScorePlayer(TestDataUtil.PLAYER_2_ID, true));
+		gameweekScores.put(TestDataUtil.PLAYER_3_ID, TestDataUtil.buildGameweekScorePlayer(TestDataUtil.PLAYER_3_ID, false));
+		gameweekScores.put(TestDataUtil.PLAYER_4_ID, TestDataUtil.buildGameweekScorePlayer(TestDataUtil.PLAYER_4_ID, true));
+		gameweekScores.put(TestDataUtil.PLAYER_5_ID, TestDataUtil.buildGameweekScorePlayer(TestDataUtil.PLAYER_5_ID, true));
+		gameweekScores.put(TestDataUtil.PLAYER_6_ID, TestDataUtil.buildGameweekScorePlayer(TestDataUtil.PLAYER_6_ID, false));
+		
+		final SelectedPlayerEntity selectedPlayer1 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_1_ID, Position.GOALKEEPER, SelectedPlayerStartingElevenStatus.CAPTAIN);
+		final SelectedPlayerEntity selectedPlayer2 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_2_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.SUB_1);
+		final SelectedPlayerEntity selectedPlayer3 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_3_ID, Position.MIDFIEDER, SelectedPlayerStartingElevenStatus.PICKED);
+		final SelectedPlayerEntity selectedPlayer4 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_4_ID, Position.MIDFIEDER, SelectedPlayerStartingElevenStatus.PICKED);
+		final SelectedPlayerEntity selectedPlayer6 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_6_ID, Position.STRIKER, SelectedPlayerStartingElevenStatus.PICKED);
+		
+		teamWithSelectedPlayers = new TeamEntity();
+		teamWithSelectedPlayers.addSelectedPlayers(Arrays.asList(selectedPlayer1, selectedPlayer2, selectedPlayer3, selectedPlayer4, selectedPlayer6));
+	}
+	
 	@Test
 	public void testIsValidFormation_Valid_451() {
 		// arrange
@@ -138,28 +164,32 @@ public class TeamSelectionUtilsTest {
 	@Test
 	public void testBuildTeamFromPickedPlayersForWeek() {
 		// arrange
-		final Map<Integer, GameweekScorePlayer> gameweekScores = new HashMap<Integer, GameweekScorePlayer>();
-
-		gameweekScores.put(TestDataUtil.PLAYER_1_ID, TestDataUtil.buildGameweekScorePlayer(TestDataUtil.PLAYER_1_ID, true));
-		gameweekScores.put(TestDataUtil.PLAYER_2_ID, TestDataUtil.buildGameweekScorePlayer(TestDataUtil.PLAYER_2_ID, true));
-		gameweekScores.put(TestDataUtil.PLAYER_3_ID, TestDataUtil.buildGameweekScorePlayer(TestDataUtil.PLAYER_3_ID, false));
-		gameweekScores.put(TestDataUtil.PLAYER_4_ID, TestDataUtil.buildGameweekScorePlayer(TestDataUtil.PLAYER_4_ID, true));
-		gameweekScores.put(TestDataUtil.PLAYER_5_ID, TestDataUtil.buildGameweekScorePlayer(TestDataUtil.PLAYER_5_ID, true));
-		gameweekScores.put(TestDataUtil.PLAYER_6_ID, TestDataUtil.buildGameweekScorePlayer(TestDataUtil.PLAYER_6_ID, false));
-		
-		final SelectedPlayerEntity selectedPlayer1 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_1_ID, Position.GOALKEEPER, SelectedPlayerStartingElevenStatus.CAPTAIN);
-		final SelectedPlayerEntity selectedPlayer2 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_2_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.SUB_1);
-		final SelectedPlayerEntity selectedPlayer3 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_3_ID, Position.MIDFIEDER, SelectedPlayerStartingElevenStatus.PICKED);
-		final SelectedPlayerEntity selectedPlayer4 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_4_ID, Position.MIDFIEDER, SelectedPlayerStartingElevenStatus.PICKED);
-		final SelectedPlayerEntity selectedPlayer6 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_6_ID, Position.STRIKER, SelectedPlayerStartingElevenStatus.PICKED);
-		
-		final TeamEntity team = new TeamEntity();
-		team.addSelectedPlayers(Arrays.asList(selectedPlayer1, selectedPlayer2, selectedPlayer3, selectedPlayer4, selectedPlayer6));
-
 		final Map<Position, List<SelectedPlayerEntity>> startingTeamForWeek = new HashMap<Position, List<SelectedPlayerEntity>>();
 		
 		// act
-		final int numberOfPickedPlayersInTeam = TeamSelectionUtils.buildTeamFromPickedPlayersForWeek(gameweekScores, team, startingTeamForWeek);
+		final int numberOfPickedPlayersInTeam = TeamSelectionUtils.buildTeamFromPickedPlayersForWeek(gameweekScores, teamWithSelectedPlayers, startingTeamForWeek);
+		
+		// assert
+		assertThat(numberOfPickedPlayersInTeam).isEqualTo(2);
+		assertThat(startingTeamForWeek.keySet()).hasSize(2);
+		assertThat(startingTeamForWeek.get(Position.GOALKEEPER)).hasSize(1);
+		assertThat(startingTeamForWeek.get(Position.DEFENDER)).isNull();
+		assertThat(startingTeamForWeek.get(Position.MIDFIEDER)).hasSize(1);
+		assertThat(startingTeamForWeek.get(Position.STRIKER)).isNull();
+	}
+	
+	@Test
+	public void testBuildTeamFromPickedPlayersForWeek_WithPlayerNoLongerPicked() {
+		// arrange
+		final Map<Position, List<SelectedPlayerEntity>> startingTeamForWeek = new HashMap<Position, List<SelectedPlayerEntity>>();
+		
+		final SelectedPlayerEntity selectedPlayer7 = TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_7_ID, Position.STRIKER, null);
+		selectedPlayer7.setStillSelected(SelectedPlayerStatus.SOLD_TO_POT);
+		
+		teamWithSelectedPlayers.addSelectedPlayers(Arrays.asList(selectedPlayer7));
+		
+		// act
+		final int numberOfPickedPlayersInTeam = TeamSelectionUtils.buildTeamFromPickedPlayersForWeek(gameweekScores, teamWithSelectedPlayers, startingTeamForWeek);
 		
 		// assert
 		assertThat(numberOfPickedPlayersInTeam).isEqualTo(2);

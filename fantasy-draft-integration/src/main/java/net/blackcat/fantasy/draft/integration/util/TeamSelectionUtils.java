@@ -15,6 +15,7 @@ import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.player.GameweekScorePlayer;
 import net.blackcat.fantasy.draft.player.types.Position;
 import net.blackcat.fantasy.draft.player.types.SelectedPlayerStartingElevenStatus;
+import net.blackcat.fantasy.draft.player.types.SelectedPlayerStatus;
 import net.blackcat.fantasy.draft.team.ValidFormations;
 
 /**
@@ -227,7 +228,7 @@ public final class TeamSelectionUtils {
 	 * @return True if the player is part of the starting 11, false if not.
 	 */
 	private static boolean isPlayerInSelectedTeam(final SelectedPlayerEntity selectedPlayer) {
-		return !isPlayerASubstitute(selectedPlayer);
+		return (selectedPlayer.getSelectedPlayerStatus() == SelectedPlayerStatus.STILL_SELECTED) && !isPlayerASubstitute(selectedPlayer);
 	}
 	
 	/**
