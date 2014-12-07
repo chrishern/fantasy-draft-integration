@@ -8,6 +8,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -21,6 +22,7 @@ import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
 import net.blackcat.fantasy.draft.integration.data.service.TransferWindowDataService;
 import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
 import net.blackcat.fantasy.draft.integration.entity.PlayerEntity;
+import net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity;
 import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
 import net.blackcat.fantasy.draft.integration.entity.TransferEntity;
 import net.blackcat.fantasy.draft.integration.entity.TransferWindowEntity;
@@ -247,6 +249,27 @@ public class TransferWindowFacadeImplTest {
 		assertThat(transfer.getPlayers()).hasSize(1);
 		assertThat(transfer.getPlayers().get(0).getPlayer()).isEqualTo(teamEntities.get(0).getSelectedPlayers().get(0).getPlayer());
 		assertThat(transfer.getStatus()).isEqualTo(TransferStatus.CONFIRMED);
+	}
+	
+	@Test
+	public void testSellPlayerToPot_AlreadySold() throws Exception {
+		// arrange
+		final List<TeamEntity> teamEntities = TestDataUtil.createTeamEntitiesWithScore();
+		
+		for (final SelectedPlayerEntity selectedPlayer : teamEntities.get(0).getSelectedPlayers()) {
+			if (selectedPlayer.getPlayer().getId() == TestDataUtil.PLAYER_1_ID) {
+				selectedPlayer.setStillSelected(SelectedPlayerStatus.PENDING_SALE_TO_POT);
+			}
+		}
+
+		when(teamDataService.getTeam(anyInt())).thenReturn(teamEntities.get(0));
+		
+		// act
+		transferWindowFacade.sellPlayerToPot(1, TestDataUtil.PLAYER_1_ID);
+		
+		// assert
+		verify(teamDataService, never()).updateTeam(any(TeamEntity.class));
+		verify(transferWindowDataService, never()).updateTransferWindow(any(TransferWindowEntity.class));
 	}
 
 }

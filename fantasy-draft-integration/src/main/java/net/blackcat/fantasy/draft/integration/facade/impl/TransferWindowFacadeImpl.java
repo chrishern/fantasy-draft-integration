@@ -344,7 +344,7 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 		final TeamEntity sellingTeam = teamDataService.getTeam(teamId);
 		
 		for (final SelectedPlayerEntity selectedPlayer : sellingTeam.getSelectedPlayers()) {
-			if (selectedPlayer.getPlayer().getId() == playerId) {
+			if (selectedPlayer.getPlayer().getId() == playerId && selectedPlayer.getSelectedPlayerStatus() == SelectedPlayerStatus.STILL_SELECTED) {
 				
 				updateTeamDataForSaleToPot(sellingTeam, selectedPlayer);
 				updateTransferWindowDataForSaleToPot(sellingTeam, selectedPlayer);
