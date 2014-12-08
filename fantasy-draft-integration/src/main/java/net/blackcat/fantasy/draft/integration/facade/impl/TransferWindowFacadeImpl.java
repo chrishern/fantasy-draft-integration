@@ -412,7 +412,10 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 		final List<AuctionRoundResults> auctionSummaries = new ArrayList<AuctionRoundResults>();
 		
 		for (final TransferWindowEntity window : transferWindowDataService.getTransferWindows(leagueId)) {
-			createTransfersSummary(transferSummaries, window);
+			// TODO Remove this hardcoding once we have decided how to deal with multiple transfer windows.
+			if (window.getOverallSequenceNumber() == 1) {
+				createTransfersSummary(transferSummaries, window);
+			}
 			createAuctionsSummary(auctionSummaries, window);
 		}
 		
