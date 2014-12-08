@@ -51,17 +51,23 @@ public class TransferWindowEntity implements Serializable {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<TransferEntity> transfers;
 	
+	// TODO This is a temporary column needed to be able to distinguish between different transfer 
+	// windows for a league.  This will be removed in the refactor or transfer windows. 
+	@Column
+	private int overallSequenceNumber;
+	
 	public TransferWindowEntity() {
 		
 	}
 	
-	public TransferWindowEntity(final int sequenceNumber, final LeagueEntity league) {
+	public TransferWindowEntity(final int sequenceNumber, final LeagueEntity league, final int overallSequenceNumber) {
 		
 		final DraftRoundKey key = new DraftRoundKey(DraftRoundPhase.TRANSFER_WINDOW, sequenceNumber, league.getId());
 		
 		this.key = key;
 		this.league = league;
 		this.status = DraftRoundStatus.OPEN;
+		this.overallSequenceNumber = overallSequenceNumber;
 	}
 
 	/**
@@ -120,6 +126,13 @@ public class TransferWindowEntity implements Serializable {
 		return transfers;
 	}
 	
+	/**
+	 * @return the overallSequenceNumber
+	 */
+	public int getOverallSequenceNumber() {
+		return overallSequenceNumber;
+	}
+
 	/**
 	 * Add a new list of bids to this transfer window.
 	 * 

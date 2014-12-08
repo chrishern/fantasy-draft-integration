@@ -4,4 +4,21 @@
     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    
+    <changeSet id="1" author="hernc">
+    
+    	<preConditions onFail="MARK_RAN">
+    		<sqlCheck expectedResult="0">SELECT COUNT(*) FROM TransferWindow WHERE overallSequenceNumber IS NOT NULL</sqlCheck>
+    	</preConditions>
+    	
+    	<comment>
+    		Add in an overall sequence number to allow different transfer windows to be distinguished between.  This is
+    		due to an error in how transfer windows are modelled.
+    	</comment>
+    	
+    	<sql>
+    		UPDATE TransferWindow SET overallSequenceNumber = 1;
+    	</sql>
+    
+    </changeSet>
 </databaseChangeLog>

@@ -82,7 +82,8 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 	public void startTransferWindow(final int leagueId, final int phase) throws FantasyDraftIntegrationException {
 		final LeagueEntity league = leagueDataService.getLeague(leagueId);
 		
-		final TransferWindowEntity draftRound = new TransferWindowEntity(phase, league);
+		// TODO Remove hardcoding of two.
+		final TransferWindowEntity draftRound = new TransferWindowEntity(phase, league, 2);
 		transferWindowDataService.createTransferWindow(draftRound);
 	}
 	

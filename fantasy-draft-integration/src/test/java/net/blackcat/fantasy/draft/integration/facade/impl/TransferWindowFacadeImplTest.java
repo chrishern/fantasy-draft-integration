@@ -59,6 +59,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class TransferWindowFacadeImplTest {
 
+	private static final int OVERALL_TRANSFER_WINDOW_SEQUENCE = 2;
+
 	private static final BigDecimal REMAINING_BUDGET = new BigDecimal("0.5");
 
 	private static final int LEAGUE_ID = 1;
@@ -95,7 +97,7 @@ public class TransferWindowFacadeImplTest {
 	public void setup() {
 		league = new LeagueEntity(TestDataUtil.LEAGUE_NAME);
 		
-		transferWindow = new TransferWindowEntity(1, league);
+		transferWindow = new TransferWindowEntity(1, league, OVERALL_TRANSFER_WINDOW_SEQUENCE);
 	}
 	
 	@Test

@@ -47,6 +47,8 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(value = {"/hsqlDatasourceContext.xml", "/testApplicationContext.xml"})
 public class TransferWindowDataServiceJpaTest {
 
+	private static final int OVERALL_SEQUENCE_NUMBER = 2;
+
 	@Rule
 	public ExpectedException thrownException = ExpectedException.none();
 	
@@ -69,7 +71,7 @@ public class TransferWindowDataServiceJpaTest {
 		// arrange
 		entityManager.persist(league);
 		
-		final TransferWindowEntity transferWindow = new TransferWindowEntity(1, league);
+		final TransferWindowEntity transferWindow = new TransferWindowEntity(1, league, OVERALL_SEQUENCE_NUMBER);
 		
 		// act
 		dataService.createTransferWindow(transferWindow);
@@ -90,13 +92,13 @@ public class TransferWindowDataServiceJpaTest {
 	@Test
 	public void testCreateDraftRound_OpenDraftRoundAlreadyExists() throws Exception {
 		// arrange
-		final TransferWindowEntity transferWindow = new TransferWindowEntity(1, league);
+		final TransferWindowEntity transferWindow = new TransferWindowEntity(1, league, OVERALL_SEQUENCE_NUMBER);
 		dataService.createTransferWindow(transferWindow);
 		
 		final LeagueEntity secondLeague = new LeagueEntity("Second League");
 		entityManager.persist(secondLeague);
 		
-		final TransferWindowEntity transferWindowForSecondLeague = new TransferWindowEntity(1, secondLeague);
+		final TransferWindowEntity transferWindowForSecondLeague = new TransferWindowEntity(1, secondLeague, OVERALL_SEQUENCE_NUMBER);
 		transferWindowForSecondLeague.setStatus(DraftRoundStatus.CLOSED);
 		dataService.createTransferWindow(transferWindowForSecondLeague);
 		
@@ -104,7 +106,7 @@ public class TransferWindowDataServiceJpaTest {
 		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.OPEN_TRANSFER_WINDOW_ALREADY_EXISTS_FOR_LEAGUE));
 		
 		// act
-		final TransferWindowEntity draftRound2 = new TransferWindowEntity(2, league);
+		final TransferWindowEntity draftRound2 = new TransferWindowEntity(2, league, OVERALL_SEQUENCE_NUMBER);
 		dataService.createTransferWindow(draftRound2);
 		
 		// assert
@@ -114,7 +116,7 @@ public class TransferWindowDataServiceJpaTest {
 	@Test
 	public void testCreateDraftRound_DraftRoundAlreadyExists() throws Exception {
 		// arrange
-		final TransferWindowEntity draftRound = new TransferWindowEntity(1, league);
+		final TransferWindowEntity draftRound = new TransferWindowEntity(1, league, OVERALL_SEQUENCE_NUMBER);
 		draftRound.setStatus(DraftRoundStatus.CLOSED);
 		dataService.createTransferWindow(draftRound);
 		
@@ -122,7 +124,7 @@ public class TransferWindowDataServiceJpaTest {
 		thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.TRANSFER_WINDOW_ALREADY_EXISTS_FOR_LEAGUE));
 		
 		// act
-		final TransferWindowEntity duplicateDraftRound = new TransferWindowEntity(1, league);
+		final TransferWindowEntity duplicateDraftRound = new TransferWindowEntity(1, league, OVERALL_SEQUENCE_NUMBER);
 		dataService.createTransferWindow(duplicateDraftRound);
 		
 		// assert
@@ -132,7 +134,7 @@ public class TransferWindowDataServiceJpaTest {
 	@Test
 	public void testGetOpenTransferWindow_Success() throws Exception {
 		// arrange
-		final TransferWindowEntity draftRound = new TransferWindowEntity(1, league);
+		final TransferWindowEntity draftRound = new TransferWindowEntity(1, league, OVERALL_SEQUENCE_NUMBER);
 		draftRound.setStatus(DraftRoundStatus.OPEN);
 		dataService.createTransferWindow(draftRound);
 		
@@ -146,7 +148,7 @@ public class TransferWindowDataServiceJpaTest {
 	@Test
 	public void testGetOpenTransferWindow_OnlyClosedWindowExists() throws Exception {
 		// arrange
-		final TransferWindowEntity draftRound = new TransferWindowEntity(1, league);
+		final TransferWindowEntity draftRound = new TransferWindowEntity(1, league, OVERALL_SEQUENCE_NUMBER);
 		draftRound.setStatus(DraftRoundStatus.CLOSED);
 		dataService.createTransferWindow(draftRound);
 
@@ -163,12 +165,12 @@ public class TransferWindowDataServiceJpaTest {
 	@Test
 	public void testGetOpenTransferWindow_WindowForLeagueDoesNotExist() throws Exception {
 		// arrange
-		final TransferWindowEntity draftRound = new TransferWindowEntity(1, league);
+		final TransferWindowEntity draftRound = new TransferWindowEntity(1, league, OVERALL_SEQUENCE_NUMBER);
 		draftRound.setStatus(DraftRoundStatus.CLOSED);
 		dataService.createTransferWindow(draftRound);
 		
 		final LeagueEntity league2 = new LeagueEntity();
-		final TransferWindowEntity draftRound2 = new TransferWindowEntity(1, league2);
+		final TransferWindowEntity draftRound2 = new TransferWindowEntity(1, league2, OVERALL_SEQUENCE_NUMBER);
 		draftRound2.setStatus(DraftRoundStatus.OPEN);
 		dataService.createTransferWindow(draftRound2);
 
@@ -185,7 +187,7 @@ public class TransferWindowDataServiceJpaTest {
 	@Test
 	public void testUpdateTransferWindow() throws Exception {
 		// arrange
-		final TransferWindowEntity draftRound = new TransferWindowEntity(1, league);
+		final TransferWindowEntity draftRound = new TransferWindowEntity(1, league, OVERALL_SEQUENCE_NUMBER);
 		draftRound.setStatus(DraftRoundStatus.OPEN);
 		dataService.createTransferWindow(draftRound);
 		

@@ -7,7 +7,7 @@
 	
 	<import resource="mysqlDatasourceContext.xml"/>
 	
-	<bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
+	<bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase" depends-on="entityManagerFactory">
       <property name="dataSource" ref="dataSource" />
       <property name="changeLog" value="classpath:integrationDb-changelog.xml" />
       <property name="contexts" value="test, production" />
