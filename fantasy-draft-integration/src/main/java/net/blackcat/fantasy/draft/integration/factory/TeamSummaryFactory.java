@@ -4,6 +4,7 @@
 package net.blackcat.fantasy.draft.integration.factory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,6 +24,8 @@ import net.blackcat.fantasy.draft.team.TeamSummary;
  */
 public final class TeamSummaryFactory {
 
+	private final static List<SelectedPlayerStatus> SOLD_PLAYER_STATUSES = Arrays.asList(SelectedPlayerStatus.SOLD_TO_POT, SelectedPlayerStatus.TRANSFERRED_OUT);
+	
 	private TeamSummaryFactory() {}
 	
 	/**
@@ -120,10 +123,10 @@ public final class TeamSummaryFactory {
 	 */
 	private static void addSelectedPlayerToAppropriateTeamList(final List<SelectedPlayer> teamList, final List<SelectedPlayer> soldPlayerList,
 			final SelectedPlayerEntity selectedPlayerEntity, final SelectedPlayer selectedPlayerModel) {
-		if (selectedPlayerEntity.getSelectedPlayerStatus() == SelectedPlayerStatus.STILL_SELECTED) {
-			teamList.add(selectedPlayerModel);
-		} else {
+		if (SOLD_PLAYER_STATUSES.contains(selectedPlayerEntity.getSelectedPlayerStatus())) {
 			soldPlayerList.add(selectedPlayerModel);
+		} else {
+			teamList.add(selectedPlayerModel);
 		}
 	}
 }

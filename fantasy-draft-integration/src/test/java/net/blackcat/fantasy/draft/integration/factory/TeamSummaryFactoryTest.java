@@ -36,6 +36,7 @@ public class TeamSummaryFactoryTest {
 				TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_2_ID, Position.GOALKEEPER, SelectedPlayerStartingElevenStatus.PICKED);
 		secondSelectedPlayer.addGameweekScore(createGameweekScoreEntity(PREVIOUS_GAMEWEEK_NUMBER, 4));
 		secondSelectedPlayer.addGameweekScore(createGameweekScoreEntity(CURRENT_GAMEWEEK_NUMBER, 2));
+		secondSelectedPlayer.setStillSelected(SelectedPlayerStatus.PENDING_SALE_TO_POT);
 		
 		final SelectedPlayerEntity soldToPotPlayer = 
 				TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_3_ID, Position.DEFENDER, null);
