@@ -395,8 +395,11 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 		
 		for (final TransferEntity transferEntity : openWindow.getTransfers()) {
 			if (transferEntity.getStatus() == TransferStatus.CONFIRMED) {
-				processTransferredPlayers(transferEntity);
-				processExchangedPlayers(transferEntity);
+				if (transferEntity.getExchangedPlayers() != null && !transferEntity.getExchangedPlayers().isEmpty()) {
+					processExchangedPlayers(transferEntity);
+				} else {
+					processTransferredPlayers(transferEntity);
+				}
 			} else {
 				processNonConfirmedTransfer(openWindow, transferEntity);
 			}
@@ -406,17 +409,16 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 	}
 
 	@Override
-	public LeagueTransferWindowSummary getLeagueTransferWindowSummary(final int leagueId) throws FantasyDraftIntegrationException {
+	public LeagueTransferWindowSummary getLeagueTransferWindowSummary(final int leagueId, final int overallSequenceNumber) throws FantasyDraftIntegrationException {
 		final LeagueTransferWindowSummary windowSummary = new LeagueTransferWindowSummary();
 		final List<LeagueTransferSummary> transferSummaries = new ArrayList<LeagueTransferSummary>();
 		final List<AuctionRoundResults> auctionSummaries = new ArrayList<AuctionRoundResults>();
 		
 		for (final TransferWindowEntity window : transferWindowDataService.getTransferWindows(leagueId)) {
-			// TODO Remove this hardcoding once we have decided how to deal with multiple transfer windows.
-			if (window.getOverallSequenceNumber() == 1) {
+			if (window.getOverallSequenceNumber() == overallSequenceNumber) {
 				createTransfersSummary(transferSummaries, window);
+				createAuctionsSummary(auctionSummaries, window);
 			}
-			createAuctionsSummary(auctionSummaries, window);
 		}
 		
 		windowSummary.setTransfers(transferSummaries);
@@ -609,30 +611,33 @@ public class TransferWindowFacadeImpl implements TransferWindowFacade {
 	 * @throws FantasyDraftIntegrationException
 	 */
 	private void processExchangedPlayers(final TransferEntity transferEntity) throws FantasyDraftIntegrationException {
-		for (final ExchangedPlayerEntity transferredPlayer : transferEntity.getExchangedPlayers()) {
-			final TeamEntity sellingTeam = transferEntity.getSellingTeam();
-			
-			final SelectedPlayerEntity selectedPlayer = getSelectedPlayerFromTeam(sellingTeam, transferredPlayer.getPlayer().getId());
-			final PlayerEntity soldPlayer = selectedPlayer.getPlayer();
-			
-			setNewPlayerSelectionStatusAfterTransferOut(selectedPlayer);
-			
+		final TeamEntity sellingTeam = transferEntity.getSellingTeam();
+		final TeamEntity buyingTeam = transferEntity.getBuyingTeam();
+		
+		for (final TransferredPlayerEntity transferredPlayerEntity : transferEntity.getPlayers()) {
+			// Set the player as no longer selected in its current team
+			final SelectedPlayerEntity playerLeavingSellingTeam = getSelectedPlayerFromTeam(sellingTeam, transferredPlayerEntity.getPlayer().getId());
+			final PlayerEntity soldPlayer = playerLeavingSellingTeam.getPlayer();
+			setNewPlayerSelectionStatusAfterTransferOut(playerLeavingSellingTeam);
 			teamDataService.updateTeam(sellingTeam);
-			
-			if (transferEntity.getBuyingTeam() != null) {
-				final TeamEntity buyingTeam = transferEntity.getBuyingTeam();
-				final SelectedPlayerEntity boughtSelectedPlayer = new SelectedPlayerEntity(soldPlayer, transferEntity.getAmount());
-				
-				buyingTeam.addSelectedPlayers(Arrays.asList(boughtSelectedPlayer));
-				
-				teamDataService.updateTeam(buyingTeam);
-			} else {
-				// update player
-				soldPlayer.setSelectionStatus(PlayerSelectionStatus.NOT_SELECTED);
-				
-				playerDataService.updatePlayer(soldPlayer);
-			}
-			
+
+			// Add the player into their new team
+			final SelectedPlayerEntity boughtSelectedPlayer = new SelectedPlayerEntity(soldPlayer, transferEntity.getAmount());
+			buyingTeam.addSelectedPlayers(Arrays.asList(boughtSelectedPlayer));
+			teamDataService.updateTeam(buyingTeam);
+		}
+		
+		for (final ExchangedPlayerEntity exchangedPlayerEntity : transferEntity.getExchangedPlayers()) {
+			// Set the player as no longer selected in its current team
+			final SelectedPlayerEntity playerLeavingBuyingTeam = getSelectedPlayerFromTeam(buyingTeam, exchangedPlayerEntity.getPlayer().getId());
+			final PlayerEntity exchangedPlayer = playerLeavingBuyingTeam.getPlayer();
+			setNewPlayerSelectionStatusAfterTransferOut(playerLeavingBuyingTeam);
+			teamDataService.updateTeam(buyingTeam);
+
+			// Add the player into their new team
+			final SelectedPlayerEntity boughtSelectedPlayer = new SelectedPlayerEntity(exchangedPlayer, transferEntity.getAmount());
+			sellingTeam.addSelectedPlayers(Arrays.asList(boughtSelectedPlayer));
+			teamDataService.updateTeam(sellingTeam);
 		}
 	}
 	

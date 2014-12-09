@@ -77,7 +77,7 @@ public interface TransferWindowFacade {
 	 * @param leagueId ID of the league to get the transfer window summary for.
 	 * @return Transfer window summary for the league,
 	 */
-	LeagueTransferWindowSummary getLeagueTransferWindowSummary(int leagueId) throws FantasyDraftIntegrationException;
+	LeagueTransferWindowSummary getLeagueTransferWindowSummary(int leagueId, int overallSequenceNumber) throws FantasyDraftIntegrationException;
 	
 	/**
 	 * Make a list of bids for a team.

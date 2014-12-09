@@ -97,8 +97,8 @@ public class TransferWindowController {
 	 * @param leagueId ID of the league to get the transfer window summary for.
 	 * @return Transfer window summary for the league,
 	 */
-	public LeagueTransferWindowSummary getLeagueTransferWindowSummary(int leagueId) throws FantasyDraftIntegrationException {
-		return transferWindowFacade.getLeagueTransferWindowSummary(leagueId);
+	public LeagueTransferWindowSummary getLeagueTransferWindowSummary(final int leagueId, final int overallSequenceNumber) throws FantasyDraftIntegrationException {
+		return transferWindowFacade.getLeagueTransferWindowSummary(leagueId, overallSequenceNumber);
 	}
 	
 	/**
