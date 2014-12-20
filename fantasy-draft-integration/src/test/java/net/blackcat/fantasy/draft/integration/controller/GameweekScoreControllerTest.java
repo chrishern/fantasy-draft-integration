@@ -35,7 +35,7 @@ public class GameweekScoreControllerTest {
 	@Test
 	public void testStoreGameweekScores() {
 		// arrange
-		final Map<Integer, GameweekScorePlayer> gameweekScores = TestDataUtil.buildFullGameweekScores();
+		final Map<Integer, GameweekScorePlayer> gameweekScores = TestDataUtil.buildFullGameweekScores(true);
 		
 		// act
 		gameweekScoreController.storeGameweekScores(gameweekScores);

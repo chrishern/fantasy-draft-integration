@@ -75,7 +75,7 @@ public class GameweekScoreFacadeImplTest {
 		final int orginalScore = team.getTotalScore();
 		
 		// act
-		gameweekScoreFacade.storeCurrentGameweekScores(TestDataUtil.buildFullGameweekScores());
+		gameweekScoreFacade.storeCurrentGameweekScores(TestDataUtil.buildFullGameweekScores(true));
 		
 		// assert
 		verify(teamDataService).updateTeam(teamCaptor.capture());
@@ -83,6 +83,38 @@ public class GameweekScoreFacadeImplTest {
 		
 		assertThat(teamCaptor.getAllValues()).hasSize(1);
 		assertThat(teamCaptor.getValue().getTotalScore()).isGreaterThan(orginalScore);
+		
+		assertThat(gameweekCaptor.getValue().getCurrentGameweek()).isEqualTo(2);
+		assertThat(gameweekCaptor.getValue().getPreviousGameweek()).isEqualTo(1);
+	}
+	
+	@Test
+	public void testStoreGameweekScores_TeamHasNoGoalkeepersInWeeklyTeam() {
+		// arrange
+		final TeamEntity team = new TeamEntity();
+		final List<SelectedPlayerEntity> squadList = TestDataUtil.buildSquadList();
+		team.addSelectedPlayers(removeNonSubstitutes(squadList));
+		
+		final LeagueEntity league = new LeagueEntity();
+		league.setTeams(Arrays.asList(team));
+		
+		final GameweekEntity gameweekData = new GameweekEntity();
+		gameweekData.setCurrentGameweek(1);
+		
+		when(leagueDataService.getLeagues()).thenReturn(Arrays.asList(league));
+		when(gameweekDataService.getGameweekData()).thenReturn(gameweekData);
+		
+		final int orginalScore = team.getTotalScore();
+		
+		// act
+		gameweekScoreFacade.storeCurrentGameweekScores(TestDataUtil.buildFullGameweekScores(false));
+		
+		// assert
+		verify(teamDataService).updateTeam(teamCaptor.capture());
+		verify(gameweekDataService).updateGameweekData(gameweekCaptor.capture());
+		
+		assertThat(teamCaptor.getAllValues()).hasSize(1);
+		assertThat(teamCaptor.getValue().getTotalScore()).isEqualTo(orginalScore);
 		
 		assertThat(gameweekCaptor.getValue().getCurrentGameweek()).isEqualTo(2);
 		assertThat(gameweekCaptor.getValue().getPreviousGameweek()).isEqualTo(1);

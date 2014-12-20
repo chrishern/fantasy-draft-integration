@@ -31,6 +31,7 @@ public class TeamSelectionUtilsTest {
 
 	private Map<Integer, GameweekScorePlayer> gameweekScores;
 	private TeamEntity teamWithSelectedPlayers;
+	private Map<Integer, GameweekScorePlayer> fullGameweekScores;
 
 	@Before
 	public void setup () {
@@ -51,6 +52,8 @@ public class TeamSelectionUtilsTest {
 		
 		teamWithSelectedPlayers = new TeamEntity();
 		teamWithSelectedPlayers.addSelectedPlayers(Arrays.asList(selectedPlayer1, selectedPlayer2, selectedPlayer3, selectedPlayer4, selectedPlayer6));
+		
+		fullGameweekScores = TestDataUtil.buildFullGameweekScores(true);
 	}
 	
 	@Test
@@ -251,7 +254,7 @@ public class TeamSelectionUtilsTest {
 		assertFullSquadDetails(startingTeam, 4, 1, 4, 4, 2);
 		
 		// act
-		TeamSelectionUtils.fillTeamUpWithSubstitutes(startingTeam, 11, TestDataUtil.buildSquadList(), TestDataUtil.buildFullGameweekScores());
+		TeamSelectionUtils.fillTeamUpWithSubstitutes(startingTeam, 11, TestDataUtil.buildSquadList(), fullGameweekScores);
 		
 		// assert
 		assertFullSquadDetails(startingTeam, 4, 1, 4, 4, 2);
@@ -265,7 +268,7 @@ public class TeamSelectionUtilsTest {
 		assertFullSquadDetails(startingTeam, 4, 0, 4, 4, 2);
 		
 		// act
-		TeamSelectionUtils.fillTeamUpWithSubstitutes(startingTeam, 10, TestDataUtil.buildSquadList(), TestDataUtil.buildFullGameweekScores());
+		TeamSelectionUtils.fillTeamUpWithSubstitutes(startingTeam, 10, TestDataUtil.buildSquadList(), fullGameweekScores);
 		
 		assertFullSquadDetails(startingTeam, 4, 1, 4, 4, 2);
 	}
@@ -278,7 +281,7 @@ public class TeamSelectionUtilsTest {
 		assertFullSquadDetails(startingTeam, 4, 1, 4, 4, 1);
 		
 		// act
-		TeamSelectionUtils.fillTeamUpWithSubstitutes(startingTeam, 10, TestDataUtil.buildSquadList(), TestDataUtil.buildFullGameweekScores());
+		TeamSelectionUtils.fillTeamUpWithSubstitutes(startingTeam, 10, TestDataUtil.buildSquadList(), fullGameweekScores);
 		
 		assertFullSquadDetails(startingTeam, 4, 1, 4, 4, 2);
 	}
@@ -291,7 +294,7 @@ public class TeamSelectionUtilsTest {
 		assertFullSquadDetails(startingTeam, 4, 1, 4, 3, 2);
 		
 		// act
-		TeamSelectionUtils.fillTeamUpWithSubstitutes(startingTeam, 10, TestDataUtil.buildSquadList(), TestDataUtil.buildFullGameweekScores());
+		TeamSelectionUtils.fillTeamUpWithSubstitutes(startingTeam, 10, TestDataUtil.buildSquadList(), fullGameweekScores);
 		
 		assertFullSquadDetails(startingTeam, 4, 1, 4, 3, 3);
 	}
@@ -304,7 +307,7 @@ public class TeamSelectionUtilsTest {
 		assertFullSquadDetails(startingTeam, 4, 1, 3, 4, 2);
 		
 		// act
-		TeamSelectionUtils.fillTeamUpWithSubstitutes(startingTeam, 10, TestDataUtil.buildSquadList(), TestDataUtil.buildFullGameweekScores());
+		TeamSelectionUtils.fillTeamUpWithSubstitutes(startingTeam, 10, TestDataUtil.buildSquadList(), fullGameweekScores);
 		
 		assertFullSquadDetails(startingTeam, 4, 1, 3, 4, 3);
 	}
@@ -317,7 +320,7 @@ public class TeamSelectionUtilsTest {
 		assertFullSquadDetails(startingTeam, 4, 1, 4, 4, 0);
 		
 		// act
-		TeamSelectionUtils.fillTeamUpWithSubstitutes(startingTeam, 9, TestDataUtil.buildSquadList(), TestDataUtil.buildFullGameweekScores());
+		TeamSelectionUtils.fillTeamUpWithSubstitutes(startingTeam, 9, TestDataUtil.buildSquadList(), fullGameweekScores);
 		
 		assertFullSquadDetails(startingTeam, 4, 1, 4, 5, 1);
 	}
@@ -330,7 +333,7 @@ public class TeamSelectionUtilsTest {
 		assertFullSquadDetails(startingTeam, 4, 1, 2, 4, 0);
 		
 		// act
-		TeamSelectionUtils.fillTeamUpWithSubstitutes(startingTeam, 7, TestDataUtil.buildSquadList(), TestDataUtil.buildFullGameweekScores());
+		TeamSelectionUtils.fillTeamUpWithSubstitutes(startingTeam, 7, TestDataUtil.buildSquadList(), fullGameweekScores);
 		
 		assertFullSquadDetails(startingTeam, 4, 1, 3, 5, 1);
 	}
@@ -351,7 +354,7 @@ public class TeamSelectionUtilsTest {
 		startingTeamForWeek.put(Position.STRIKER, strikerList);
 		
 		// act
-		final int gameweekScore = TeamSelectionUtils.calculateTeamGameweekScore(startingTeamForWeek, 1, TestDataUtil.buildFullGameweekScores());
+		final int gameweekScore = TeamSelectionUtils.calculateTeamGameweekScore(startingTeamForWeek, 1, fullGameweekScores);
 		
 		// assert
 		assertThat(gameweekScore).isEqualTo(10);
@@ -373,10 +376,30 @@ public class TeamSelectionUtilsTest {
 		startingTeamForWeek.put(Position.STRIKER, strikerList);
 		
 		// act
-		final int gameweekScore = TeamSelectionUtils.calculateTeamGameweekScore(startingTeamForWeek, 1, TestDataUtil.buildFullGameweekScores());
+		final int gameweekScore = TeamSelectionUtils.calculateTeamGameweekScore(startingTeamForWeek, 1, fullGameweekScores);
 		
 		// assert
 		assertThat(gameweekScore).isEqualTo(10);
+	}
+	
+	@Test
+	public void testCalculateTeamGameweekScore_WithoutGoalkeeper() {
+		// arrange
+		final Map<Position, List<SelectedPlayerEntity>> startingTeamForWeek = new HashMap<Position, List<SelectedPlayerEntity>>();
+		
+		final List<SelectedPlayerEntity> defenderList = Arrays.asList(TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_2_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.VICE_CAPTAIN));
+		final List<SelectedPlayerEntity> midfielderList = Arrays.asList(TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_7_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.PICKED));
+		final List<SelectedPlayerEntity> strikerList = Arrays.asList(TestDataUtil.buildSelectedPlayer(TestDataUtil.PLAYER_13_ID, Position.DEFENDER, SelectedPlayerStartingElevenStatus.PICKED));
+		
+		startingTeamForWeek.put(Position.DEFENDER, defenderList);
+		startingTeamForWeek.put(Position.MIDFIEDER, midfielderList);
+		startingTeamForWeek.put(Position.STRIKER, strikerList);
+		
+		// act
+		final int gameweekScore = TeamSelectionUtils.calculateTeamGameweekScore(startingTeamForWeek, 1, fullGameweekScores);
+		
+		// assert
+		assertThat(gameweekScore).isEqualTo(8);
 	}
 	
 	private void assertFullSquadDetails(final Map<Position, List<SelectedPlayerEntity>> startingTeam, 

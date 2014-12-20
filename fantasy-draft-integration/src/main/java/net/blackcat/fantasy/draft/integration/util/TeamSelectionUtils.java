@@ -132,18 +132,21 @@ public final class TeamSelectionUtils {
 		
 		for (final Position position : Position.values()) {
 			final List<SelectedPlayerEntity> playersInPosition = startingTeamForWeek.get(position);
-			
-			for (final SelectedPlayerEntity selectedPlayer : playersInPosition) {
-				final GameweekScorePlayer weekScorePlayer = gameweekScores.get(selectedPlayer.getPlayer().getId());
-				final int weekPointsScored = calculatePlayerScore(isCaptainInTeam, selectedPlayer, weekScorePlayer.getScore());
-				
-				System.out.println("Player: " + selectedPlayer.getPlayer().getForename() + " " + selectedPlayer.getPlayer().getSurname() + ", score: " + weekPointsScored);
-				
-				final GameweekScoreEntity playerWeekScoreEntity = new GameweekScoreEntity(gameweek, weekPointsScored);
-				selectedPlayer.addGameweekScore(playerWeekScoreEntity);
-				selectedPlayer.setPointsScored(selectedPlayer.getPointsScored() + weekPointsScored);
-				
-				teamWeekScore += weekPointsScored;
+		
+			if (teamHasPlayersPlayingInPosition(playersInPosition)) {
+				for (final SelectedPlayerEntity selectedPlayer : playersInPosition) {
+
+					final GameweekScorePlayer weekScorePlayer = gameweekScores.get(selectedPlayer.getPlayer().getId());
+					final int weekPointsScored = calculatePlayerScore(isCaptainInTeam, selectedPlayer, weekScorePlayer.getScore());
+					
+					System.out.println("Player: " + selectedPlayer.getPlayer().getForename() + " " + selectedPlayer.getPlayer().getSurname() + ", score: " + weekPointsScored);
+					
+					final GameweekScoreEntity playerWeekScoreEntity = new GameweekScoreEntity(gameweek, weekPointsScored);
+					selectedPlayer.addGameweekScore(playerWeekScoreEntity);
+					selectedPlayer.setPointsScored(selectedPlayer.getPointsScored() + weekPointsScored);
+					
+					teamWeekScore += weekPointsScored;
+				}
 			}
 		}
 		
@@ -269,14 +272,26 @@ public final class TeamSelectionUtils {
 		for (final Position position : Position.values()) {
 			final List<SelectedPlayerEntity> playersInPosition = startingTeamForWeek.get(position);
 			
-			for (final SelectedPlayerEntity selectedPlayer : playersInPosition) {
-				if (selectedPlayer.getSelectionStatus() == SelectedPlayerStartingElevenStatus.CAPTAIN) {
-					return true;
+			if (teamHasPlayersPlayingInPosition(playersInPosition)) {
+				for (final SelectedPlayerEntity selectedPlayer : playersInPosition) {
+					if (selectedPlayer.getSelectionStatus() == SelectedPlayerStartingElevenStatus.CAPTAIN) {
+						return true;
+					}
 				}
 			}
 		}
 		
 		return false;
+	}
+
+	/**
+	 * Determine if a team has players in their weekly team for a given position based on a list of selected players.
+	 * 
+	 * @param playersInPosition List of selected players to determine if any players exist.
+	 * @return True if a team has players in the given selected player list.
+	 */
+	private static boolean teamHasPlayersPlayingInPosition(final List<SelectedPlayerEntity> playersInPosition) {
+		return playersInPosition != null  && !playersInPosition.isEmpty();
 	}
 	
 	/**

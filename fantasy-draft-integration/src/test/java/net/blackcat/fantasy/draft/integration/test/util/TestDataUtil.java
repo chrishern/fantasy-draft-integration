@@ -171,13 +171,13 @@ public final class TestDataUtil {
 		return selectedPlayer;
 	}
 	
-	public static Map<Integer, GameweekScorePlayer> buildFullGameweekScores() {
+	public static Map<Integer, GameweekScorePlayer> buildFullGameweekScores(final boolean didPlayersPlay) {
 		final Map<Integer, GameweekScorePlayer> gameweekScores = new HashMap<Integer, GameweekScorePlayer>();
 		
-		gameweekScores.put(PLAYER_1_ID, buildGameweekScorePlayer(PLAYER_1_ID, true));
-		gameweekScores.put(PLAYER_2_ID, buildGameweekScorePlayer(PLAYER_2_ID, true));
-		gameweekScores.put(PLAYER_7_ID, buildGameweekScorePlayer(PLAYER_7_ID, true));
-		gameweekScores.put(PLAYER_13_ID, buildGameweekScorePlayer(PLAYER_13_ID, true));
+		gameweekScores.put(PLAYER_1_ID, buildGameweekScorePlayer(PLAYER_1_ID, didPlayersPlay));
+		gameweekScores.put(PLAYER_2_ID, buildGameweekScorePlayer(PLAYER_2_ID, didPlayersPlay));
+		gameweekScores.put(PLAYER_7_ID, buildGameweekScorePlayer(PLAYER_7_ID, didPlayersPlay));
+		gameweekScores.put(PLAYER_13_ID, buildGameweekScorePlayer(PLAYER_13_ID, didPlayersPlay));
 		gameweekScores.put(PLAYER_14_ID, buildGameweekScorePlayer(PLAYER_14_ID, false));
 		
 		return gameweekScores;
