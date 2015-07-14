@@ -37,6 +37,13 @@ public class User implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private UserRole role;
 	
+	/*
+	 * Used only for Hibernate database mapping.
+	 */
+	private User() {
+		
+	}
+	
 	private User(final String emailAddress, final String forename,
 			final String surname, final UserRole role) {
 		

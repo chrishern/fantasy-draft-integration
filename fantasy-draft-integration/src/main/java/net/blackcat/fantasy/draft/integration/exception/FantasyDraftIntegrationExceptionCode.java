@@ -16,4 +16,9 @@ public enum FantasyDraftIntegrationExceptionCode {
      */
     PLAYER_NOT_FOUND,
 
+    /**
+     * User codes.
+     */
+    USER_NOT_FOUND,
+    USER_ALREADY_EXISTS;
 }

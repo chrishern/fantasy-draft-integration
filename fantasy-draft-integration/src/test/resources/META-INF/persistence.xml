@@ -6,6 +6,7 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider> 
 		
 		<class>net.blackcat.fantasy.draft.integration.model.Player</class>
+		<class>net.blackcat.fantasy.draft.integration.model.User</class>
 
 	</persistence-unit>
 </persistence>
