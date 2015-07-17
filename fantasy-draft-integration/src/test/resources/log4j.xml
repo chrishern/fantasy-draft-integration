@@ -11,7 +11,9 @@
 		</layout>
 	</appender>
 
-	<logger name="org.hibernate.SQL">
+	<!-- Uncomment the below logging levels to log out detailed Hibernate query details -->
+	
+	<!-- <logger name="org.hibernate.SQL">
 		<level value="debug" />
 		<appender-ref ref="console" />
 	</logger>
@@ -19,7 +21,7 @@
 	<logger name="org.hibernate.type">
 		<level value="trace" />
 		<appender-ref ref="console" />
-	</logger>
+	</logger> -->
 
 	<root>
 		<priority value="error" />
