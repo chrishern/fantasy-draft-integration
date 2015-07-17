@@ -15,42 +15,47 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Spring data implementation of the {@link UserDataService}.
  * 
  * @author Chris
- *
+ * 
  */
 public class SpringDataUserDataService implements UserDataService {
 
-	private UserRepository userRepository;
-	
-	@Autowired
-	public SpringDataUserDataService(final UserRepository userRepository) {
-		
-		this.userRepository = userRepository;
-	}
-	
-	@Override
-	public User getUser(final String emailAddress) throws FantasyDraftIntegrationException {
-		
-		final User user = userRepository.findOne(emailAddress);
-		
-		if (user == null) {
-			throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.USER_NOT_FOUND);
-		}
-		
-		return user;
-	}
+    private UserRepository userRepository;
 
-	@Override
-	public void addUser(final User user) throws FantasyDraftIntegrationException {
+    @Autowired
+    public SpringDataUserDataService(final UserRepository userRepository) {
 
-		if (userRepository.exists(user.getEmailAddress())) {
-			throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.USER_ALREADY_EXISTS);
-		}
-		
-		userRepository.save(user);
-	}
+        this.userRepository = userRepository;
+    }
 
-	@Override
-	public void updateUser(final User user) throws FantasyDraftIntegrationException {
-		
-	}
+    @Override
+    public User getUser(final String emailAddress) throws FantasyDraftIntegrationException {
+
+        final User user = userRepository.findOne(emailAddress);
+
+        if (user == null) {
+            throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.USER_NOT_FOUND);
+        }
+
+        return user;
+    }
+
+    @Override
+    public void addUser(final User user) throws FantasyDraftIntegrationException {
+
+        if (userRepository.exists(user.getEmailAddress())) {
+            throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.USER_ALREADY_EXISTS);
+        }
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateUser(final User user) throws FantasyDraftIntegrationException {
+
+        if (userRepository.exists(user.getEmailAddress())) {
+            userRepository.save(user);
+        } else {
+            throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.USER_NOT_FOUND);
+        }
+    }
 }
