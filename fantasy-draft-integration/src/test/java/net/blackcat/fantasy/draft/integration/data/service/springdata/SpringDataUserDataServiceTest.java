@@ -111,11 +111,6 @@ public class SpringDataUserDataServiceTest {
         Assert.fail("Exception expected");
     }
 
-    /*
-     * This test is currently failing because DBUnit does not appear to be able to clear down the DB from the below test
-     * - it fails with a foreign key constraint violation. Not sure why as the relationship is annotated with an ALL
-     * cascade type.
-     */
     @Test
     public void testUpdateUser_AddedTeam_UserDoesNotExist() throws Exception {
         // arrange

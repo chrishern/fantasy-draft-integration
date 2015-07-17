@@ -4,6 +4,5 @@
 	<Player id="2" forename="Nicky" surname="Summerbee" team="Sunderland" position="MIDFIELDER" selectionStatus="SELECTED" totalPoints="45" />
 	<Player id="3" forename="Alex" surname="Rae" team="Sunderland" position="MIDFIELDER" selectionStatus="NOT_SELECTED" totalPoints="0" />
 	<User />
-	<User_Team />
 	<Team />
 </dataset>

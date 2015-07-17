@@ -41,7 +41,7 @@ public class User implements Serializable {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @OneToMany(cascade = { CascadeType.ALL })
+    @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "manager")
     private List<Team> teams;
 
     /*
@@ -49,7 +49,6 @@ public class User implements Serializable {
      */
     private User() {
 
-        this.teams = new ArrayList<Team>();
     }
 
     private User(final String emailAddress, final String forename, final String surname, final UserRole role) {
@@ -117,6 +116,7 @@ public class User implements Serializable {
      */
     public void addManagedTeam(final Team team) {
 
+        team.setManager(this);
         this.teams.add(team);
     }
 
