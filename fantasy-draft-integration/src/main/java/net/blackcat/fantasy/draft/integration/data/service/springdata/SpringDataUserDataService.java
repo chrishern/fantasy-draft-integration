@@ -48,4 +48,9 @@ public class SpringDataUserDataService implements UserDataService {
 		
 		userRepository.save(user);
 	}
+
+	@Override
+	public void updateUser(final User user) throws FantasyDraftIntegrationException {
+		
+	}
 }

@@ -2,6 +2,6 @@
 <dataset>
 	<User emailAddress="user1@test.com" forename="User" surname="One" role="MANAGER" />
 	<Player />
-	<User_Team />
-	<Team />
+	<User_Team User_emailAddress="user1@test.com" Team_id="1" />
+	<Team id="1" name="Test Team" totalScore="0" status="INCOMPLETE" remainingBudget="100" />
 </dataset>

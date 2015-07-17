@@ -4,12 +4,16 @@
 package net.blackcat.fantasy.draft.integration.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import net.blackcat.fantasy.draft.integration.model.types.user.UserRole;
 
@@ -37,11 +41,15 @@ public class User implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private UserRole role;
 	
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	private List<Team> teams;
+	
 	/*
 	 * Used only for Hibernate database mapping.
 	 */
 	private User() {
 		
+		this.teams = new ArrayList<Team>();
 	}
 	
 	private User(final String emailAddress, final String forename,
@@ -51,6 +59,7 @@ public class User implements Serializable {
 		this.forename = forename;
 		this.surname = surname;
 		this.role = role;
+		this.teams = new ArrayList<Team>();
 	}
 	
 	/**
@@ -90,6 +99,16 @@ public class User implements Serializable {
 	public static User buildAdministrator(final String emailAddress, final String forename, final String surname) {
 		
 		return new User(emailAddress, forename, surname, UserRole.ADMIN);
+	}
+	
+	/**
+	 * Add a {@link Team} managed by this user to the list of teams managed.
+	 * 
+	 * @param team {@link Team} to add.
+	 */
+	public void addManagedTeam(final Team team) {
+		
+		this.teams.add(team);
 	}
 	
 	/**

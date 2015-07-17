@@ -30,4 +30,12 @@ public interface UserDataService {
 	 * @throws FantasyDraftIntegrationException If a {@link User} with the same email address already exists.
 	 */
 	void addUser(User user) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Update an existing {@link User} within the system.
+	 * 
+	 * @param user {@link User} to update.
+	 * @throws FantasyDraftIntegrationException If the {@link User} does not already exist.
+	 */
+	void updateUser(User user) throws FantasyDraftIntegrationException;
 }

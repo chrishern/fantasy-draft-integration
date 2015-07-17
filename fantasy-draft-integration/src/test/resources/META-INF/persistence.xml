@@ -7,6 +7,7 @@
 		
 		<class>net.blackcat.fantasy.draft.integration.model.Player</class>
 		<class>net.blackcat.fantasy.draft.integration.model.User</class>
+		<class>net.blackcat.fantasy.draft.integration.model.Team</class>
 
 	</persistence-unit>
 </persistence>
