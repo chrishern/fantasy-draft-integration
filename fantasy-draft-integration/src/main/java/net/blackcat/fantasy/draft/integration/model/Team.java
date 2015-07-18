@@ -78,4 +78,11 @@ public class Team implements Serializable {
 
         this.manager = manager;
     }
+
+    /**
+     * @return the manager
+     */
+    public User getManager() {
+        return manager;
+    }
 }
