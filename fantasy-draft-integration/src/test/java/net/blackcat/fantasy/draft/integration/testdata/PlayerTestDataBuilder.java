@@ -20,13 +20,21 @@ public class PlayerTestDataBuilder {
     private static final Position DEFAULT_POSITION = Position.STRIKER;
     private static final BigDecimal DEFAULT_CURRENT_PRICE = new BigDecimal("9.5");
 
+    private int id = DEFAULT_ID;
+
     public static PlayerTestDataBuilder aPlayer() {
 
         return new PlayerTestDataBuilder();
     }
 
+    public PlayerTestDataBuilder withId(final int id) {
+
+        this.id = id;
+        return this;
+    }
+
     public Player build() {
 
-        return new Player(DEFAULT_ID, DEFAULT_FORNAME, DEFAULT_SURNAME, DEFAULT_TEAM, DEFAULT_POSITION, DEFAULT_CURRENT_PRICE);
+        return new Player(id, DEFAULT_FORNAME, DEFAULT_SURNAME, DEFAULT_TEAM, DEFAULT_POSITION, DEFAULT_CURRENT_PRICE);
     }
 }

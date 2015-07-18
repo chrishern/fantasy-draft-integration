@@ -5,9 +5,12 @@
 
 		<provider>org.hibernate.ejb.HibernatePersistence</provider> 
 		
+		<class>net.blackcat.fantasy.draft.integration.model.Auction</class>
+		<class>net.blackcat.fantasy.draft.integration.model.Bid</class>
+		<class>net.blackcat.fantasy.draft.integration.model.League</class>
 		<class>net.blackcat.fantasy.draft.integration.model.Player</class>
-		<class>net.blackcat.fantasy.draft.integration.model.User</class>
 		<class>net.blackcat.fantasy.draft.integration.model.Team</class>
+		<class>net.blackcat.fantasy.draft.integration.model.User</class>
 
 	</persistence-unit>
 </persistence>

@@ -4,4 +4,8 @@
 	<User emailAddress="user1@test.com" forename="User" surname="One" role="MANAGER" />
 	<Player/>
 	<Team />
+	<League />
+	<Auction />
+	<Auction_Bid />
+	<Bid />
 </dataset>

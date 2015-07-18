@@ -6,4 +6,8 @@
 	<Player id="4" forename="Kevin" surname="Phillips" team="Sunderland" position="STRIKER" selectionStatus="NOT_SELECTED" totalPoints="0" currentPrice="9.5" />
 	<User />
 	<Team />
+	<League />
+	<Auction />
+	<Auction_Bid />
+	<Bid />
 </dataset>

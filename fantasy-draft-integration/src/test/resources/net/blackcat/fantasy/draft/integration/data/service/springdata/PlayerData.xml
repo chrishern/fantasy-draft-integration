@@ -5,4 +5,7 @@
 	<Player id="3" forename="Alex" surname="Rae" team="Sunderland" position="MIDFIELDER" selectionStatus="NOT_SELECTED" totalPoints="0" />
 	<User />
 	<Team />
+	<League />
+	<Auction />
+	<Bid />
 </dataset>

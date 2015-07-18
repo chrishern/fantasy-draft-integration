@@ -19,6 +19,15 @@ public enum FantasyDraftIntegrationExceptionCode {
     /**
      * User codes.
      */
-    USER_NOT_FOUND,
-    USER_ALREADY_EXISTS;
+    USER_NOT_FOUND, USER_ALREADY_EXISTS,
+
+    /**
+     * League codes.
+     */
+    LEAGUE_NOT_FOUND,
+
+    /**
+     * Team codes.
+     */
+    TEAM_NOT_FOUND;
 }

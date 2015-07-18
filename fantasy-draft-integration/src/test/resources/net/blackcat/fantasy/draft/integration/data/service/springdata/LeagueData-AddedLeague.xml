@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<Player />
+	<User />
+	<Team />
+	<League id="1" name="League One" />
+	<League id="2" name="League Two" auction_id="" />
+	<Auction />
+	<Auction_Bid />
+	<Bid />
+</dataset>

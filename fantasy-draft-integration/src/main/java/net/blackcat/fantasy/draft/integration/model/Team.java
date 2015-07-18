@@ -52,6 +52,10 @@ public class Team implements Serializable {
     @JoinColumn(name = "manager", referencedColumnName = "emailAddress")
     private User manager;
 
+    @ManyToOne
+    @JoinColumn(name = "league", referencedColumnName = "id")
+    private League league;
+
     /*
      * Only used for Hibernate database mapping.
      */
@@ -80,9 +84,62 @@ public class Team implements Serializable {
     }
 
     /**
+     * Set the {@link League} this Team is in.
+     * 
+     * @param league
+     *            {@link League} representing the league this team is in.
+     */
+    public void setLeague(final League league) {
+
+        this.league = league;
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @return the totalScore
+     */
+    public int getTotalScore() {
+        return totalScore;
+    }
+
+    /**
+     * @return the status
+     */
+    public TeamStatus getStatus() {
+        return status;
+    }
+
+    /**
+     * @return the remainingBudget
+     */
+    public BigDecimal getRemainingBudget() {
+        return remainingBudget;
+    }
+
+    /**
      * @return the manager
      */
     public User getManager() {
         return manager;
+    }
+
+    /**
+     * @return the league
+     */
+    public League getLeague() {
+        return league;
     }
 }

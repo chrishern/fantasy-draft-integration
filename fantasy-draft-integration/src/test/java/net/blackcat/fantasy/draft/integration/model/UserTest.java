@@ -16,6 +16,7 @@ import org.junit.Test;
  */
 public class UserTest {
 
+    private static final String TEAM_NAME = "Team name";
     private static final String EMAIL_ADDRESS = "test@email.com";
     private static final String FORENAME = "Forename";
     private static final String SURNAME = "Surname";
@@ -57,7 +58,7 @@ public class UserTest {
     public void testAddManagedTeam() {
         // arrange
         final User manager = User.buildManager(EMAIL_ADDRESS, FORENAME, SURNAME);
-        final Team team = new Team("Team name");
+        final Team team = new Team(TEAM_NAME);
 
         // act
         manager.addManagedTeam(team);

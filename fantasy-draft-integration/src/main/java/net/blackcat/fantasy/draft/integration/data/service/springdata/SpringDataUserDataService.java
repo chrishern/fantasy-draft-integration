@@ -10,6 +10,7 @@ import net.blackcat.fantasy.draft.integration.model.User;
 import net.blackcat.fantasy.draft.integration.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 /**
  * Spring data implementation of the {@link UserDataService}.
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Chris
  * 
  */
+@Repository
 public class SpringDataUserDataService implements UserDataService {
 
     private UserRepository userRepository;
