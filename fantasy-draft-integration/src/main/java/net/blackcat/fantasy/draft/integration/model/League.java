@@ -57,6 +57,15 @@ public class League implements Serializable {
     }
 
     /**
+     * Open the auction for this league.
+     */
+    public void openAuction() {
+
+        final Auction newAuction = new Auction();
+        this.auction = newAuction;
+    }
+
+    /**
      * Close the auction for this league.
      */
     public void closeAuction() {

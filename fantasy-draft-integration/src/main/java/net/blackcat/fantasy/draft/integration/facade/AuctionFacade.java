@@ -13,7 +13,6 @@ import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationE
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.facade.dto.AuctionBidsDto;
 import net.blackcat.fantasy.draft.integration.facade.dto.BidDto;
-import net.blackcat.fantasy.draft.integration.model.Auction;
 import net.blackcat.fantasy.draft.integration.model.AuctionPhase;
 import net.blackcat.fantasy.draft.integration.model.Bid;
 import net.blackcat.fantasy.draft.integration.model.League;
@@ -56,8 +55,7 @@ public class AuctionFacade {
 
         final League league = leagueDataService.getLeague(leagueId);
 
-        final Auction auction = new Auction();
-        league.setAuction(auction);
+        league.openAuction();
 
         leagueDataService.updateLeague(league);
     }
@@ -85,6 +83,12 @@ public class AuctionFacade {
         leagueDataService.updateLeague(league);
     }
 
+    /**
+     * Close the auction phase for a given league.
+     * 
+     * @param leagueId
+     *            ID of the league to start the auction for.
+     */
     public void closeAuction(final int leagueId) throws FantasyDraftIntegrationException {
 
         final League league = leagueDataService.getLeague(leagueId);

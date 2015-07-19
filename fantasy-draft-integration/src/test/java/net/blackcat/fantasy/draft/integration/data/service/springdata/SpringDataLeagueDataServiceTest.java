@@ -8,7 +8,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
-import net.blackcat.fantasy.draft.integration.model.Auction;
 import net.blackcat.fantasy.draft.integration.model.AuctionPhase;
 import net.blackcat.fantasy.draft.integration.model.League;
 import net.blackcat.fantasy.draft.integration.model.types.auction.AuctionPhaseStatus;
@@ -123,12 +122,11 @@ public class SpringDataLeagueDataServiceTest {
     public void testUpdateLeague_LeagueDoesNotExist() throws Exception {
         // arrange
         final League league = mock(League.class);
-        final Auction auction = new Auction();
 
         when(league.getId()).thenReturn(14);
         when(league.getName()).thenReturn(TestDataConstants.LEAGUE_ONE_NAME);
 
-        league.setAuction(auction);
+        league.openAuction();
 
         thrownException.expect(FantasyDraftIntegrationException.class);
         thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.LEAGUE_NOT_FOUND));
