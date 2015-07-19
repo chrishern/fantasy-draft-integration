@@ -10,6 +10,7 @@ import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
 import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
 import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
+import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.facade.dto.AuctionBidsDto;
 import net.blackcat.fantasy.draft.integration.facade.dto.BidDto;
 import net.blackcat.fantasy.draft.integration.model.Auction;
@@ -82,6 +83,18 @@ public class AuctionFacade {
 
         // Update league
         leagueDataService.updateLeague(league);
+    }
+
+    public void closeAuction(final int leagueId) throws FantasyDraftIntegrationException {
+
+        final League league = leagueDataService.getLeague(leagueId);
+
+        if (league.hasOpenAuction()) {
+            league.closeAuction();
+            leagueDataService.updateLeague(league);
+        } else {
+            throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.OPEN_AUCTION_NOT_FOUND);
+        }
     }
 
     /*

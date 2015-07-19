@@ -28,6 +28,7 @@ public enum FantasyDraftIntegrationExceptionCode {
      * League codes.
      */
     LEAGUE_NOT_FOUND,
+    OPEN_AUCTION_NOT_FOUND,
     OPEN_AUCTION_PHASE_NOT_FOUND,
 
     /**

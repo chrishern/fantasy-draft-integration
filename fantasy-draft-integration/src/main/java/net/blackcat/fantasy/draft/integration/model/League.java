@@ -57,6 +57,14 @@ public class League implements Serializable {
     }
 
     /**
+     * Close the auction for this league.
+     */
+    public void closeAuction() {
+
+        auction.setStatus(AuctionStatus.CLOSED);
+    }
+
+    /**
      * Determine is this league has an open auction or not.
      * 
      * @return True if this league has an open auction, false if it doesn't have an auction or that auction is closed.

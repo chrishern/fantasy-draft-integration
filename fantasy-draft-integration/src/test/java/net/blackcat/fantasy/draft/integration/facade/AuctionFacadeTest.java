@@ -9,12 +9,16 @@ import java.math.BigDecimal;
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
 import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
 import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
+import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
+import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.facade.dto.AuctionBidsDto;
 import net.blackcat.fantasy.draft.integration.model.Auction;
 import net.blackcat.fantasy.draft.integration.model.AuctionPhase;
 import net.blackcat.fantasy.draft.integration.model.League;
 import net.blackcat.fantasy.draft.integration.model.Player;
 import net.blackcat.fantasy.draft.integration.model.Team;
+import net.blackcat.fantasy.draft.integration.model.types.auction.AuctionStatus;
+import net.blackcat.fantasy.draft.integration.test.util.CustomIntegrationExceptionMatcher;
 import net.blackcat.fantasy.draft.integration.testdata.AuctionPhaseTestDataBuilder;
 import net.blackcat.fantasy.draft.integration.testdata.AuctionTestDataBuilder;
 import net.blackcat.fantasy.draft.integration.testdata.LeagueTestDataBuilder;
@@ -22,8 +26,11 @@ import net.blackcat.fantasy.draft.integration.testdata.PlayerTestDataBuilder;
 import net.blackcat.fantasy.draft.integration.testdata.TestDataConstants;
 import net.blackcat.fantasy.draft.integration.testdata.dto.AuctionBidsDtoTestDataBuilder;
 
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -38,6 +45,9 @@ import org.unitils.reflectionassert.ReflectionAssert;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class AuctionFacadeTest {
+
+    @Rule
+    public ExpectedException thrownException = ExpectedException.none();
 
     @Mock
     private LeagueDataService leagueDataService;
@@ -130,5 +140,37 @@ public class AuctionFacadeTest {
         // assert
         verify(leagueDataService).updateLeague(leagueCaptor.capture());
         ReflectionAssert.assertReflectionEquals(expectedLeague, leagueCaptor.getValue());
+    }
+
+    @Test
+    public void testCloseAuction_Success() throws Exception {
+        // arrange
+        final League league = LeagueTestDataBuilder.aLeague().withAuction().build();
+
+        when(leagueDataService.getLeague(league.getId())).thenReturn(league);
+
+        // act
+        auctionFacade.closeAuction(league.getId());
+
+        // assert
+        verify(leagueDataService).updateLeague(league);
+        assertThat(league.getAuction().getStatus()).isEqualTo(AuctionStatus.CLOSED);
+    }
+
+    @Test
+    public void testCloseAuction_LeagueHasNoAuction() throws Exception {
+        // arrange
+        final League league = LeagueTestDataBuilder.aLeague().build();
+
+        when(leagueDataService.getLeague(league.getId())).thenReturn(league);
+
+        thrownException.expect(FantasyDraftIntegrationException.class);
+        thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.OPEN_AUCTION_NOT_FOUND));
+
+        // act
+        auctionFacade.closeAuction(league.getId());
+
+        // assert
+        Assert.fail("Exception expected.");
     }
 }

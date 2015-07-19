@@ -70,4 +70,16 @@ public class LeagueTest {
         // assert
         assertThat(hasOpenAuction).isFalse();
     }
+
+    @Test
+    public void testCloseAuction() {
+        // arrange
+        final League league = LeagueTestDataBuilder.aLeague().withAuction().build();
+
+        // act
+        league.closeAuction();
+
+        // assert
+        assertThat(league.getAuction().getStatus()).isEqualTo(AuctionStatus.CLOSED);
+    }
 }
