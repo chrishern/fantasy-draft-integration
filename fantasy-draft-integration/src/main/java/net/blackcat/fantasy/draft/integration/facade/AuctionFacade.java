@@ -4,7 +4,10 @@
 package net.blackcat.fantasy.draft.integration.facade;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
 import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
@@ -81,6 +84,57 @@ public class AuctionFacade {
 
         // Update league
         leagueDataService.updateLeague(league);
+    }
+
+    public void closeAuctionPhase(final int leagueId) throws FantasyDraftIntegrationException {
+
+        // Get league and open auction phase. - TODO combine into a single query
+        final League league = leagueDataService.getLeague(leagueId);
+        final AuctionPhase openAuctionPhase = leagueDataService.getOpenAuctionPhase(league);
+
+        // Build up a map of PlayerId to List of Bids for that player
+        final Map<Integer, List<Bid>> playerBids = new HashMap<Integer, List<Bid>>();
+
+        for (final Bid bid : openAuctionPhase.getBids()) {
+            List<Bid> bidList = playerBids.get(bid.getPlayer().getId());
+
+            if (bidList == null) {
+                bidList = new ArrayList<Bid>();
+            }
+
+            bidList.add(bid);
+            playerBids.put(bid.getPlayer().getId(), bidList);
+        }
+
+        // Work out the highest bidder for each player
+        for (final Integer playerId : playerBids.keySet()) {
+
+            final List<Bid> bids = playerBids.get(playerId);
+
+            if (bids.size() == 1) {
+                // If we only have one bid, we have a successful bid
+                final Bid successfulBid = bids.get(0);
+
+                successfulBid.markBidAsSuccessful();
+                successfulBid.getPlayer().markPlayerAsSelected();
+            } else {
+                Collections.sort(bids);
+
+                if (bids.get(0).hasMatchingAmount(bids.get(1))) {
+                    // We have matching bids
+                } else {
+                    final Bid successfulBid = bids.get(0);
+
+                    successfulBid.markBidAsSuccessful();
+                    successfulBid.getPlayer().markPlayerAsSelected();
+                }
+            }
+        }
+
+        // Move each 'won' player to their Team as a SelectedPlayer
+        // Also set the selection status of each Player to show they are picked and update the player
+
+        // Update the league
     }
 
     /**

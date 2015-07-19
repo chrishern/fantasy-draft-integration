@@ -72,6 +72,13 @@ public class Player implements Serializable {
     }
 
     /**
+     * Mark this player as being selected by a team.
+     */
+    public void markPlayerAsSelected() {
+        this.selectionStatus = PlayerSelectionStatus.SELECTED;
+    }
+
+    /**
      * Update the total points scored for this player.
      * 
      * @param newTotalPoints

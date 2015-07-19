@@ -17,10 +17,22 @@ import net.blackcat.fantasy.draft.integration.model.Team;
  */
 public class BidTestDataBuilder {
 
-    private static final BigDecimal AMOUNT = new BigDecimal("5.0");
+    private static final BigDecimal DEFAULT_AMOUNT = new BigDecimal("5.0");
+
+    private BigDecimal amount;
+
+    private BidTestDataBuilder() {
+        amount = DEFAULT_AMOUNT;
+    }
 
     public static BidTestDataBuilder aBid() {
         return new BidTestDataBuilder();
+    }
+
+    public BidTestDataBuilder withAmount(final BigDecimal amount) {
+        this.amount = amount;
+
+        return this;
     }
 
     public Bid build() {
@@ -28,6 +40,6 @@ public class BidTestDataBuilder {
         final Team team = new Team(TestDataConstants.TEAM_ONE_NAME);
         final Player player = PlayerTestDataBuilder.aPlayer().build();
 
-        return new Bid(team, player, AMOUNT);
+        return new Bid(team, player, amount);
     }
 }
