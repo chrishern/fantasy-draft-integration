@@ -42,7 +42,7 @@ import com.github.springtestdbunit.annotation.ExpectedDatabase;
 @ContextConfiguration(value = { "/hsqlDatasourceContext.xml", "/testApplicationContext.xml" })
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class, DbUnitTestExecutionListener.class })
-@DatabaseSetup("LeagueData.xml")
+@DatabaseSetup("LeagueData-withOpenAuctionPhase.xml")
 public class SpringDataLeagueDataServiceTest {
 
     @Rule

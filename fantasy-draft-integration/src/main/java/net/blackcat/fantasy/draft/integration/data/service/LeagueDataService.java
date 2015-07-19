@@ -4,6 +4,7 @@
 package net.blackcat.fantasy.draft.integration.data.service;
 
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
+import net.blackcat.fantasy.draft.integration.model.AuctionPhase;
 import net.blackcat.fantasy.draft.integration.model.League;
 
 /**
@@ -42,4 +43,15 @@ public interface LeagueDataService {
      *             If a {@link League} with the matching ID does not exist in the system.
      */
     void updateLeague(League league) throws FantasyDraftIntegrationException;
+
+    /**
+     * Get the currently open auction phase for a given {@link League}.
+     * 
+     * @param league
+     *            League to get the open auction phase for.
+     * @return Open {@link AuctionPhase}.
+     * @throws FantasyDraftIntegrationException
+     *             If the given league does not have an open auction phase.
+     */
+    AuctionPhase getOpenAuctionPhase(League league) throws FantasyDraftIntegrationException;
 }

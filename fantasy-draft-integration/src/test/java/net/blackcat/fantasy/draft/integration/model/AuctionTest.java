@@ -4,10 +4,7 @@
 package net.blackcat.fantasy.draft.integration.model;
 
 import static org.fest.assertions.Assertions.assertThat;
-
-import java.util.Arrays;
-
-import net.blackcat.fantasy.draft.integration.testdata.BidTestDataBuilder;
+import net.blackcat.fantasy.draft.integration.model.types.auction.AuctionStatus;
 
 import org.junit.Test;
 
@@ -20,16 +17,28 @@ import org.junit.Test;
 public class AuctionTest {
 
     @Test
+    public void testCreatNewInstance() {
+        // arrange
+
+        // act
+        final Auction auction = new Auction();
+
+        // assert
+        assertThat(auction.getStatus()).isEqualTo(AuctionStatus.OPEN);
+        assertThat(auction.getPhases()).hasSize(1);
+    }
+
+    @Test
     public void testAddBids() {
         // arrange
         final Auction auction = new Auction();
-        final Bid bid = BidTestDataBuilder.aBid().build();
+        final AuctionPhase phase = new AuctionPhase();
 
         // act
-        auction.addBids(Arrays.asList(bid));
+        auction.addPhase(phase);
 
         // assert
-        assertThat(auction.getBids()).contains(bid);
+        assertThat(auction.getPhases()).contains(phase);
     }
 
 }

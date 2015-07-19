@@ -6,6 +6,7 @@ package net.blackcat.fantasy.draft.integration.data.service.springdata;
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
+import net.blackcat.fantasy.draft.integration.model.AuctionPhase;
 import net.blackcat.fantasy.draft.integration.model.League;
 import net.blackcat.fantasy.draft.integration.repository.LeagueRepository;
 
@@ -55,5 +56,11 @@ public class SpringDataLeagueDataService implements LeagueDataService {
         } else {
             throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.LEAGUE_NOT_FOUND);
         }
+    }
+
+    @Override
+    public AuctionPhase getOpenAuctionPhase(final League league) throws FantasyDraftIntegrationException {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

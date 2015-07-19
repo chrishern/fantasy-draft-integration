@@ -3,8 +3,12 @@
 	<Player />
 	<User />
 	<Team />
-	<League id="1" name="New Name" auction_id="" />
-	<Auction />
-	<Auction_Bid />
+	<Auction id="1" status="OPEN"/>
+	<AuctionPhase id="1" status="CLOSED"/>
+	<AuctionPhase id="2" status="OPEN"/>
+	<Auction_AuctionPhase auction_id="1" phases_id="1"/>
+	<Auction_AuctionPhase auction_id="1" phases_id="2"/>
+	<League id="1" name="New Name" auction_id="1" />
 	<Bid />
+	<AuctionPhase_Bid/>
 </dataset>

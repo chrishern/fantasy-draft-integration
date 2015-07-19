@@ -77,7 +77,7 @@ public class AuctionFacade {
 
         // Add domain bids to Auction
         final Auction auction = league.getAuction();
-        auction.addBids(domainBids);
+        // auction.addBids(domainBids);
 
         // Update league
         leagueDataService.updateLeague(league);

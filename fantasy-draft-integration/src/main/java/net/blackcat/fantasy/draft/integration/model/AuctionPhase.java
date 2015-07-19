@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package net.blackcat.fantasy.draft.integration.model;
 
 import java.io.Serializable;
@@ -14,43 +17,45 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import net.blackcat.fantasy.draft.integration.model.types.auction.AuctionStatus;
+import net.blackcat.fantasy.draft.integration.model.types.auction.AuctionPhaseStatus;
 
+/**
+ * Model class storing information about an individual phase of an auction.
+ * 
+ * @author Chris Hern
+ * 
+ */
 @Entity
-public class Auction implements Serializable {
+public class AuctionPhase implements Serializable {
 
-    private static final long serialVersionUID = -8773358797616427822L;
+    private static final long serialVersionUID = 5706041189244796847L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<AuctionPhase> phases;
+    private List<Bid> bids;
 
     @Column
     @Enumerated(EnumType.STRING)
-    private AuctionStatus status;
+    private AuctionPhaseStatus status;
 
-    public Auction() {
+    public AuctionPhase() {
 
-        final AuctionPhase phase = new AuctionPhase();
-
-        phases = new ArrayList<AuctionPhase>();
-        phases.add(phase);
-
-        status = AuctionStatus.OPEN;
+        bids = new ArrayList<Bid>();
+        status = AuctionPhaseStatus.OPEN;
     }
 
     /**
-     * Add a set of new bids to this auction.
+     * Add a set of new bids to this auction phase.
      * 
-     * @param newPhase
-     *            New bids to add to the auction.
+     * @param newBids
+     *            New bids to add to the auction phase.
      */
-    public void addPhase(final AuctionPhase newPhase) {
+    public void addBids(final List<Bid> newBids) {
 
-        phases.add(newPhase);
+        bids.addAll(newBids);
     }
 
     /**
@@ -63,14 +68,14 @@ public class Auction implements Serializable {
     /**
      * @return the bids
      */
-    public List<AuctionPhase> getPhases() {
-        return phases;
+    public List<Bid> getBids() {
+        return bids;
     }
 
     /**
      * @return the status
      */
-    public AuctionStatus getStatus() {
+    public AuctionPhaseStatus getStatus() {
         return status;
     }
 }

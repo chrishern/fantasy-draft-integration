@@ -11,6 +11,8 @@ package net.blackcat.fantasy.draft.integration.exception;
  */
 public enum FantasyDraftIntegrationExceptionCode {
 
+    // @formatter:off
+    
     /**
      * Player codes.
      */
@@ -19,15 +21,19 @@ public enum FantasyDraftIntegrationExceptionCode {
     /**
      * User codes.
      */
-    USER_NOT_FOUND, USER_ALREADY_EXISTS,
+    USER_NOT_FOUND, 
+    USER_ALREADY_EXISTS,
 
     /**
      * League codes.
      */
     LEAGUE_NOT_FOUND,
+    OPEN_AUCTION_PHASE_NOT_FOUND,
 
     /**
      * Team codes.
      */
     TEAM_NOT_FOUND;
+    
+    // @formatter:on
 }

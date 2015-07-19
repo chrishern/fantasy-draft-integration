@@ -9,7 +9,5 @@
 	<Auction_AuctionPhase auction_id="1" phases_id="1"/>
 	<Auction_AuctionPhase auction_id="1" phases_id="2"/>
 	<League id="1" name="League One" auction_id="1" />
-	<League id="2" name="League Two" auction_id="" />
 	<Bid />
-	<AuctionPhase_Bid/>
 </dataset>
