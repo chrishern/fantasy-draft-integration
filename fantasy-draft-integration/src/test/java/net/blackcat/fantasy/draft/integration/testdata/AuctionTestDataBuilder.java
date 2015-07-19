@@ -3,14 +3,11 @@
  */
 package net.blackcat.fantasy.draft.integration.testdata;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.blackcat.fantasy.draft.integration.model.Auction;
-import net.blackcat.fantasy.draft.integration.model.Bid;
-import net.blackcat.fantasy.draft.integration.model.Player;
-import net.blackcat.fantasy.draft.integration.model.Team;
+import net.blackcat.fantasy.draft.integration.model.AuctionPhase;
 
 /**
  * @author Chris Hern
@@ -18,10 +15,10 @@ import net.blackcat.fantasy.draft.integration.model.Team;
  */
 public class AuctionTestDataBuilder {
 
-    private List<Bid> bids;
+    private List<AuctionPhase> phases;
 
     private AuctionTestDataBuilder() {
-        bids = new ArrayList<Bid>();
+        phases = new ArrayList<AuctionPhase>();
     }
 
     public static AuctionTestDataBuilder anAuction() {
@@ -29,11 +26,9 @@ public class AuctionTestDataBuilder {
         return new AuctionTestDataBuilder();
     }
 
-    public AuctionTestDataBuilder withBid(final Player player, final Team team, final BigDecimal amount) {
+    public AuctionTestDataBuilder withPhase(final AuctionPhase phase) {
 
-        final Bid bid = new Bid(team, player, amount);
-
-        bids.add(bid);
+        phases.add(phase);
 
         return this;
     }
@@ -41,7 +36,10 @@ public class AuctionTestDataBuilder {
     public Auction build() {
 
         final Auction auction = new Auction();
-        auction.addBids(bids);
+
+        for (final AuctionPhase phase : phases) {
+            auction.addPhase(phase);
+        }
 
         return auction;
     }

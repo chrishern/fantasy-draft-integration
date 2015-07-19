@@ -11,9 +11,11 @@ import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
 import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
 import net.blackcat.fantasy.draft.integration.facade.dto.AuctionBidsDto;
 import net.blackcat.fantasy.draft.integration.model.Auction;
+import net.blackcat.fantasy.draft.integration.model.AuctionPhase;
 import net.blackcat.fantasy.draft.integration.model.League;
 import net.blackcat.fantasy.draft.integration.model.Player;
 import net.blackcat.fantasy.draft.integration.model.Team;
+import net.blackcat.fantasy.draft.integration.testdata.AuctionPhaseTestDataBuilder;
 import net.blackcat.fantasy.draft.integration.testdata.AuctionTestDataBuilder;
 import net.blackcat.fantasy.draft.integration.testdata.LeagueTestDataBuilder;
 import net.blackcat.fantasy.draft.integration.testdata.PlayerTestDataBuilder;
@@ -86,9 +88,13 @@ public class AuctionFacadeTest {
                 .withBid(TestDataConstants.PLAYER_TWO_ID, player2BidAmount)
                 .build();
         
+        final AuctionPhase auctionPhase = AuctionPhaseTestDataBuilder.anOpenAuctionPhase().build();
+
+        final Auction auction = AuctionTestDataBuilder.anAuction().withPhase(auctionPhase).build();
+        
         final League league = LeagueTestDataBuilder
                 .aLeague()
-                .withAuction()
+                .withAuction(auction)
                 .build();
         
         final Team team = new Team(TestDataConstants.TEAM_ONE_NAME);
@@ -97,9 +103,13 @@ public class AuctionFacadeTest {
         final Player player1 = PlayerTestDataBuilder.aPlayer().withId(TestDataConstants.PLAYER_ONE_ID).build();
         final Player player2 = PlayerTestDataBuilder.aPlayer().withId(TestDataConstants.PLAYER_TWO_ID).build();
         
-        final Auction expectedAuction = AuctionTestDataBuilder.anAuction()
+        final AuctionPhase expectedAuctionPhase = AuctionPhaseTestDataBuilder.anOpenAuctionPhase()
                 .withBid(player1, team, player1BidAmount)
                 .withBid(player2, team, player2BidAmount)
+                .build();
+        
+        final Auction expectedAuction = AuctionTestDataBuilder.anAuction()
+                .withPhase(expectedAuctionPhase)
                 .build();
 
         final League expectedLeague = LeagueTestDataBuilder
@@ -112,6 +122,7 @@ public class AuctionFacadeTest {
         when(teamDataService.getTeam(TestDataConstants.TEAM_ONE_ID)).thenReturn(team);
         when(playerDataService.getPlayer(TestDataConstants.PLAYER_ONE_ID)).thenReturn(player1);
         when(playerDataService.getPlayer(TestDataConstants.PLAYER_TWO_ID)).thenReturn(player2);
+        when(leagueDataService.getOpenAuctionPhase(league)).thenReturn(auctionPhase);
 
         // act
         auctionFacade.makeBids(auctionBidsDto);

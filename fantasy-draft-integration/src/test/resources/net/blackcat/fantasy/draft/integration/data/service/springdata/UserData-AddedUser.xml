@@ -6,6 +6,8 @@
 	<Team />
 	<League />
 	<Auction />
-	<Auction_Bid />
+	<AuctionPhase />
+	<Auction_AuctionPhase />
+	<AuctionPhase_Bid />
 	<Bid />
 </dataset>
