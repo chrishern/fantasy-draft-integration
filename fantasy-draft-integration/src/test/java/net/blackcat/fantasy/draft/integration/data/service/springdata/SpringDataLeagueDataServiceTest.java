@@ -42,7 +42,7 @@ import com.github.springtestdbunit.annotation.ExpectedDatabase;
 @ContextConfiguration(value = { "/hsqlDatasourceContext.xml", "/testApplicationContext.xml" })
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class, DbUnitTestExecutionListener.class })
-@DatabaseSetup("LeagueData-withOpenAuctionPhase.xml")
+@DatabaseSetup("LeagueData.xml")
 public class SpringDataLeagueDataServiceTest {
 
     @Rule
@@ -89,7 +89,7 @@ public class SpringDataLeagueDataServiceTest {
     @ExpectedDatabase("LeagueData-AddedLeague.xml")
     public void testAddLeague() {
         // arrange
-        final League newLeague = new League(TestDataConstants.LEAGUE_TWO_NAME);
+        final League newLeague = new League(TestDataConstants.LEAGUE_THREE_NAME);
 
         // act
         leagueDataService.addLeague(newLeague);

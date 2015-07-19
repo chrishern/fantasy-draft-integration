@@ -4,12 +4,18 @@
 	<User />
 	<Team />
 	<Auction id="1" status="OPEN"/>
+	<Auction id="2" status="OPEN"/>
 	<AuctionPhase id="1" status="CLOSED"/>
 	<AuctionPhase id="2" status="OPEN"/>
+	<AuctionPhase id="3" status="CLOSED"/>
+	<AuctionPhase id="4" status="CLOSED"/>
 	<Auction_AuctionPhase auction_id="1" phases_id="1"/>
 	<Auction_AuctionPhase auction_id="1" phases_id="2"/>
+	<Auction_AuctionPhase auction_id="2" phases_id="3"/>
+	<Auction_AuctionPhase auction_id="2" phases_id="4"/>
 	<League id="1" name="League One" auction_id="1" />
-	<League id="2" name="League Two" auction_id="" />
+	<League id="2" name="League Two" auction_id="2" />
+	<League id="3" name="League Three" auction_id="" />
 	<Bid />
 	<AuctionPhase_Bid/>
 </dataset>
