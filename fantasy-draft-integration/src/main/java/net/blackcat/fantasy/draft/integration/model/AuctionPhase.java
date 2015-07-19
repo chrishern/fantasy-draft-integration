@@ -48,6 +48,15 @@ public class AuctionPhase implements Serializable {
     }
 
     /**
+     * Return true if this auction phase is open.
+     * 
+     * @return True if this auction phase is open, false if not.
+     */
+    public boolean isOpen() {
+        return status == AuctionPhaseStatus.OPEN;
+    }
+
+    /**
      * Add a set of new bids to this auction phase.
      * 
      * @param newBids
@@ -56,6 +65,14 @@ public class AuctionPhase implements Serializable {
     public void addBids(final List<Bid> newBids) {
 
         bids.addAll(newBids);
+    }
+
+    /**
+     * @param status
+     *            the status to set
+     */
+    public void setStatus(AuctionPhaseStatus status) {
+        this.status = status;
     }
 
     /**

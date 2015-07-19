@@ -54,6 +54,14 @@ public class Auction implements Serializable {
     }
 
     /**
+     * @param status
+     *            the status to set
+     */
+    public void setStatus(AuctionStatus status) {
+        this.status = status;
+    }
+
+    /**
      * @return the id
      */
     public int getId() {

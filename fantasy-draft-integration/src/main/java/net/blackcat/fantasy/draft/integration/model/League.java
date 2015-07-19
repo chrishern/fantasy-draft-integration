@@ -16,6 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import net.blackcat.fantasy.draft.integration.model.types.auction.AuctionStatus;
+
 /**
  * Model object representing a league within the draft game.
  * 
@@ -52,6 +54,16 @@ public class League implements Serializable {
 
         this.name = name;
         this.teams = new ArrayList<Team>();
+    }
+
+    /**
+     * Determine is this league has an open auction or not.
+     * 
+     * @return True if this league has an open auction, false if it doesn't have an auction or that auction is closed.
+     */
+    public boolean hasOpenAuction() {
+
+        return auction != null && auction.getStatus() == AuctionStatus.OPEN;
     }
 
     /**

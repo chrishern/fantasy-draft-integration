@@ -60,7 +60,16 @@ public class SpringDataLeagueDataService implements LeagueDataService {
 
     @Override
     public AuctionPhase getOpenAuctionPhase(final League league) throws FantasyDraftIntegrationException {
-        // TODO Auto-generated method stub
-        return null;
+
+        if (league.hasOpenAuction()) {
+            for (final AuctionPhase phase : league.getAuction().getPhases()) {
+
+                if (phase.isOpen()) {
+                    return phase;
+                }
+            }
+        }
+
+        throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.OPEN_AUCTION_PHASE_NOT_FOUND);
     }
 }

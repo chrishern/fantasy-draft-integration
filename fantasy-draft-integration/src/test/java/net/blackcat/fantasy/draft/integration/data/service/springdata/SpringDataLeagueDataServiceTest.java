@@ -9,7 +9,9 @@ import static org.mockito.Mockito.when;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.model.Auction;
+import net.blackcat.fantasy.draft.integration.model.AuctionPhase;
 import net.blackcat.fantasy.draft.integration.model.League;
+import net.blackcat.fantasy.draft.integration.model.types.auction.AuctionPhaseStatus;
 import net.blackcat.fantasy.draft.integration.repository.LeagueRepository;
 import net.blackcat.fantasy.draft.integration.test.util.CustomIntegrationExceptionMatcher;
 import net.blackcat.fantasy.draft.integration.testdata.TestDataConstants;
@@ -27,6 +29,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -89,7 +92,7 @@ public class SpringDataLeagueDataServiceTest {
     @ExpectedDatabase("LeagueData-AddedLeague.xml")
     public void testAddLeague() {
         // arrange
-        final League newLeague = new League(TestDataConstants.LEAGUE_THREE_NAME);
+        final League newLeague = new League(TestDataConstants.LEAGUE_FOUR_NAME);
 
         // act
         leagueDataService.addLeague(newLeague);
@@ -114,7 +117,6 @@ public class SpringDataLeagueDataServiceTest {
     @Test
     public void testUpdateLeague_LeagueDoesNotExist() throws Exception {
         // arrange
-
         final League league = mock(League.class);
         final Auction auction = new Auction();
 
@@ -128,6 +130,52 @@ public class SpringDataLeagueDataServiceTest {
 
         // act
         leagueDataService.updateLeague(league);
+
+        // assert
+        Assert.fail("Exception expected");
+    }
+
+    @Test
+    @Transactional
+    public void testGetOpenAuctionPhase_Success() throws Exception {
+        // arrange
+        final League league = leagueDataService.getLeague(TestDataConstants.LEAGUE_ONE_ID);
+
+        // act
+        final AuctionPhase openAuctionPhase = leagueDataService.getOpenAuctionPhase(league);
+
+        // assert
+        assertThat(openAuctionPhase).isNotNull();
+        assertThat(openAuctionPhase.getStatus()).isEqualTo(AuctionPhaseStatus.OPEN);
+        assertThat(openAuctionPhase.getId()).isEqualTo(2);
+    }
+
+    @Test
+    @Transactional
+    public void testGetOpenAuctionPhase_NoOpenPhase() throws Exception {
+        // arrange
+        final League league = leagueDataService.getLeague(TestDataConstants.LEAGUE_TWO_ID);
+
+        thrownException.expect(FantasyDraftIntegrationException.class);
+        thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.OPEN_AUCTION_PHASE_NOT_FOUND));
+
+        // act
+        leagueDataService.getOpenAuctionPhase(league);
+
+        // assert
+        Assert.fail("Exception expected");
+    }
+
+    @Test
+    public void testGetOpenAuctionPhase_NoAuction() throws Exception {
+        // arrange
+        final League league = leagueDataService.getLeague(TestDataConstants.LEAGUE_THREE_ID);
+
+        thrownException.expect(FantasyDraftIntegrationException.class);
+        thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.OPEN_AUCTION_PHASE_NOT_FOUND));
+
+        // act
+        leagueDataService.getOpenAuctionPhase(league);
 
         // assert
         Assert.fail("Exception expected");
