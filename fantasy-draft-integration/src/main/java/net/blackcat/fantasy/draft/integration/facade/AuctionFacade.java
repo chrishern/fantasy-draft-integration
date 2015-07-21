@@ -4,8 +4,6 @@
 package net.blackcat.fantasy.draft.integration.facade;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +18,9 @@ import net.blackcat.fantasy.draft.integration.model.AuctionPhase;
 import net.blackcat.fantasy.draft.integration.model.Bid;
 import net.blackcat.fantasy.draft.integration.model.League;
 import net.blackcat.fantasy.draft.integration.model.Player;
+import net.blackcat.fantasy.draft.integration.model.SelectedPlayer;
 import net.blackcat.fantasy.draft.integration.model.Team;
+import net.blackcat.fantasy.draft.integration.service.AuctionPhaseResultsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,13 +39,16 @@ public class AuctionFacade {
     private LeagueDataService leagueDataService;
     private TeamDataService teamDataService;
     private PlayerDataService playerDataService;
+    private AuctionPhaseResultsService auctionPhaseResultsService;
 
     @Autowired
-    public AuctionFacade(final LeagueDataService leagueDataService, final TeamDataService teamDataService, final PlayerDataService playerDataService) {
+    public AuctionFacade(final LeagueDataService leagueDataService, final TeamDataService teamDataService, final PlayerDataService playerDataService,
+            final AuctionPhaseResultsService auctionPhaseResultsFacade) {
 
         this.leagueDataService = leagueDataService;
         this.teamDataService = teamDataService;
         this.playerDataService = playerDataService;
+        this.auctionPhaseResultsService = auctionPhaseResultsFacade;
     }
 
     /**
@@ -93,48 +96,30 @@ public class AuctionFacade {
         final AuctionPhase openAuctionPhase = leagueDataService.getOpenAuctionPhase(league);
 
         // Build up a map of PlayerId to List of Bids for that player
-        final Map<Integer, List<Bid>> playerBids = new HashMap<Integer, List<Bid>>();
+        final Map<Integer, List<Bid>> playerBids = auctionPhaseResultsService.buildUpPlayerBidList(openAuctionPhase);
 
-        for (final Bid bid : openAuctionPhase.getBids()) {
-            List<Bid> bidList = playerBids.get(bid.getPlayer().getId());
+        final Map<Integer, List<Bid>> playerBidsWithSuccessMarked = auctionPhaseResultsService.determineSuccessfulBids(playerBids);
 
-            if (bidList == null) {
-                bidList = new ArrayList<Bid>();
-            }
-
-            bidList.add(bid);
-            playerBids.put(bid.getPlayer().getId(), bidList);
-        }
-
-        // Work out the highest bidder for each player
-        for (final Integer playerId : playerBids.keySet()) {
-
-            final List<Bid> bids = playerBids.get(playerId);
-
-            if (bids.size() == 1) {
-                // If we only have one bid, we have a successful bid
-                final Bid successfulBid = bids.get(0);
-
-                successfulBid.markBidAsSuccessful();
-                successfulBid.getPlayer().markPlayerAsSelected();
-            } else {
-                Collections.sort(bids);
-
-                if (bids.get(0).hasMatchingAmount(bids.get(1))) {
-                    // We have matching bids
-                } else {
-                    final Bid successfulBid = bids.get(0);
-
-                    successfulBid.markBidAsSuccessful();
-                    successfulBid.getPlayer().markPlayerAsSelected();
-                }
-            }
-        }
+        final Map<Team, List<Bid>> successfulTeamBids = auctionPhaseResultsService.getSuccessfulTeamBids(playerBidsWithSuccessMarked);
 
         // Move each 'won' player to their Team as a SelectedPlayer
-        // Also set the selection status of each Player to show they are picked and update the player
+        for (final Team team : successfulTeamBids.keySet()) {
+
+            for (final Bid bid : successfulTeamBids.get(team)) {
+                final Player playerBought = bid.getPlayer();
+                final SelectedPlayer selectedPlayer = new SelectedPlayer(playerBought, bid.getAmount(), playerBought.getCurrentPrice());
+
+                team.addSelectedPlayer(selectedPlayer);
+            }
+
+            // TODO write update team method
+        }
+
+        // Also set the selection status of each Player to show they are picked and update the player - do we need to do
+        // this?? I didn't last time
 
         // Update the league
+        leagueDataService.updateLeague(league);
     }
 
     /**

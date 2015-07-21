@@ -18,15 +18,24 @@ import net.blackcat.fantasy.draft.integration.model.Team;
 public class BidTestDataBuilder {
 
     private static final BigDecimal DEFAULT_AMOUNT = new BigDecimal("5.0");
+    private static final String DEFAULT_TEAM_NAME = TestDataConstants.TEAM_ONE_NAME;
 
     private BigDecimal amount;
+    private String teamName;
+    private boolean isSuccessful;
 
-    private BidTestDataBuilder() {
-        amount = DEFAULT_AMOUNT;
+    private BidTestDataBuilder(final boolean isSuccessful) {
+        this.amount = DEFAULT_AMOUNT;
+        this.teamName = DEFAULT_TEAM_NAME;
+        this.isSuccessful = isSuccessful;
     }
 
     public static BidTestDataBuilder aBid() {
-        return new BidTestDataBuilder();
+        return new BidTestDataBuilder(false);
+    }
+
+    public static BidTestDataBuilder aSuccessfulBid() {
+        return new BidTestDataBuilder(true);
     }
 
     public BidTestDataBuilder withAmount(final BigDecimal amount) {
@@ -35,11 +44,23 @@ public class BidTestDataBuilder {
         return this;
     }
 
+    public BidTestDataBuilder withTeam(final String teamName) {
+        this.teamName = teamName;
+
+        return this;
+    }
+
     public Bid build() {
 
-        final Team team = new Team(TestDataConstants.TEAM_ONE_NAME);
+        final Team team = new Team(teamName);
         final Player player = PlayerTestDataBuilder.aPlayer().build();
 
-        return new Bid(team, player, amount);
+        final Bid bid = new Bid(team, player, amount);
+
+        if (isSuccessful) {
+            bid.markBidAsSuccessful();
+        }
+
+        return bid;
     }
 }

@@ -12,6 +12,7 @@ package net.blackcat.fantasy.draft.integration.testdata;
 public class TestDataConstants {
 
     public final static String TEAM_ONE_NAME = "Team One";
+    public final static String TEAM_TWO_NAME = "Team Two";
     public final static int TEAM_ONE_ID = 1;
     public final static int TEAM_TWO_ID = 2;
 
@@ -25,5 +26,6 @@ public class TestDataConstants {
 
     public final static int PLAYER_ONE_ID = 1;
     public final static int PLAYER_TWO_ID = 2;
+    public final static int PLAYER_THREE_ID = 3;
 
 }

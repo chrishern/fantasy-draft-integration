@@ -5,7 +5,11 @@ package net.blackcat.fantasy.draft.integration.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,6 +19,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import net.blackcat.fantasy.draft.integration.model.types.team.TeamStatus;
 
@@ -56,6 +61,9 @@ public class Team implements Serializable {
     @JoinColumn(name = "league", referencedColumnName = "id")
     private League league;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<SelectedPlayer> selectedPlayers;
+
     /*
      * Only used for Hibernate database mapping.
      */
@@ -70,6 +78,17 @@ public class Team implements Serializable {
         this.totalScore = 0;
         this.status = TeamStatus.INCOMPLETE;
         this.remainingBudget = STARTING_BUDGET;
+        this.selectedPlayers = new ArrayList<SelectedPlayer>();
+    }
+
+    /**
+     * Add a new selected player to this team.
+     * 
+     * @param selectedPlayer
+     *            Selected player to add to this team.
+     */
+    public void addSelectedPlayer(final SelectedPlayer selectedPlayer) {
+        this.selectedPlayers.add(selectedPlayer);
     }
 
     /**
@@ -141,5 +160,29 @@ public class Team implements Serializable {
      */
     public League getLeague() {
         return league;
+    }
+
+    /**
+     * @return the selectedPlayers
+     */
+    public List<SelectedPlayer> getSelectedPlayers() {
+        return selectedPlayers;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
+    }
+
+    @Override
+    public boolean equals(final Object objectToCompare) {
+
+        if (objectToCompare instanceof Team) {
+            final Team teamToCompare = (Team) objectToCompare;
+
+            return Objects.equals(this.name, teamToCompare.name);
+        }
+
+        return false;
     }
 }
