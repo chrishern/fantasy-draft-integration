@@ -82,6 +82,16 @@ public class Team implements Serializable {
     }
 
     /**
+     * Add to the total score this team has.
+     * 
+     * @param amountToAdd
+     *            Amount to add to the total score.
+     */
+    public void addToTotalScore(final int amountToAdd) {
+        this.totalScore += amountToAdd;
+    }
+
+    /**
      * Add a new selected player to this team.
      * 
      * @param selectedPlayer

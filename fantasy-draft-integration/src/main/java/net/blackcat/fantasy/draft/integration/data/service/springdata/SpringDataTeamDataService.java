@@ -41,4 +41,14 @@ public class SpringDataTeamDataService implements TeamDataService {
         return team;
     }
 
+    @Override
+    public void updateTeam(final Team updatedTeam) throws FantasyDraftIntegrationException {
+
+        if (repository.exists(updatedTeam.getId())) {
+            repository.save(updatedTeam);
+        } else {
+            throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.TEAM_NOT_FOUND);
+        }
+    }
+
 }

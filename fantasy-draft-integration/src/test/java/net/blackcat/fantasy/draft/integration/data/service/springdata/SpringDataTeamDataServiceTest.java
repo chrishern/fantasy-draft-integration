@@ -4,6 +4,8 @@
 package net.blackcat.fantasy.draft.integration.data.service.springdata;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.model.Team;
@@ -11,7 +13,6 @@ import net.blackcat.fantasy.draft.integration.repository.TeamRepository;
 import net.blackcat.fantasy.draft.integration.test.util.CustomIntegrationExceptionMatcher;
 import net.blackcat.fantasy.draft.integration.testdata.TestDataConstants;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -19,8 +20,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -42,7 +41,6 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class, DbUnitTestExecutionListener.class })
 @DatabaseSetup("TeamData.xml")
-@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class SpringDataTeamDataServiceTest {
 
     @Rule
@@ -57,12 +55,6 @@ public class SpringDataTeamDataServiceTest {
     public void setup() {
 
         dataService = new SpringDataTeamDataService(repository);
-    }
-
-    @After
-    public void tearDown() {
-
-        repository.deleteAll();
     }
 
     @Test
@@ -85,6 +77,38 @@ public class SpringDataTeamDataServiceTest {
 
         // act
         dataService.getTeam(3);
+
+        // assert
+        Assert.fail("Exception expected");
+    }
+
+    @Test
+    public void testUpdateTeam_Success() throws Exception {
+        // arrange
+        final Team team = dataService.getTeam(TestDataConstants.TEAM_TWO_ID);
+        team.addToTotalScore(10);
+
+        // act
+        dataService.updateTeam(team);
+
+        // assert
+        final Team updatedTeam = dataService.getTeam(TestDataConstants.TEAM_TWO_ID);
+
+        assertThat(updatedTeam.getTotalScore()).isEqualTo(10);
+    }
+
+    @Test
+    public void testUpdateTeam_NotFound() throws Exception {
+        // arrange
+        thrownException.expect(FantasyDraftIntegrationException.class);
+        thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.TEAM_NOT_FOUND));
+
+        final Team team = mock(Team.class);
+
+        when(team.getId()).thenReturn(3);
+
+        // act
+        dataService.updateTeam(team);
 
         // assert
         Assert.fail("Exception expected");

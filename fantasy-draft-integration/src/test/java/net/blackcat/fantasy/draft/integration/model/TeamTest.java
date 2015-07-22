@@ -61,4 +61,19 @@ public class TeamTest {
         // assert
         assertThat(team.getSelectedPlayers()).contains(selectedPlayer);
     }
+
+    @Test
+    public void testAddToTotalScore() {
+        // arrange
+        final Team team = new Team(TestDataConstants.TEAM_ONE_NAME);
+        final int startingScore = team.getTotalScore();
+        final int amountToAdd = 15;
+        final int expectedTotalScore = startingScore + amountToAdd;
+
+        // act
+        team.addToTotalScore(amountToAdd);
+
+        // assert
+        assertThat(team.getTotalScore()).isEqualTo(expectedTotalScore);
+    }
 }

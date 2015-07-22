@@ -24,4 +24,12 @@ public interface TeamDataService {
      *             If a {@link Team} with the given ID does not exist.
      */
     Team getTeam(int teamId) throws FantasyDraftIntegrationException;
+
+    /**
+     * Update the given {@link Team} in the backend.
+     * 
+     * @param updatedTeam
+     *            {@link Team} to update with updated data.
+     */
+    void updateTeam(Team updatedTeam) throws FantasyDraftIntegrationException;
 }
