@@ -7,7 +7,9 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import java.math.BigDecimal;
 
-import net.blackcat.fantasy.draft.integration.testdata.PlayerTestDataBuilder;
+import net.blackcat.fantasy.draft.integration.model.types.team.TeamStatus;
+import net.blackcat.fantasy.draft.integration.testdata.BidTestDataBuilder;
+import net.blackcat.fantasy.draft.integration.testdata.TeamTestDataBuilder;
 import net.blackcat.fantasy.draft.integration.testdata.TestDataConstants;
 
 import org.junit.Test;
@@ -49,20 +51,6 @@ public class TeamTest {
     }
 
     @Test
-    public void testAddPlayer() {
-        // arrange
-        final Player player = PlayerTestDataBuilder.aPlayer().build();
-        final SelectedPlayer selectedPlayer = new SelectedPlayer(player, ONE_MILLION, ONE_MILLION);
-        final Team team = new Team(TestDataConstants.TEAM_ONE_NAME);
-
-        // act
-        team.addSelectedPlayer(selectedPlayer);
-
-        // assert
-        assertThat(team.getSelectedPlayers()).contains(selectedPlayer);
-    }
-
-    @Test
     public void testAddToTotalScore() {
         // arrange
         final Team team = new Team(TestDataConstants.TEAM_ONE_NAME);
@@ -75,5 +63,40 @@ public class TeamTest {
 
         // assert
         assertThat(team.getTotalScore()).isEqualTo(expectedTotalScore);
+    }
+
+    @Test
+    public void testProcessSuccessfulBid_DoesNotResultInCompleteSquad() {
+        // arrange
+        final Team team = new Team(TestDataConstants.TEAM_ONE_NAME);
+        final BigDecimal startingBudget = team.getRemainingBudget();
+        final BigDecimal bidAmount = new BigDecimal("15");
+        final BigDecimal expectedRemainingBudget = startingBudget.subtract(bidAmount);
+
+        final Bid bid = BidTestDataBuilder.aSuccessfulBid().withAmount(bidAmount).build();
+
+        final Player playerBiddedFor = bid.getPlayer();
+
+        // act
+        team.processSuccessfulBid(bid);
+
+        // assert
+        assertThat(team.getRemainingBudget()).isEqualTo(expectedRemainingBudget);
+        assertThat(team.getSelectedPlayers()).hasSize(1);
+        assertThat(team.getSelectedPlayers().get(0).getPlayer()).isEqualTo(playerBiddedFor);
+        assertThat(team.getStatus()).isEqualTo(TeamStatus.INCOMPLETE);
+    }
+
+    @Test
+    public void testProcessSuccessfulBid_ResultsInCompleteSquad() {
+        // arrange
+        final Team team = TeamTestDataBuilder.aTeam().withSquadSize(15).build();
+        final Bid bid = BidTestDataBuilder.aSuccessfulBid().build();
+
+        // act
+        team.processSuccessfulBid(bid);
+
+        // assert
+        assertThat(team.getStatus()).isEqualTo(TeamStatus.COMPLETE);
     }
 }

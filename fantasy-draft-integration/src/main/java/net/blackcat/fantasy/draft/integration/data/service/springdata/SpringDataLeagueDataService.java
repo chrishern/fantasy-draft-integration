@@ -12,6 +12,7 @@ import net.blackcat.fantasy.draft.integration.repository.LeagueRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Spring Data implementation of the {@link LeagueDataService}.
@@ -59,6 +60,7 @@ public class SpringDataLeagueDataService implements LeagueDataService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AuctionPhase getOpenAuctionPhase(final League league) throws FantasyDraftIntegrationException {
 
         if (league.hasOpenAuction()) {

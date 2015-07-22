@@ -56,10 +56,34 @@ public class SelectedPlayer implements Serializable {
     @Column
     private BigDecimal currentSellToPotPrice;
 
+    /*
+     * Used only for Hibernate mapping
+     */
+    @SuppressWarnings("unused")
+    private SelectedPlayer() {
+
+    }
+
     public SelectedPlayer(final Player player, final BigDecimal cost, final BigDecimal fplCostAtPurchase) {
 
         this.player = player;
         this.cost = cost;
         this.fplCostAtPurchase = fplCostAtPurchase;
     }
+
+    /**
+     * @return the player
+     */
+    public Player getPlayer() {
+        return player;
+    }
+
+    /**
+     * @param player
+     *            the player to set
+     */
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
 }

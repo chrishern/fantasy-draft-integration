@@ -1,0 +1,50 @@
+package net.blackcat.fantasy.draft.integration.integrationtest;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+
+import net.blackcat.fantasy.draft.integration.facade.AuctionFacade;
+import net.blackcat.fantasy.draft.integration.facade.dto.AuctionBidsDto;
+import net.blackcat.fantasy.draft.integration.facade.dto.BidDto;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+/**
+ * Integration tests for the Fantasy Draft integration functionality.
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/integrationTestContext.xml" })
+public class FantasyDraftIntegrationTest {
+
+    @Autowired
+    private AuctionFacade auctionFacade;
+
+    @Test
+    public void testStartAuction() throws Exception {
+        auctionFacade.startAuction(1);
+    }
+
+    @Test
+    public void testMakeBids() throws Exception {
+        // Team 1 bids
+        final BidDto t1p1Bid = new BidDto(1, new BigDecimal("3"));
+        final BidDto t1p2Bid = new BidDto(2, new BigDecimal("1"));
+        final BidDto t1p3Bid = new BidDto(3, new BigDecimal("5"));
+
+        final AuctionBidsDto team1Bids = new AuctionBidsDto(1, Arrays.asList(t1p1Bid, t1p2Bid, t1p3Bid));
+
+        auctionFacade.makeBids(team1Bids);
+
+        // Team 2 bids
+        final BidDto t2p1Bid = new BidDto(1, new BigDecimal("3.1"));
+        final BidDto t2p2Bid = new BidDto(2, new BigDecimal("1"));
+
+        final AuctionBidsDto team2Bids = new AuctionBidsDto(2, Arrays.asList(t2p1Bid, t2p2Bid));
+
+        auctionFacade.makeBids(team2Bids);
+    }
+}

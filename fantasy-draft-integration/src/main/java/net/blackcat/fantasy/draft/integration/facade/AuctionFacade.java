@@ -18,7 +18,6 @@ import net.blackcat.fantasy.draft.integration.model.AuctionPhase;
 import net.blackcat.fantasy.draft.integration.model.Bid;
 import net.blackcat.fantasy.draft.integration.model.League;
 import net.blackcat.fantasy.draft.integration.model.Player;
-import net.blackcat.fantasy.draft.integration.model.SelectedPlayer;
 import net.blackcat.fantasy.draft.integration.model.Team;
 import net.blackcat.fantasy.draft.integration.service.AuctionPhaseResultsService;
 
@@ -77,6 +76,7 @@ public class AuctionFacade {
         // Get team associated with bids, league associated with team and open auction phase for league
         final Team team = teamDataService.getTeam(bids.getTeamId());
         final League league = team.getLeague();
+        league.getAuction().getPhases();
         final AuctionPhase openAuctionPhase = leagueDataService.getOpenAuctionPhase(league);
 
         // Convert dtos to domain bids
@@ -89,6 +89,13 @@ public class AuctionFacade {
         leagueDataService.updateLeague(league);
     }
 
+    /**
+     * Close an auction phase for a league. This involves calculating winning bids for players and transferring then to
+     * the teams with the winning bids.
+     * 
+     * @param leagueId
+     * @throws FantasyDraftIntegrationException
+     */
     public void closeAuctionPhase(final int leagueId) throws FantasyDraftIntegrationException {
 
         // Get league and open auction phase. - TODO combine into a single query
@@ -106,13 +113,10 @@ public class AuctionFacade {
         for (final Team team : successfulTeamBids.keySet()) {
 
             for (final Bid bid : successfulTeamBids.get(team)) {
-                final Player playerBought = bid.getPlayer();
-                final SelectedPlayer selectedPlayer = new SelectedPlayer(playerBought, bid.getAmount(), playerBought.getCurrentPrice());
-
-                team.addSelectedPlayer(selectedPlayer);
+                team.processSuccessfulBid(bid);
             }
 
-            // TODO write update team method
+            teamDataService.updateTeam(team);
         }
 
         // Also set the selection status of each Player to show they are picked and update the player - do we need to do

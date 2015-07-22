@@ -35,6 +35,7 @@ public class Team implements Serializable {
     private static final long serialVersionUID = -3734641391628154428L;
 
     private static final BigDecimal STARTING_BUDGET = new BigDecimal(100);
+    private static final int SQUAD_SIZE = 16;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -82,6 +83,22 @@ public class Team implements Serializable {
     }
 
     /**
+     * Process a successful player bid made by this team.
+     * 
+     * @param bid
+     *            The successful {@link Bid} made by this team.
+     */
+    public void processSuccessfulBid(final Bid bid) {
+
+        final Player playerBought = bid.getPlayer();
+        final SelectedPlayer selectedPlayer = new SelectedPlayer(playerBought, bid.getAmount(), playerBought.getCurrentPrice());
+
+        this.selectedPlayers.add(selectedPlayer);
+        reduceRemaningBudget(bid.getAmount());
+        updateTeamStatus();
+    }
+
+    /**
      * Add to the total score this team has.
      * 
      * @param amountToAdd
@@ -89,16 +106,6 @@ public class Team implements Serializable {
      */
     public void addToTotalScore(final int amountToAdd) {
         this.totalScore += amountToAdd;
-    }
-
-    /**
-     * Add a new selected player to this team.
-     * 
-     * @param selectedPlayer
-     *            Selected player to add to this team.
-     */
-    public void addSelectedPlayer(final SelectedPlayer selectedPlayer) {
-        this.selectedPlayers.add(selectedPlayer);
     }
 
     /**
@@ -195,4 +202,24 @@ public class Team implements Serializable {
 
         return false;
     }
+
+    /*
+     * Reduce the remaining budget this team has.
+     */
+    private void reduceRemaningBudget(final BigDecimal amountToReduce) {
+        final BigDecimal newBudget = this.remainingBudget.subtract(amountToReduce);
+
+        this.remainingBudget = newBudget;
+    }
+
+    /*
+     * Update the selection status of this team.
+     */
+    private void updateTeamStatus() {
+
+        if (this.selectedPlayers.size() == SQUAD_SIZE) {
+            this.status = TeamStatus.COMPLETE;
+        }
+    }
+
 }
