@@ -26,6 +26,16 @@ public class AuctionTestDataBuilder {
         return new AuctionTestDataBuilder();
     }
 
+    public static AuctionTestDataBuilder anAuctionWithOpenPhase() {
+
+        final AuctionTestDataBuilder builder = new AuctionTestDataBuilder();
+        final AuctionPhase openAuctionPhase = AuctionPhaseTestDataBuilder.anOpenAuctionPhase().build();
+
+        builder.phases.add(openAuctionPhase);
+
+        return builder;
+    }
+
     public AuctionTestDataBuilder withPhase(final AuctionPhase phase) {
 
         phases.add(phase);

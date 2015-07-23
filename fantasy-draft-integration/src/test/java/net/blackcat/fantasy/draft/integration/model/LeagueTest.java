@@ -82,4 +82,18 @@ public class LeagueTest {
         // assert
         assertThat(league.getAuction().getStatus()).isEqualTo(AuctionStatus.CLOSED);
     }
+
+    @Test
+    public void testOpenAuctionPhase() {
+        // arrange
+        final League league = LeagueTestDataBuilder.aLeague().withAuction().build();
+        final int expectedNumberOfOpenAuctionPhases = league.getAuction().getPhases().size() + 1;
+
+        // act
+        league.openAuctionPhase();
+
+        // assert
+        final int actualNumberOfOpenAuctionPhases = league.getAuction().getPhases().size();
+        assertThat(actualNumberOfOpenAuctionPhases).isEqualTo(expectedNumberOfOpenAuctionPhases);
+    }
 }

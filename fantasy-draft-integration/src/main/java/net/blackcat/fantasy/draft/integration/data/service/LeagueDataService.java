@@ -45,6 +45,15 @@ public interface LeagueDataService {
     void updateLeague(League league) throws FantasyDraftIntegrationException;
 
     /**
+     * Determine if an open auction phase exists for a given {@link League}.
+     * 
+     * @param league
+     *            League to get the check the open auction phase for.
+     * @return True if an open auction phase exists. False otherwise.
+     */
+    boolean doesOpenAuctionPhaseExist(League league);
+
+    /**
      * Get the currently open auction phase for a given {@link League}.
      * 
      * @param league

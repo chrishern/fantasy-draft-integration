@@ -19,6 +19,7 @@ import net.blackcat.fantasy.draft.integration.model.Bid;
 import net.blackcat.fantasy.draft.integration.model.League;
 import net.blackcat.fantasy.draft.integration.model.Player;
 import net.blackcat.fantasy.draft.integration.model.Team;
+import net.blackcat.fantasy.draft.integration.model.types.auction.AuctionPhaseStatus;
 import net.blackcat.fantasy.draft.integration.service.AuctionPhaseResultsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +77,6 @@ public class AuctionFacade {
         // Get team associated with bids, league associated with team and open auction phase for league
         final Team team = teamDataService.getTeam(bids.getTeamId());
         final League league = team.getLeague();
-        league.getAuction().getPhases();
         final AuctionPhase openAuctionPhase = leagueDataService.getOpenAuctionPhase(league);
 
         // Convert dtos to domain bids
@@ -98,7 +98,7 @@ public class AuctionFacade {
      */
     public void closeAuctionPhase(final int leagueId) throws FantasyDraftIntegrationException {
 
-        // Get league and open auction phase. - TODO combine into a single query
+        // Get league and open auction phase
         final League league = leagueDataService.getLeague(leagueId);
         final AuctionPhase openAuctionPhase = leagueDataService.getOpenAuctionPhase(league);
 
@@ -115,15 +115,29 @@ public class AuctionFacade {
             for (final Bid bid : successfulTeamBids.get(team)) {
                 team.processSuccessfulBid(bid);
             }
-
-            teamDataService.updateTeam(team);
         }
 
-        // Also set the selection status of each Player to show they are picked and update the player - do we need to do
-        // this?? I didn't last time
-
         // Update the league
+        openAuctionPhase.setStatus(AuctionPhaseStatus.CLOSED);
         leagueDataService.updateLeague(league);
+    }
+
+    /**
+     * Opens a new auction phase for a league.
+     * 
+     * @param leagueId
+     *            League ID of the league to open the auction phase for.
+     * @throws FantasyDraftIntegrationException
+     */
+    public void openAuctionPhase(final int leagueId) throws FantasyDraftIntegrationException {
+
+        final League league = leagueDataService.getLeague(leagueId);
+
+        if (league.hasOpenAuction()) {
+            openAuctionPhaseForLeagueWithOpenAuction(league);
+        } else {
+            throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.OPEN_AUCTION_NOT_FOUND);
+        }
     }
 
     /**
@@ -137,10 +151,35 @@ public class AuctionFacade {
         final League league = leagueDataService.getLeague(leagueId);
 
         if (league.hasOpenAuction()) {
-            league.closeAuction();
-            leagueDataService.updateLeague(league);
+            closeAuctionForLeagueWithOpenAuction(league);
         } else {
             throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.OPEN_AUCTION_NOT_FOUND);
+        }
+    }
+
+    /*
+     * Close an auction for a league which has an open auction.
+     */
+    private void closeAuctionForLeagueWithOpenAuction(final League league) throws FantasyDraftIntegrationException {
+
+        if (leagueDataService.doesOpenAuctionPhaseExist(league)) {
+            throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.OPEN_AUCTION_PHASE_EXISTS);
+        } else {
+            league.closeAuction();
+            leagueDataService.updateLeague(league);
+        }
+    }
+
+    /*
+     * Open an auction phase for a league which has an open auction.
+     */
+    private void openAuctionPhaseForLeagueWithOpenAuction(final League league) throws FantasyDraftIntegrationException {
+
+        if (leagueDataService.doesOpenAuctionPhaseExist(league)) {
+            throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.OPEN_AUCTION_PHASE_EXISTS);
+        } else {
+            league.openAuctionPhase();
+            leagueDataService.updateLeague(league);
         }
     }
 

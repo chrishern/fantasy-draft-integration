@@ -69,6 +69,7 @@ public class SelectedPlayer implements Serializable {
         this.player = player;
         this.cost = cost;
         this.fplCostAtPurchase = fplCostAtPurchase;
+        this.selectedStatus = SelectedPlayerStatus.STILL_SELECTED;
     }
 
     /**

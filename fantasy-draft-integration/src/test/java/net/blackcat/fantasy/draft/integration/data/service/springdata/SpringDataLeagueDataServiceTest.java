@@ -17,7 +17,6 @@ import net.blackcat.fantasy.draft.integration.testdata.TestDataConstants;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -29,7 +28,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -49,7 +47,6 @@ import com.github.springtestdbunit.annotation.ExpectedDatabase;
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class, DbUnitTestExecutionListener.class })
 @DatabaseSetup("LeagueData.xml")
-@Ignore
 public class SpringDataLeagueDataServiceTest {
 
     @Rule
@@ -139,7 +136,6 @@ public class SpringDataLeagueDataServiceTest {
     }
 
     @Test
-    @Transactional
     public void testGetOpenAuctionPhase_Success() throws Exception {
         // arrange
         final League league = leagueDataService.getLeague(TestDataConstants.LEAGUE_ONE_ID);
@@ -154,7 +150,6 @@ public class SpringDataLeagueDataServiceTest {
     }
 
     @Test
-    @Transactional
     public void testGetOpenAuctionPhase_NoOpenPhase() throws Exception {
         // arrange
         final League league = leagueDataService.getLeague(TestDataConstants.LEAGUE_TWO_ID);
@@ -182,5 +177,41 @@ public class SpringDataLeagueDataServiceTest {
 
         // assert
         Assert.fail("Exception expected");
+    }
+
+    @Test
+    public void testDoesOpenAuctionPhaseExist_True() throws Exception {
+        // arrange
+        final League league = leagueDataService.getLeague(TestDataConstants.LEAGUE_ONE_ID);
+
+        // act
+        final boolean doesOpenAuctionPhaseExist = leagueDataService.doesOpenAuctionPhaseExist(league);
+
+        // assert
+        assertThat(doesOpenAuctionPhaseExist).isTrue();
+    }
+
+    @Test
+    public void testDoesOpenAuctionPhaseExist_False_NoOpenPhase() throws Exception {
+        // arrange
+        final League league = leagueDataService.getLeague(TestDataConstants.LEAGUE_TWO_ID);
+
+        // act
+        final boolean doesOpenAuctionPhaseExist = leagueDataService.doesOpenAuctionPhaseExist(league);
+
+        // assert
+        assertThat(doesOpenAuctionPhaseExist).isFalse();
+    }
+
+    @Test
+    public void testDoesOpenAuctionPhaseExist_False_NoAuction() throws Exception {
+        // arrange
+        final League league = leagueDataService.getLeague(TestDataConstants.LEAGUE_THREE_ID);
+
+        // act
+        final boolean doesOpenAuctionPhaseExist = leagueDataService.doesOpenAuctionPhaseExist(league);
+
+        // assert
+        assertThat(doesOpenAuctionPhaseExist).isFalse();
     }
 }

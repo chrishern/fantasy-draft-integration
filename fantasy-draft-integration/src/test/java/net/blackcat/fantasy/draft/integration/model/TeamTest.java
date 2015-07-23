@@ -22,8 +22,6 @@ import org.junit.Test;
  */
 public class TeamTest {
 
-    private static final BigDecimal ONE_MILLION = new BigDecimal("1.0");
-
     @Test
     public void testEquals_True() {
         // arrange

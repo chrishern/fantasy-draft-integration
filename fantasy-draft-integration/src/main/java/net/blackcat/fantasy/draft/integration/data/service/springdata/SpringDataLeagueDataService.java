@@ -12,7 +12,6 @@ import net.blackcat.fantasy.draft.integration.repository.LeagueRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Spring Data implementation of the {@link LeagueDataService}.
@@ -60,18 +59,27 @@ public class SpringDataLeagueDataService implements LeagueDataService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public AuctionPhase getOpenAuctionPhase(final League league) throws FantasyDraftIntegrationException {
 
-        if (league.hasOpenAuction()) {
-            for (final AuctionPhase phase : league.getAuction().getPhases()) {
+        final Object[] queryResult = repository.getOpenAuctionPhase(league.getId());
 
-                if (phase.isOpen()) {
-                    return phase;
-                }
-            }
+        if (queryResult.length == 0) {
+            throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.OPEN_AUCTION_PHASE_NOT_FOUND);
         }
 
-        throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.OPEN_AUCTION_PHASE_NOT_FOUND);
+        final int phaseId = (int) queryResult[0];
+
+        return repository.getAuctionPhase(phaseId);
+    }
+
+    @Override
+    public boolean doesOpenAuctionPhaseExist(final League league) {
+
+        try {
+            getOpenAuctionPhase(league);
+            return true;
+        } catch (final FantasyDraftIntegrationException e) {
+            return false;
+        }
     }
 }

@@ -84,6 +84,15 @@ public class League implements Serializable {
     }
 
     /**
+     * Open a new auction phase for this league.
+     */
+    public void openAuctionPhase() {
+
+        final AuctionPhase auctionPhase = new AuctionPhase();
+        auction.addPhase(auctionPhase);
+    }
+
+    /**
      * Add a team to this league.
      * 
      * @param team

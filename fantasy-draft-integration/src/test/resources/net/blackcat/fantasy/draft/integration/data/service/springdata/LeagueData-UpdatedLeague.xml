@@ -18,4 +18,6 @@
 	<League id="3" name="League Three" />
 	<Bid />
 	<AuctionPhase_Bid/>
+	<SelectedPlayer/>
+	<Team_SelectedPlayer/>
 </dataset>

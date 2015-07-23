@@ -47,4 +47,19 @@ public class FantasyDraftIntegrationTest {
 
         auctionFacade.makeBids(team2Bids);
     }
+
+    @Test
+    public void testCloseAuctionPhase() throws Exception {
+        auctionFacade.closeAuctionPhase(1);
+    }
+
+    @Test
+    public void testOpenAuctionPhase() throws Exception {
+        auctionFacade.openAuctionPhase(1);
+    }
+
+    @Test
+    public void testCloseAuction() throws Exception {
+        auctionFacade.closeAuction(1);
+    }
 }
