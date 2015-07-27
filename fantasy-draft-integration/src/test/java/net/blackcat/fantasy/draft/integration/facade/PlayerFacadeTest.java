@@ -1,0 +1,94 @@
+/**
+ * 
+ */
+package net.blackcat.fantasy.draft.integration.facade;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
+import java.util.List;
+
+import net.blackcat.fantasy.draft.integration.converter.ConverterService;
+import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
+import net.blackcat.fantasy.draft.integration.facade.dto.PlayerDto;
+import net.blackcat.fantasy.draft.integration.model.Player;
+import net.blackcat.fantasy.draft.integration.model.types.player.PlayerSelectionStatus;
+import net.blackcat.fantasy.draft.integration.model.types.player.Position;
+import net.blackcat.fantasy.draft.integration.testdata.PlayerTestDataBuilder;
+import net.blackcat.fantasy.draft.integration.testdata.dto.PlayerDtoTestDataBuilder;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+/**
+ * Unit tests for {@link PlayerFacade}.
+ * 
+ * @author Chris Hern
+ * 
+ */
+@RunWith(MockitoJUnitRunner.class)
+public class PlayerFacadeTest {
+
+    @Captor
+    private ArgumentCaptor<List<Player>> playerListCaptor;
+
+    @Mock
+    private ConverterService converterService;
+
+    @Mock
+    private PlayerDataService playerDataService;
+
+    private PlayerFacade playerFacade;
+
+    private PlayerDto playerDto1;
+    private PlayerDto playerDto2;
+    private Player player1;
+    private Player player2;
+
+    @Before
+    public void setup() {
+        playerFacade = new PlayerFacade(playerDataService, converterService);
+
+        playerDto1 = PlayerDtoTestDataBuilder.aPlayer().build();
+        playerDto2 = PlayerDtoTestDataBuilder.aPlayer().build();
+        player1 = PlayerTestDataBuilder.aPlayer().build();
+        player2 = PlayerTestDataBuilder.aPlayer().build();
+    }
+
+    @Test
+    public void testAddPlayers() {
+        // arrange
+        when(converterService.convert(playerDto1, Player.class)).thenReturn(player1);
+        when(converterService.convert(playerDto2, Player.class)).thenReturn(player2);
+
+        // act
+        playerFacade.addPlayers(Arrays.asList(playerDto1, playerDto2));
+
+        // assert
+        verify(playerDataService).addPlayers(playerListCaptor.capture());
+
+        assertThat(playerListCaptor.getValue()).containsOnly(player1, player2);
+    }
+
+    @Test
+    public void testGetPlayers() {
+        // arrange
+        when(converterService.convert(player1, PlayerDto.class)).thenReturn(playerDto1);
+        when(converterService.convert(player2, PlayerDto.class)).thenReturn(playerDto2);
+
+        when(playerDataService.getPlayers(Position.DEFENDER, PlayerSelectionStatus.SELECTED)).thenReturn(Arrays.asList(player1, player2));
+
+        // act
+        final List<PlayerDto> actualPlayerDtos = playerFacade.getPlayers(Position.DEFENDER, PlayerSelectionStatus.SELECTED);
+
+        // assert
+        assertThat(actualPlayerDtos).containsOnly(playerDto1, playerDto2);
+    }
+}
