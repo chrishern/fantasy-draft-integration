@@ -8,9 +8,9 @@
 	
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://127.6.124.2:3306/rmm" />
-		<property name="username" value="rmm" />
-		<property name="password" value="rmm" />
+		<property name="url" value="jdbc:mysql://127.6.124.2:3306/fantasydraft" />
+		<property name="username" value="fd" />
+		<property name="password" value="fd" />
 	</bean>
 
 	<bean id="jpaProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
@@ -23,7 +23,7 @@
 	</bean>
 
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<property name="persistenceUnitName" value="testJpaData" />
+		<property name="persistenceUnitName" value="jpaData" />
 		<property name="dataSource" ref="dataSource" />
 		<property name="jpaProperties" ref="jpaProperties" />
 	</bean>
