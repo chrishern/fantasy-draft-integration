@@ -2,8 +2,10 @@
 <dataset>
 	<Player />
 	<User />
-	<Team id="2" name="Team Two" totalScore="0"/>
+	<Team id="2" name="Team Two" totalScore="0" manager="user@1.com"/>
 	<League />
 	<Auction />
 	<Bid />
+	<User emailAddress="user@1.com" />
+	<User emailAddress="user@2.com" />
 </dataset>

@@ -4,12 +4,14 @@
 package net.blackcat.fantasy.draft.integration.data.service.springdata;
 
 import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
+import net.blackcat.fantasy.draft.integration.data.specification.TeamSpecification;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.model.Team;
 import net.blackcat.fantasy.draft.integration.repository.TeamRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -49,6 +51,20 @@ public class SpringDataTeamDataService implements TeamDataService {
         } else {
             throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.TEAM_NOT_FOUND);
         }
+    }
+
+    @Override
+    public Team getTeamForManager(final String managerEmailAddress) throws FantasyDraftIntegrationException {
+
+        final Specification<Team> managerSpecification = TeamSpecification.managerIsEqualTo(managerEmailAddress);
+
+        final Team team = repository.findOne(managerSpecification);
+
+        if (team == null) {
+            throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.TEAM_NOT_FOUND);
+        }
+
+        return team;
     }
 
 }

@@ -28,4 +28,7 @@ public class TestDataConstants {
     public final static int PLAYER_TWO_ID = 2;
     public final static int PLAYER_THREE_ID = 3;
 
+    public final static String USER_ONE_EMAIL_ADDRESS = "user@1.com";
+    public final static String USER_TWO_EMAIL_ADDRESS = "user@2.com";
+
 }

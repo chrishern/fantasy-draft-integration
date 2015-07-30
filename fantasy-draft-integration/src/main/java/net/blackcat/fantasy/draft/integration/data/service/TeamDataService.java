@@ -25,6 +25,8 @@ public interface TeamDataService {
      */
     Team getTeam(int teamId) throws FantasyDraftIntegrationException;
 
+    Team getTeamForManager(String managerEmailAddress) throws FantasyDraftIntegrationException;
+
     /**
      * Update the given {@link Team} in the backend.
      * 

@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 
 import net.blackcat.fantasy.draft.integration.facade.AuctionFacade;
+import net.blackcat.fantasy.draft.integration.facade.TeamFacade;
 import net.blackcat.fantasy.draft.integration.facade.dto.AuctionBidsDto;
 import net.blackcat.fantasy.draft.integration.facade.dto.BidDto;
+import net.blackcat.fantasy.draft.integration.facade.dto.SquadDto;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +24,9 @@ public class FantasyDraftIntegrationTest {
 
     @Autowired
     private AuctionFacade auctionFacade;
+
+    @Autowired
+    private TeamFacade teamFacade;
 
     @Test
     public void testStartAuction() throws Exception {
@@ -51,6 +56,13 @@ public class FantasyDraftIntegrationTest {
     @Test
     public void testCloseAuctionPhase() throws Exception {
         auctionFacade.closeAuctionPhase(1);
+    }
+
+    @Test
+    public void testGetSquadDetails() throws Exception {
+        final SquadDto squadDetails = teamFacade.getSquadDetails("a@a.com");
+
+        System.out.println("Squad size: " + squadDetails.getCurrentPlayers().size());
     }
 
     @Test

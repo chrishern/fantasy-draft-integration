@@ -80,11 +80,52 @@ public class SelectedPlayer implements Serializable {
     }
 
     /**
-     * @param player
-     *            the player to set
+     * @return the id
      */
-    public void setPlayer(Player player) {
-        this.player = player;
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @return the pointsScored
+     */
+    public int getPointsScored() {
+        return pointsScored;
+    }
+
+    /**
+     * @return the selectedStatus
+     */
+    public SelectedPlayerStatus getSelectedStatus() {
+        return selectedStatus;
+    }
+
+    /**
+     * @return the cost
+     */
+    public BigDecimal getCost() {
+        return cost;
+    }
+
+    /**
+     * @return the startingTeamStatus
+     */
+    public StartingTeamStatus getStartingTeamStatus() {
+        return startingTeamStatus;
+    }
+
+    /**
+     * @return the fplCostAtPurchase
+     */
+    public BigDecimal getFplCostAtPurchase() {
+        return fplCostAtPurchase;
+    }
+
+    /**
+     * @return the currentSellToPotPrice
+     */
+    public BigDecimal getCurrentSellToPotPrice() {
+        return currentSellToPotPrice;
     }
 
 }

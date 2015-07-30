@@ -113,4 +113,29 @@ public class SpringDataTeamDataServiceTest {
         // assert
         Assert.fail("Exception expected");
     }
+
+    @Test
+    public void testGetTeamForManager_Success() throws Exception {
+        // arrange
+
+        // act
+        final Team team = dataService.getTeamForManager(TestDataConstants.USER_ONE_EMAIL_ADDRESS);
+
+        // assert
+        assertThat(team).isNotNull();
+        assertThat(team.getName()).isEqualTo(TestDataConstants.TEAM_TWO_NAME);
+    }
+
+    @Test
+    public void testGetTeamForManager_NotFound() throws Exception {
+        // arrange
+        thrownException.expect(FantasyDraftIntegrationException.class);
+        thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.TEAM_NOT_FOUND));
+
+        // act
+        dataService.getTeamForManager(TestDataConstants.USER_TWO_EMAIL_ADDRESS);
+
+        // assert
+        Assert.fail("Exception expected");
+    }
 }
