@@ -5,6 +5,7 @@ package net.blackcat.fantasy.draft.integration.converter.player;
 
 import net.blackcat.fantasy.draft.integration.facade.dto.PlayerDto;
 import net.blackcat.fantasy.draft.integration.model.Player;
+import net.blackcat.fantasy.draft.integration.model.PlayerStatistics;
 import net.blackcat.fantasy.draft.integration.testdata.dto.PlayerDtoTestDataBuilder;
 
 import org.junit.Test;
@@ -23,9 +24,13 @@ public class PlayerDtoToPlayerConverterTest {
     @Test
     public void testConvert() {
         // arrange
-        final PlayerDto dto = PlayerDtoTestDataBuilder.aPlayer().build();
+        final PlayerDto dto = PlayerDtoTestDataBuilder.aPlayer().withStatistics().build();
         final Player expectedPlayer =
                 new Player(dto.getId(), dto.getForename(), dto.getSurname(), dto.getTeam(), dto.getPosition(), dto.getCurrentPrice());
+        final PlayerStatistics statistics =
+                new PlayerStatistics(dto.getTotalPoints(), dto.getGoals(), dto.getAssists(), dto.getCleanSheets(), dto.getPointsPerGame());
+
+        expectedPlayer.withStatistics(statistics);
 
         // act
         final Player actualPlayer = converter.convert(dto);

@@ -52,6 +52,18 @@ public class Player implements Serializable {
     @Column
     private BigDecimal currentPrice;
 
+    @Column
+    private int goals;
+
+    @Column
+    private int assists;
+
+    @Column
+    private int cleanSheets;
+
+    @Column
+    private BigDecimal pointsPerGame;
+
     /*
      * Only for Hibernate database mapping
      */
@@ -69,6 +81,21 @@ public class Player implements Serializable {
         this.selectionStatus = PlayerSelectionStatus.NOT_SELECTED;
         this.totalPoints = 0;
         this.currentPrice = currentPrice;
+    }
+
+    /**
+     * Set the statistics for this player.
+     * 
+     * @param statistics
+     *            Statistics for this player.
+     */
+    public void withStatistics(final PlayerStatistics statistics) {
+
+        this.pointsPerGame = statistics.getPointsPerGame();
+        this.assists = statistics.getAssists();
+        this.goals = statistics.getGoals();
+        this.totalPoints = statistics.getTotalPoints();
+        this.cleanSheets = statistics.getCleanSheets();
     }
 
     /**
@@ -142,5 +169,33 @@ public class Player implements Serializable {
      */
     public BigDecimal getCurrentPrice() {
         return currentPrice;
+    }
+
+    /**
+     * @return the goals
+     */
+    public int getGoals() {
+        return goals;
+    }
+
+    /**
+     * @return the assists
+     */
+    public int getAssists() {
+        return assists;
+    }
+
+    /**
+     * @return the cleanSheets
+     */
+    public int getCleanSheets() {
+        return cleanSheets;
+    }
+
+    /**
+     * @return the pointsPerGame
+     */
+    public BigDecimal getPointsPerGame() {
+        return pointsPerGame;
     }
 }

@@ -3,12 +3,12 @@
  */
 package net.blackcat.fantasy.draft.integration.converter.player;
 
+import static org.fest.assertions.Assertions.assertThat;
 import net.blackcat.fantasy.draft.integration.facade.dto.PlayerDto;
 import net.blackcat.fantasy.draft.integration.model.Player;
 import net.blackcat.fantasy.draft.integration.testdata.PlayerTestDataBuilder;
 
 import org.junit.Test;
-import org.unitils.reflectionassert.ReflectionAssert;
 
 /**
  * Unit tests for {@link PlayerToPlayerDtoConverter}.
@@ -24,15 +24,12 @@ public class PlayerToPlayerDtoConverterTest {
     public void testConvert() {
         // arrange
         final Player player = PlayerTestDataBuilder.aPlayer().build();
-        final PlayerDto expectedPlayerDto =
-                new PlayerDto(player.getId(), player.getForename(), player.getSurname(), player.getTeam(), player.getPosition(),
-                        player.getCurrentPrice());
 
         // act
         final PlayerDto actualPlayerDto = converter.convert(player);
 
         // assert
-        ReflectionAssert.assertReflectionEquals(expectedPlayerDto, actualPlayerDto);
+        assertThat(actualPlayerDto.getAssists()).isEqualTo(player.getAssists());
+        assertThat(actualPlayerDto.getForename()).isEqualTo(player.getForename());
     }
-
 }

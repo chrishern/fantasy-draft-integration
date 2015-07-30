@@ -15,6 +15,8 @@ import net.blackcat.fantasy.draft.integration.model.types.player.Position;
 import net.blackcat.fantasy.draft.integration.model.types.player.SelectedPlayerStatus;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Facade over player operations.
@@ -22,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Chris Hern
  * 
  */
+@Component
+@Transactional
 public class PlayerFacade {
 
     private PlayerDataService playerDataService;

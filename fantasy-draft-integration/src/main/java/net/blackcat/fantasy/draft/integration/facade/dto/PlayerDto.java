@@ -27,16 +27,110 @@ public class PlayerDto implements Serializable {
     private PlayerSelectionStatus selectionStatus;
     private int totalPoints;
     private BigDecimal currentPrice;
+    private int goals;
+    private int assists;
+    private int cleanSheets;
+    private BigDecimal pointsPerGame;
 
-    public PlayerDto(final int id, final String forename, final String surname, final String team, final Position position,
-            final BigDecimal currentPrice) {
+    public PlayerDto(final int id) {
 
         this.id = id;
+    }
+
+    /**
+     * @param id
+     *            the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
+     * @param forename
+     *            the forename to set
+     */
+    public void setForename(String forename) {
         this.forename = forename;
+    }
+
+    /**
+     * @param surname
+     *            the surname to set
+     */
+    public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    /**
+     * @param team
+     *            the team to set
+     */
+    public void setTeam(String team) {
         this.team = team;
+    }
+
+    /**
+     * @param position
+     *            the position to set
+     */
+    public void setPosition(Position position) {
         this.position = position;
+    }
+
+    /**
+     * @param selectionStatus
+     *            the selectionStatus to set
+     */
+    public void setSelectionStatus(PlayerSelectionStatus selectionStatus) {
+        this.selectionStatus = selectionStatus;
+    }
+
+    /**
+     * @param totalPoints
+     *            the totalPoints to set
+     */
+    public void setTotalPoints(int totalPoints) {
+        this.totalPoints = totalPoints;
+    }
+
+    /**
+     * @param currentPrice
+     *            the currentPrice to set
+     */
+    public void setCurrentPrice(BigDecimal currentPrice) {
         this.currentPrice = currentPrice;
+    }
+
+    /**
+     * @param goals
+     *            the goals to set
+     */
+    public void setGoals(int goals) {
+        this.goals = goals;
+    }
+
+    /**
+     * @param assists
+     *            the assists to set
+     */
+    public void setAssists(int assists) {
+        this.assists = assists;
+    }
+
+    /**
+     * @param cleanSheets
+     *            the cleanSheets to set
+     */
+    public void setCleanSheets(int cleanSheets) {
+        this.cleanSheets = cleanSheets;
+    }
+
+    /**
+     * @param pointsPerGame
+     *            the pointsPerGame to set
+     */
+    public void setPointsPerGame(BigDecimal pointsPerGame) {
+        this.pointsPerGame = pointsPerGame;
     }
 
     /**
@@ -93,5 +187,33 @@ public class PlayerDto implements Serializable {
      */
     public BigDecimal getCurrentPrice() {
         return currentPrice;
+    }
+
+    /**
+     * @return the goals
+     */
+    public int getGoals() {
+        return goals;
+    }
+
+    /**
+     * @return the assists
+     */
+    public int getAssists() {
+        return assists;
+    }
+
+    /**
+     * @return the cleanSheets
+     */
+    public int getCleanSheets() {
+        return cleanSheets;
+    }
+
+    /**
+     * @return the pointsPerGame
+     */
+    public BigDecimal getPointsPerGame() {
+        return pointsPerGame;
     }
 }
