@@ -17,6 +17,7 @@ import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.facade.dto.AuctionBidsDto;
+import net.blackcat.fantasy.draft.integration.facade.dto.TeamAuctionStatusDto;
 import net.blackcat.fantasy.draft.integration.model.Auction;
 import net.blackcat.fantasy.draft.integration.model.AuctionPhase;
 import net.blackcat.fantasy.draft.integration.model.Bid;
@@ -51,6 +52,8 @@ import org.unitils.reflectionassert.ReflectionAssert;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class AuctionFacadeTest {
+
+    private static final BigDecimal REMAINING_BUDGET = new BigDecimal("5.5");
 
     @Rule
     public ExpectedException thrownException = ExpectedException.none();
@@ -286,5 +289,74 @@ public class AuctionFacadeTest {
 
         // assert
         Assert.fail("Exception expected");
+    }
+
+    @Test
+    public void testGetTeamAuctionStatus_OpenWindowWithBids() throws Exception {
+        // arrange
+        final Team team = mock(Team.class);
+        final League league = mock(League.class);
+        final AuctionPhase auctionPhase = mock(AuctionPhase.class);
+
+        when(teamDataService.getTeamForManager(TestDataConstants.USER_ONE_EMAIL_ADDRESS)).thenReturn(team);
+        when(team.getLeague()).thenReturn(league);
+        when(team.getName()).thenReturn(TestDataConstants.TEAM_ONE_NAME);
+        when(team.getRemainingBudget()).thenReturn(REMAINING_BUDGET);
+        when(league.hasOpenAuction()).thenReturn(true);
+        when(leagueDataService.getOpenAuctionPhase(league)).thenReturn(auctionPhase);
+        when(auctionPhase.hasTeamSubmittedBids(TestDataConstants.TEAM_ONE_NAME)).thenReturn(true);
+
+        // act
+        final TeamAuctionStatusDto teamAuctionStatus = auctionFacade.getTeamAuctionStatus(TestDataConstants.USER_ONE_EMAIL_ADDRESS);
+
+        // assert
+        assertThat(teamAuctionStatus.getRemainingBudget()).isEqualTo(REMAINING_BUDGET);
+        assertThat(teamAuctionStatus.isOpenTransferWindowForTeam()).isTrue();
+        assertThat(teamAuctionStatus.isBidsSubmittedInCurrentWindow()).isTrue();
+    }
+
+    @Test
+    public void testGetTeamAuctionStatus_OpenWindowWithoutBids() throws Exception {
+        // arrange
+        final Team team = mock(Team.class);
+        final League league = mock(League.class);
+        final AuctionPhase auctionPhase = mock(AuctionPhase.class);
+
+        when(teamDataService.getTeamForManager(TestDataConstants.USER_ONE_EMAIL_ADDRESS)).thenReturn(team);
+        when(team.getLeague()).thenReturn(league);
+        when(team.getName()).thenReturn(TestDataConstants.TEAM_ONE_NAME);
+        when(team.getRemainingBudget()).thenReturn(REMAINING_BUDGET);
+        when(league.hasOpenAuction()).thenReturn(true);
+        when(leagueDataService.getOpenAuctionPhase(league)).thenReturn(auctionPhase);
+        when(auctionPhase.hasTeamSubmittedBids(TestDataConstants.TEAM_ONE_NAME)).thenReturn(false);
+
+        // act
+        final TeamAuctionStatusDto teamAuctionStatus = auctionFacade.getTeamAuctionStatus(TestDataConstants.USER_ONE_EMAIL_ADDRESS);
+
+        // assert
+        assertThat(teamAuctionStatus.getRemainingBudget()).isEqualTo(REMAINING_BUDGET);
+        assertThat(teamAuctionStatus.isOpenTransferWindowForTeam()).isTrue();
+        assertThat(teamAuctionStatus.isBidsSubmittedInCurrentWindow()).isFalse();
+    }
+
+    @Test
+    public void testGetTeamAuctionStatus_NoOpenWindow() throws Exception {
+        // arrange
+        final Team team = mock(Team.class);
+        final League league = mock(League.class);
+
+        when(teamDataService.getTeamForManager(TestDataConstants.USER_ONE_EMAIL_ADDRESS)).thenReturn(team);
+        when(team.getLeague()).thenReturn(league);
+        when(team.getName()).thenReturn(TestDataConstants.TEAM_ONE_NAME);
+        when(team.getRemainingBudget()).thenReturn(REMAINING_BUDGET);
+        when(league.hasOpenAuction()).thenReturn(false);
+
+        // act
+        final TeamAuctionStatusDto teamAuctionStatus = auctionFacade.getTeamAuctionStatus(TestDataConstants.USER_ONE_EMAIL_ADDRESS);
+
+        // assert
+        assertThat(teamAuctionStatus.getRemainingBudget()).isEqualTo(REMAINING_BUDGET);
+        assertThat(teamAuctionStatus.isOpenTransferWindowForTeam()).isFalse();
+        assertThat(teamAuctionStatus.isBidsSubmittedInCurrentWindow()).isFalse();
     }
 }

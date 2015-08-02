@@ -14,6 +14,7 @@ import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationE
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.facade.dto.AuctionBidsDto;
 import net.blackcat.fantasy.draft.integration.facade.dto.BidDto;
+import net.blackcat.fantasy.draft.integration.facade.dto.TeamAuctionStatusDto;
 import net.blackcat.fantasy.draft.integration.model.AuctionPhase;
 import net.blackcat.fantasy.draft.integration.model.Bid;
 import net.blackcat.fantasy.draft.integration.model.League;
@@ -155,6 +156,34 @@ public class AuctionFacade {
         } else {
             throw new FantasyDraftIntegrationException(FantasyDraftIntegrationExceptionCode.OPEN_AUCTION_NOT_FOUND);
         }
+    }
+
+    /**
+     * Get the auction status of a team managed by a given manager.
+     * 
+     * @param managerEmailAddress
+     *            Email address of the manager to get the
+     * @return
+     * @throws FantasyDraftIntegrationException
+     */
+    public TeamAuctionStatusDto getTeamAuctionStatus(final String managerEmailAddress) throws FantasyDraftIntegrationException {
+
+        final Team team = teamDataService.getTeamForManager(managerEmailAddress);
+        final League league = team.getLeague();
+
+        final TeamAuctionStatusDto teamAuctionStatus = new TeamAuctionStatusDto(team.getRemainingBudget());
+
+        if (league.hasOpenAuction()) {
+            final AuctionPhase openAuctionPhase = leagueDataService.getOpenAuctionPhase(league);
+
+            teamAuctionStatus.withOpenTransferWindow();
+
+            if (openAuctionPhase.hasTeamSubmittedBids(team.getName())) {
+                teamAuctionStatus.withBidsSubmittedInCurrentWindow();
+            }
+        }
+
+        return teamAuctionStatus;
     }
 
     /*

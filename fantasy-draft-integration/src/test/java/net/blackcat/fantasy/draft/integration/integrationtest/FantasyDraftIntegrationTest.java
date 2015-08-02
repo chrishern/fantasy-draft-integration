@@ -1,5 +1,7 @@
 package net.blackcat.fantasy.draft.integration.integrationtest;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import java.math.BigDecimal;
 import java.util.Arrays;
 
@@ -8,6 +10,7 @@ import net.blackcat.fantasy.draft.integration.facade.TeamFacade;
 import net.blackcat.fantasy.draft.integration.facade.dto.AuctionBidsDto;
 import net.blackcat.fantasy.draft.integration.facade.dto.BidDto;
 import net.blackcat.fantasy.draft.integration.facade.dto.SquadDto;
+import net.blackcat.fantasy.draft.integration.facade.dto.TeamAuctionStatusDto;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,6 +54,15 @@ public class FantasyDraftIntegrationTest {
         final AuctionBidsDto team2Bids = new AuctionBidsDto(2, Arrays.asList(t2p1Bid, t2p2Bid));
 
         auctionFacade.makeBids(team2Bids);
+    }
+
+    @Test
+    public void testGetTeamAuctionStatus() throws Exception {
+        final TeamAuctionStatusDto teamAuctionStatus = auctionFacade.getTeamAuctionStatus("a@a.com");
+
+        assertThat(teamAuctionStatus.getRemainingBudget()).isNotNull();
+        assertThat(teamAuctionStatus.isBidsSubmittedInCurrentWindow()).isTrue();
+        assertThat(teamAuctionStatus.isOpenTransferWindowForTeam()).isTrue();
     }
 
     @Test

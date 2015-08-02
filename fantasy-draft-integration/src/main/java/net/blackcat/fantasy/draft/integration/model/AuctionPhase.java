@@ -57,6 +57,24 @@ public class AuctionPhase implements Serializable {
     }
 
     /**
+     * Return true if a team identified by the team name has submitted bids in the current transfer window.
+     * 
+     * @param teamName
+     *            Name of the team to check whether bids have been submitted or not.
+     * @return True if the team has submitted bids, false otherwise.
+     */
+    public boolean hasTeamSubmittedBids(final String teamName) {
+
+        for (final Bid bid : bids) {
+            if (bid.getTeam().getName().equals(teamName)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Add a set of new bids to this auction phase.
      * 
      * @param newBids
