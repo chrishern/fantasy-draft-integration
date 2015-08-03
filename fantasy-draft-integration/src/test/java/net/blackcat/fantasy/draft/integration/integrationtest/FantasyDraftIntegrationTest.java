@@ -4,10 +4,12 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
 
 import net.blackcat.fantasy.draft.integration.facade.AuctionFacade;
 import net.blackcat.fantasy.draft.integration.facade.TeamFacade;
 import net.blackcat.fantasy.draft.integration.facade.dto.AuctionBidsDto;
+import net.blackcat.fantasy.draft.integration.facade.dto.AuctionPhaseResultsDto;
 import net.blackcat.fantasy.draft.integration.facade.dto.BidDto;
 import net.blackcat.fantasy.draft.integration.facade.dto.SquadDto;
 import net.blackcat.fantasy.draft.integration.facade.dto.TeamAuctionStatusDto;
@@ -34,6 +36,11 @@ public class FantasyDraftIntegrationTest {
     @Test
     public void testStartAuction() throws Exception {
         auctionFacade.startAuction(1);
+    }
+
+    @Test
+    public void testOpenAuctionPhase() throws Exception {
+        auctionFacade.openAuctionPhase(1);
     }
 
     @Test
@@ -71,15 +78,17 @@ public class FantasyDraftIntegrationTest {
     }
 
     @Test
+    public void testGetLeagueAuctionPhaseResults() throws Exception {
+        final List<AuctionPhaseResultsDto> leagueAuctionPhaseResults = auctionFacade.getLeagueAuctionPhaseResults(1);
+
+        assertThat(leagueAuctionPhaseResults).hasSize(1);
+    }
+
+    @Test
     public void testGetSquadDetails() throws Exception {
         final SquadDto squadDetails = teamFacade.getSquadDetails("a@a.com");
 
         System.out.println("Squad size: " + squadDetails.getCurrentPlayers().size());
-    }
-
-    @Test
-    public void testOpenAuctionPhase() throws Exception {
-        auctionFacade.openAuctionPhase(1);
     }
 
     @Test

@@ -29,16 +29,16 @@ public class AuctionTest {
     }
 
     @Test
-    public void testAddBids() {
+    public void testCreateNewPhase() {
         // arrange
         final Auction auction = new Auction();
-        final AuctionPhase phase = new AuctionPhase();
 
         // act
-        auction.addPhase(phase);
+        auction.createNewPhase();
 
         // assert
-        assertThat(auction.getPhases()).contains(phase);
+        assertThat(auction.getPhases()).hasSize(2);
+        assertThat(auction.getPhases().get(1).getSequenceNumber()).isEqualTo(2);
     }
 
 }

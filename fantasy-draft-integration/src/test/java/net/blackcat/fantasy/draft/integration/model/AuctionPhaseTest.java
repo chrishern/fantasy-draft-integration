@@ -25,11 +25,12 @@ import org.junit.Test;
 public class AuctionPhaseTest {
 
     private static final String NON_EXISTING_TEAM_NAME = "Non existing team";
+    private static final int FIRST_AUCTION_PHASE = 1;
 
     @Test
     public void testAddBids() {
         // arrange
-        final AuctionPhase auctionPhase = new AuctionPhase();
+        final AuctionPhase auctionPhase = new AuctionPhase(FIRST_AUCTION_PHASE);
         final Bid bid = BidTestDataBuilder.aBid().build();
 
         // act
@@ -42,7 +43,7 @@ public class AuctionPhaseTest {
     @Test
     public void testIsOpen_True() {
         // arrange
-        final AuctionPhase auctionPhase = new AuctionPhase();
+        final AuctionPhase auctionPhase = new AuctionPhase(FIRST_AUCTION_PHASE);
 
         // act
         final boolean isOpen = auctionPhase.isOpen();
@@ -54,7 +55,7 @@ public class AuctionPhaseTest {
     @Test
     public void testIsOpen_False() {
         // arrange
-        final AuctionPhase auctionPhase = new AuctionPhase();
+        final AuctionPhase auctionPhase = new AuctionPhase(FIRST_AUCTION_PHASE);
         auctionPhase.setStatus(AuctionPhaseStatus.CLOSED);
 
         // act

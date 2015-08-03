@@ -10,4 +10,6 @@
 	<Auction_AuctionPhase />
 	<AuctionPhase_Bid />
 	<Bid />
+	<SelectedPlayer />
+	<Team_SelectedPlayer />
 </dataset>

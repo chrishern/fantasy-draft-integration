@@ -88,8 +88,7 @@ public class League implements Serializable {
      */
     public void openAuctionPhase() {
 
-        final AuctionPhase auctionPhase = new AuctionPhase();
-        auction.addPhase(auctionPhase);
+        auction.createNewPhase();
     }
 
     /**

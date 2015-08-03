@@ -21,6 +21,8 @@ public class Auction implements Serializable {
 
     private static final long serialVersionUID = -8773358797616427822L;
 
+    private static final int FIRST_AUCTION_PHASE = 1;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -34,7 +36,7 @@ public class Auction implements Serializable {
 
     public Auction() {
 
-        final AuctionPhase phase = new AuctionPhase();
+        final AuctionPhase phase = new AuctionPhase(FIRST_AUCTION_PHASE);
 
         phases = new ArrayList<AuctionPhase>();
         phases.add(phase);
@@ -43,12 +45,11 @@ public class Auction implements Serializable {
     }
 
     /**
-     * Add a set of new bids to this auction.
-     * 
-     * @param newPhase
-     *            New bids to add to the auction.
+     * Create a new phase of this auction.
      */
-    public void addPhase(final AuctionPhase newPhase) {
+    public void createNewPhase() {
+
+        final AuctionPhase newPhase = new AuctionPhase(phases.size() + 1);
 
         phases.add(newPhase);
     }

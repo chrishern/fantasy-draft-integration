@@ -13,6 +13,7 @@ public class TestDataConstants {
 
     public final static String TEAM_ONE_NAME = "Team One";
     public final static String TEAM_TWO_NAME = "Team Two";
+    public final static String TEAM_THREE_NAME = "Team Three";
     public final static int TEAM_ONE_ID = 1;
     public final static int TEAM_TWO_ID = 2;
 

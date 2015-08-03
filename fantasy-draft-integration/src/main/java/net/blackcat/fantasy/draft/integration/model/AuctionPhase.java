@@ -34,6 +34,9 @@ public class AuctionPhase implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @Column
+    private int sequenceNumber;
+
     @OneToMany(cascade = CascadeType.ALL)
     private List<Bid> bids;
 
@@ -41,10 +44,19 @@ public class AuctionPhase implements Serializable {
     @Enumerated(EnumType.STRING)
     private AuctionPhaseStatus status;
 
-    public AuctionPhase() {
+    /*
+     * Used only for Hibernate database mapping
+     */
+    @SuppressWarnings("unused")
+    private AuctionPhase() {
 
-        bids = new ArrayList<Bid>();
-        status = AuctionPhaseStatus.OPEN;
+    }
+
+    public AuctionPhase(final int sequenceNumber) {
+
+        this.sequenceNumber = sequenceNumber;
+        this.bids = new ArrayList<Bid>();
+        this.status = AuctionPhaseStatus.OPEN;
     }
 
     /**
@@ -112,5 +124,12 @@ public class AuctionPhase implements Serializable {
      */
     public AuctionPhaseStatus getStatus() {
         return status;
+    }
+
+    /**
+     * @return the sequenceNumber
+     */
+    public int getSequenceNumber() {
+        return sequenceNumber;
     }
 }

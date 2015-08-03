@@ -21,6 +21,8 @@ import net.blackcat.fantasy.draft.integration.model.types.auction.AuctionPhaseSt
  */
 public class AuctionPhaseTestDataBuilder {
 
+    private final static int DEFAULT_SEQUENCE_NUMBER = 1;
+
     private AuctionPhaseStatus status;
     private List<Bid> bids;
 
@@ -50,7 +52,7 @@ public class AuctionPhaseTestDataBuilder {
 
     public AuctionPhase build() {
 
-        final AuctionPhase auctionPhase = new AuctionPhase();
+        final AuctionPhase auctionPhase = new AuctionPhase(DEFAULT_SEQUENCE_NUMBER);
 
         auctionPhase.setStatus(status);
         auctionPhase.addBids(bids);

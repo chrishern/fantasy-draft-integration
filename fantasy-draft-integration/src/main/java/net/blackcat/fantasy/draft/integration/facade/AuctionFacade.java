@@ -4,6 +4,7 @@
 package net.blackcat.fantasy.draft.integration.facade;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,9 @@ import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.facade.dto.AuctionBidsDto;
+import net.blackcat.fantasy.draft.integration.facade.dto.AuctionPhaseResultsDto;
 import net.blackcat.fantasy.draft.integration.facade.dto.BidDto;
+import net.blackcat.fantasy.draft.integration.facade.dto.PlayerAuctionBidResultDto;
 import net.blackcat.fantasy.draft.integration.facade.dto.TeamAuctionStatusDto;
 import net.blackcat.fantasy.draft.integration.model.AuctionPhase;
 import net.blackcat.fantasy.draft.integration.model.Bid;
@@ -184,6 +187,63 @@ public class AuctionFacade {
         }
 
         return teamAuctionStatus;
+    }
+
+    /**
+     * Get a list of the {@link AuctionPhaseResultsDto} representing the auction phase results for a given league.
+     * 
+     * @param leagueId
+     *            ID of the league to get the auction phase results for.
+     * @return List of the {@link AuctionPhaseResultsDto} representing the auction phase results for the given league.
+     * @throws FantasyDraftIntegrationException
+     */
+    public List<AuctionPhaseResultsDto> getLeagueAuctionPhaseResults(final int leagueId) throws FantasyDraftIntegrationException {
+
+        final List<AuctionPhaseResultsDto> auctionPhaseResultsList = new ArrayList<AuctionPhaseResultsDto>();
+
+        final League league = leagueDataService.getLeague(leagueId);
+
+        for (final AuctionPhase auctionPhase : league.getAuction().getPhases()) {
+
+            if (!auctionPhase.isOpen()) {
+                final AuctionPhaseResultsDto auctionPhaseResults = new AuctionPhaseResultsDto(auctionPhase.getSequenceNumber());
+
+                final Map<Integer, List<Bid>> playerBids = auctionPhaseResultsService.buildUpPlayerBidList(auctionPhase);
+                final Map<Integer, List<Bid>> playerBidsWithSuccessMarked = auctionPhaseResultsService.determineSuccessfulBids(playerBids);
+
+                createAndAddAuctionPhaseResultsDtos(auctionPhaseResults, playerBidsWithSuccessMarked);
+
+                auctionPhaseResultsList.add(auctionPhaseResults);
+            }
+        }
+
+        Collections.sort(auctionPhaseResultsList);
+
+        return auctionPhaseResultsList;
+    }
+
+    /*
+     * Create PlayerAuctionBidResultDto objects for the a map of player ID to the bids made for that player in an
+     * auction phase.
+     */
+    private void createAndAddAuctionPhaseResultsDtos(final AuctionPhaseResultsDto auctionPhaseResults,
+            final Map<Integer, List<Bid>> playerBidsWithSuccessMarked) throws FantasyDraftIntegrationException {
+
+        for (final Integer playerId : playerBidsWithSuccessMarked.keySet()) {
+            final Player player = playerDataService.getPlayer(playerId);
+
+            final PlayerAuctionBidResultDto playerAuctionPhaseResult = new PlayerAuctionBidResultDto(player.getForename(), player.getSurname());
+
+            for (final Bid bid : playerBidsWithSuccessMarked.get(playerId)) {
+                if (bid.isSuccessful()) {
+                    playerAuctionPhaseResult.withSuccessfulBid(bid.getTeam().getName(), bid.getAmount());
+                } else {
+                    playerAuctionPhaseResult.withUnsuccessfulBid(bid.getTeam().getName(), bid.getAmount());
+                }
+            }
+
+            auctionPhaseResults.withPlayerResult(playerAuctionPhaseResult);
+        }
     }
 
     /*

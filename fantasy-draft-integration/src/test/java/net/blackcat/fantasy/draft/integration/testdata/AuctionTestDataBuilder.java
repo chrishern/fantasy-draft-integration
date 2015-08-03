@@ -48,7 +48,7 @@ public class AuctionTestDataBuilder {
         final Auction auction = new Auction();
 
         for (final AuctionPhase phase : phases) {
-            auction.addPhase(phase);
+            auction.createNewPhase();
         }
 
         return auction;

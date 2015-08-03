@@ -5,10 +5,10 @@
 	<Team />
 	<Auction id="1" status="OPEN"/>
 	<Auction id="2" status="OPEN"/>
-	<AuctionPhase id="1" status="CLOSED"/>
-	<AuctionPhase id="2" status="OPEN"/>
-	<AuctionPhase id="3" status="CLOSED"/>
-	<AuctionPhase id="4" status="CLOSED"/>
+	<AuctionPhase id="1" sequenceNumber="1" status="CLOSED"/>
+	<AuctionPhase id="2" sequenceNumber="2" status="OPEN"/>
+	<AuctionPhase id="3" sequenceNumber="1" status="CLOSED"/>
+	<AuctionPhase id="4" sequenceNumber="2" status="CLOSED"/>
 	<Auction_AuctionPhase auction_id="1" phases_id="1"/>
 	<Auction_AuctionPhase auction_id="1" phases_id="2"/>
 	<Auction_AuctionPhase auction_id="2" phases_id="3"/>
