@@ -19,6 +19,13 @@ public class AuctionBidsDto implements Serializable {
     private int teamId;
     private List<BidDto> bids;
 
+    /*
+     * For JSON Serialization
+     */
+    public AuctionBidsDto() {
+    	
+    }
+    
     public AuctionBidsDto(final int teamId, final List<BidDto> bids) {
 
         this.teamId = teamId;

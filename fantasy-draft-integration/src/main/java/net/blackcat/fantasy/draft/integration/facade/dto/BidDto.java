@@ -19,6 +19,13 @@ public class BidDto implements Serializable {
     private int playerId;
     private BigDecimal amount;
 
+    /*
+     * For JSON Serialization
+     */
+    public BidDto() {
+    	
+    }
+    
     public BidDto(final int playerId, final BigDecimal amount) {
 
         this.playerId = playerId;

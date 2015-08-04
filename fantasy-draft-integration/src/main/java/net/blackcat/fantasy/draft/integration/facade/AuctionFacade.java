@@ -177,12 +177,16 @@ public class AuctionFacade {
         final TeamAuctionStatusDto teamAuctionStatus = new TeamAuctionStatusDto(team.getRemainingBudget());
 
         if (league.hasOpenAuction()) {
-            final AuctionPhase openAuctionPhase = leagueDataService.getOpenAuctionPhase(league);
-
-            teamAuctionStatus.withOpenTransferWindow();
-
-            if (openAuctionPhase.hasTeamSubmittedBids(team.getName())) {
-                teamAuctionStatus.withBidsSubmittedInCurrentWindow();
+        	try {
+	            final AuctionPhase openAuctionPhase = leagueDataService.getOpenAuctionPhase(league);
+	
+	            teamAuctionStatus.withOpenTransferWindow();
+	
+	            if (openAuctionPhase.hasTeamSubmittedBids(team.getName())) {
+	                teamAuctionStatus.withBidsSubmittedInCurrentWindow();
+	            }
+        	} catch (final FantasyDraftIntegrationException e) {
+            	// Indicates that there is no open auction phase TODO change this
             }
         }
 

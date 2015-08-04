@@ -27,7 +27,7 @@ public class TeamToSquadDtoConverter implements Converter<Team, SquadDto> {
     @Override
     public SquadDto convert(final Team team) {
 
-        final SquadDto squad = new SquadDto(createSelectedPlayers(team));
+        final SquadDto squad = new SquadDto(team.getId(), createSelectedPlayers(team));
 
         return squad;
     }

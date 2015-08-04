@@ -13,13 +13,22 @@ import java.util.List;
  */
 public class SquadDto {
 
+	private int teamId;
     private List<SelectedPlayerDto> currentPlayers;
 
-    public SquadDto(final List<SelectedPlayerDto> currentPlayers) {
+    public SquadDto(final int teamId, final List<SelectedPlayerDto> currentPlayers) {
+    	this.teamId = teamId;
         this.currentPlayers = currentPlayers;
     }
 
     /**
+	 * @return the teamId
+	 */
+	public int getTeamId() {
+		return teamId;
+	}
+
+	/**
      * @return the currentPlayers
      */
     public List<SelectedPlayerDto> getCurrentPlayers() {
