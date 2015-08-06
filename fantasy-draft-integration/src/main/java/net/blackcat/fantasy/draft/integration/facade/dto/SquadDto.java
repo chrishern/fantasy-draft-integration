@@ -3,6 +3,8 @@
  */
 package net.blackcat.fantasy.draft.integration.facade.dto;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,11 +16,23 @@ import java.util.List;
 public class SquadDto {
 
 	private int teamId;
+	private String teamName;
     private List<SelectedPlayerDto> currentPlayers;
 
-    public SquadDto(final int teamId, final List<SelectedPlayerDto> currentPlayers) {
+    public SquadDto(final int teamId, final String teamName) {
     	this.teamId = teamId;
-        this.currentPlayers = currentPlayers;
+    	this.teamName = teamName;
+        this.currentPlayers = new ArrayList<SelectedPlayerDto>();
+    }
+    
+    /**
+     * Add a selected player to this squad.
+     * 
+     * @param selectedPlayer Player to add to this squad.
+     */
+    public void addSelectedPlayer(final SelectedPlayerDto selectedPlayer) {
+    	currentPlayers.add(selectedPlayer);
+    	Collections.sort(currentPlayers);
     }
 
     /**
@@ -26,6 +40,13 @@ public class SquadDto {
 	 */
 	public int getTeamId() {
 		return teamId;
+	}
+
+	/**
+	 * @return the teamName
+	 */
+	public String getTeamName() {
+		return teamName;
 	}
 
 	/**

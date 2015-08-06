@@ -14,7 +14,7 @@ import net.blackcat.fantasy.draft.integration.model.types.player.Position;
  * @author Chris Hern
  * 
  */
-public class SelectedPlayerDto implements Serializable {
+public class SelectedPlayerDto implements Serializable, Comparable<SelectedPlayerDto> {
 
     private static final long serialVersionUID = -6472944042325975290L;
 
@@ -114,4 +114,9 @@ public class SelectedPlayerDto implements Serializable {
     public void setPointsScored(int pointsScored) {
         this.pointsScored = pointsScored;
     }
+
+	@Override
+	public int compareTo(final SelectedPlayerDto playerToCompare) {
+		return position.compareTo(playerToCompare.getPosition());
+	}
 }

@@ -3,9 +3,6 @@
  */
 package net.blackcat.fantasy.draft.integration.converter.team;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.blackcat.fantasy.draft.integration.converter.IntegrationConverter;
 import net.blackcat.fantasy.draft.integration.facade.dto.SelectedPlayerDto;
 import net.blackcat.fantasy.draft.integration.facade.dto.SquadDto;
@@ -27,17 +24,17 @@ public class TeamToSquadDtoConverter implements Converter<Team, SquadDto> {
     @Override
     public SquadDto convert(final Team team) {
 
-        final SquadDto squad = new SquadDto(team.getId(), createSelectedPlayers(team));
+        final SquadDto squad = new SquadDto(team.getId(), team.getName());
 
+        addSelectedPlayers(team, squad);
+        
         return squad;
     }
 
     /*
-     * Create the SelectedPlayerDto objects for the given team.
+     * Add the SelectedPlayerDto objects for the given team.
      */
-    private List<SelectedPlayerDto> createSelectedPlayers(final Team team) {
-
-        final List<SelectedPlayerDto> selectedPlayers = new ArrayList<SelectedPlayerDto>();
+    private void addSelectedPlayers(final Team team, final SquadDto squad) {
 
         for (final SelectedPlayer selectedPlayer : team.getSelectedPlayers()) {
 
@@ -52,9 +49,8 @@ public class TeamToSquadDtoConverter implements Converter<Team, SquadDto> {
             selectedPlayerDto.setPosition(player.getPosition());
             selectedPlayerDto.setSelectedPlayerId(selectedPlayer.getId());
 
-            selectedPlayers.add(selectedPlayerDto);
+            squad.addSelectedPlayer(selectedPlayerDto);
         }
-        return selectedPlayers;
     }
 
 }
