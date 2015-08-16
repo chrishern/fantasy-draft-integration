@@ -57,6 +57,25 @@ public class PlayerFacade {
     }
 
     /**
+     * Get all players in the game.
+     * 
+     * @return All players in the game.
+     */
+    public List<PlayerDto> getPlayers() {
+
+        final List<PlayerDto> playerDtos = new ArrayList<PlayerDto>();
+
+        for (final Position position : Position.values()) {
+	        for (final Player player : playerDataService.getPlayers(position)) {
+	            final PlayerDto playerDto = converterService.convert(player, PlayerDto.class);
+	            playerDtos.add(playerDto);
+	        }
+        }
+
+        return playerDtos;
+    }
+    
+    /**
      * Get a list of {@link Player} objects in a given {@link Position} and with a certain {@link PlayerSelectionStatus}
      * .
      * 

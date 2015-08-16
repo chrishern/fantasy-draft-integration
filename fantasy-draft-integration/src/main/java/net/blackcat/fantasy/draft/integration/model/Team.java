@@ -6,6 +6,7 @@ package net.blackcat.fantasy.draft.integration.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,6 +35,7 @@ public class Team implements Serializable {
 
     private static final long serialVersionUID = -3734641391628154428L;
 
+    public static final int MAXIMUM_STARTING_TEAM_SIZE = 11;
     private static final BigDecimal STARTING_BUDGET = new BigDecimal(100);
     private static final int SQUAD_SIZE = 16;
 
@@ -64,6 +66,9 @@ public class Team implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<SelectedPlayer> selectedPlayers;
+    
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<GameweekScore> gameweekScores;
 
     /*
      * Only used for Hibernate database mapping.
@@ -107,6 +112,24 @@ public class Team implements Serializable {
     public void addToTotalScore(final int amountToAdd) {
         this.totalScore += amountToAdd;
     }
+    
+    /**
+     * Add a gameweek score to this team.
+     * 
+     * @param gameweek The gameweek number of the week the points were scored in.
+     * @param score The points scored.
+     */
+    public void addGameweekScore(final int gameweek, final int score) {
+    	
+    	if (gameweekScores == null) {
+    		gameweekScores = new ArrayList<GameweekScore>();
+    	}
+    	
+    	totalScore += score;
+    	
+    	final GameweekScore gameweekScore = new GameweekScore(gameweek, score);
+    	gameweekScores.add(gameweekScore);
+    }
 
     /**
      * Set the {@link User} representing the manager of this Team.
@@ -130,6 +153,50 @@ public class Team implements Serializable {
         this.league = league;
     }
 
+    /**
+     * Get the starting line up for this team.
+     * 
+     * TODO test this once we can add players who are not part of the starting lineup.
+     * 
+     * @return Starting line up for this team.
+     */
+    public List<SelectedPlayer> getStartingTeam() {
+    	
+    	final List<SelectedPlayer> startingLineup = new ArrayList<SelectedPlayer>();
+    	
+    	for (final SelectedPlayer selectedPlayer : this.selectedPlayers) {
+    		if (selectedPlayer.isInStartingLineup()) {
+    			startingLineup.add(selectedPlayer);
+    		}
+    	}
+    	
+    	Collections.sort(startingLineup);
+    	
+    	return startingLineup;
+    }
+    
+    /**
+     * Get the substitutes for this team.
+     * 
+     * TODO test this once we can add players who are not part of the starting lineup.
+     * 
+     * @return Substitutes for this team.
+     */
+    public List<SelectedPlayer> getSubstitutes() {
+    	
+    	final List<SelectedPlayer> startingLineup = new ArrayList<SelectedPlayer>();
+    	
+    	for (final SelectedPlayer selectedPlayer : this.selectedPlayers) {
+    		if (selectedPlayer.isSubstitute()) {
+    			startingLineup.add(selectedPlayer);
+    		}
+    	}
+    	
+    	Collections.sort(startingLineup);
+    	
+    	return startingLineup;
+    }
+    
     /**
      * @return the id
      */

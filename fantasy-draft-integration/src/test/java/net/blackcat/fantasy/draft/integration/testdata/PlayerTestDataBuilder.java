@@ -21,6 +21,7 @@ public class PlayerTestDataBuilder {
     private static final BigDecimal DEFAULT_CURRENT_PRICE = new BigDecimal("9.5");
 
     private int id = DEFAULT_ID;
+    private Position position = DEFAULT_POSITION;
 
     public static PlayerTestDataBuilder aPlayer() {
 
@@ -32,9 +33,15 @@ public class PlayerTestDataBuilder {
         this.id = id;
         return this;
     }
+    
+    public PlayerTestDataBuilder withPosition(final Position position) {
+
+        this.position = position;
+        return this;
+    }
 
     public Player build() {
 
-        return new Player(id, DEFAULT_FORNAME, DEFAULT_SURNAME, DEFAULT_TEAM, DEFAULT_POSITION, DEFAULT_CURRENT_PRICE);
+        return new Player(id, DEFAULT_FORNAME, DEFAULT_SURNAME, DEFAULT_TEAM, position, DEFAULT_CURRENT_PRICE);
     }
 }

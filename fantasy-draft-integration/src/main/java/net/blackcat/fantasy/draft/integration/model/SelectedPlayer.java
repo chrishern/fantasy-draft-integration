@@ -5,7 +5,10 @@ package net.blackcat.fantasy.draft.integration.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import net.blackcat.fantasy.draft.integration.model.types.player.SelectedPlayerStatus;
 import net.blackcat.fantasy.draft.integration.model.types.player.StartingTeamStatus;
@@ -25,7 +29,7 @@ import net.blackcat.fantasy.draft.integration.model.types.player.StartingTeamSta
  * 
  */
 @Entity
-public class SelectedPlayer implements Serializable {
+public class SelectedPlayer implements Serializable, Comparable<SelectedPlayer> {
 
     private static final long serialVersionUID = -9196777599538702713L;
 
@@ -55,6 +59,9 @@ public class SelectedPlayer implements Serializable {
 
     @Column
     private BigDecimal currentSellToPotPrice;
+    
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<GameweekScore> gameweekScores;
 
     /*
      * Used only for Hibernate mapping
@@ -70,6 +77,73 @@ public class SelectedPlayer implements Serializable {
         this.cost = cost;
         this.fplCostAtPurchase = fplCostAtPurchase;
         this.selectedStatus = SelectedPlayerStatus.STILL_SELECTED;
+    }
+    
+
+    /**
+     * Return true/false depending on whether this player is in the starting lineup for this team.
+     * 
+     * TODO Unit test for this once we can set the selected player status to something other than 
+     * 'STILL_SELECTED' and also set the starting position.
+     * 
+     * @return True/false depending on whether this player is part of the starting lineup.
+     */
+    public boolean isInStartingLineup() {
+    	return this.selectedStatus == SelectedPlayerStatus.STILL_SELECTED && this.startingTeamStatus.isStartingPosition();
+    }
+    
+    /**
+     * Return true/false depending on whether this player is a substitute for this team.
+     * 
+     * TODO Unit test for this once we can set the selected player status to something other than 
+     * 'STILL_SELECTED' and also set the starting position.
+     * 
+     * @return True/false depending on whether this player is a substitute.
+     */
+    public boolean isSubstitute() {
+    	return this.selectedStatus == SelectedPlayerStatus.STILL_SELECTED && this.startingTeamStatus.isSubstitutePosition();
+    }
+    
+    /**
+     * Return true/false depending on whether this player is the captain for this team.
+     * 
+     * TODO Unit test for this once we can set the selected player status to something other than 
+     * 'STILL_SELECTED' and also set the starting position.
+     * 
+     * @return True/false depending on whether this player is the captain.
+     */
+    public boolean isCaptain() {
+    	return this.selectedStatus == SelectedPlayerStatus.STILL_SELECTED && this.startingTeamStatus == StartingTeamStatus.CAPTAIN;
+    }
+    
+    /**
+     * Return true/false depending on whether this player is the vice captain for this team.
+     * 
+     * TODO Unit test for this once we can set the selected player status to something other than 
+     * 'STILL_SELECTED' and also set the starting position.
+     * 
+     * @return True/false depending on whether this player is the vice captain.
+     */
+    public boolean isViceCaptain() {
+    	return this.selectedStatus == SelectedPlayerStatus.STILL_SELECTED && this.startingTeamStatus == StartingTeamStatus.VICE_CAPTAIN;
+    }
+    
+    /**
+     * Add a gameweek score to this selected player.
+     * 
+     * @param gameweek The gameweek number of the week the points were scored in.
+     * @param score The points scored.
+     */
+    public void addGameweekScore(final int gameweek, final int score) {
+    	
+    	if (gameweekScores == null) {
+    		gameweekScores = new ArrayList<GameweekScore>();
+    	}
+    	
+    	pointsScored += score;
+    	
+    	final GameweekScore gameweekScore = new GameweekScore(gameweek, score);
+    	gameweekScores.add(gameweekScore);
     }
 
     /**
@@ -128,4 +202,13 @@ public class SelectedPlayer implements Serializable {
         return currentSellToPotPrice;
     }
 
+	@Override
+	public int compareTo(final SelectedPlayer objectToCompare) {
+		
+		if (this.startingTeamStatus == objectToCompare.startingTeamStatus) {
+			return this.startingTeamStatus.compareTo(objectToCompare.startingTeamStatus);
+		}
+		
+		return this.player.getPosition().compareTo(objectToCompare.getPlayer().getPosition());
+	}
 }
