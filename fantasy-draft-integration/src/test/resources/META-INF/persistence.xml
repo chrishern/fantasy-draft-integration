@@ -9,6 +9,7 @@
 		<class>net.blackcat.fantasy.draft.integration.model.AuctionPhase</class>
 		<class>net.blackcat.fantasy.draft.integration.model.Bid</class>
 		<class>net.blackcat.fantasy.draft.integration.model.Gameweek</class>
+		<class>net.blackcat.fantasy.draft.integration.model.GameweekScore</class>
 		<class>net.blackcat.fantasy.draft.integration.model.League</class>
 		<class>net.blackcat.fantasy.draft.integration.model.Player</class>
 		<class>net.blackcat.fantasy.draft.integration.model.SelectedPlayer</class>

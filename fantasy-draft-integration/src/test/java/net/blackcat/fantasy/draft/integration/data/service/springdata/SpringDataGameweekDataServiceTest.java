@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.unitils.reflectionassert.ReflectionAssert;
 
 /**
  * Unit tests for {@link SpringDataGameweekDataService}.
@@ -55,4 +56,14 @@ public class SpringDataGameweekDataServiceTest {
 		assertThat(updatedGameweek.getCurrentGameweek()).isNotEqualTo(initialCurrentGameweek);
 	}
 
+	@Test
+	public void testGetGameweek() {
+		// arrange
+		
+		// act
+		final Gameweek retrievedGameweek = dataService.getGameweek();
+		
+		// assert
+		ReflectionAssert.assertReflectionEquals(savedGameweek, retrievedGameweek);
+	}
 }

@@ -33,4 +33,11 @@ public class SpringDataGameweekDataService implements GameweekDataService {
 		repository.save(gameweek);
 	}
 
+	@Override
+	public Gameweek getGameweek() {
+		
+		// There will only be ever one Gameweek record.
+		return repository.findAll().iterator().next();
+	}
+
 }

@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import net.blackcat.fantasy.draft.integration.data.service.GameweekDataService;
 import net.blackcat.fantasy.draft.integration.data.service.LeagueDataService;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.facade.dto.PlayerGameweekScoreDto;
+import net.blackcat.fantasy.draft.integration.model.Gameweek;
 import net.blackcat.fantasy.draft.integration.model.League;
 import net.blackcat.fantasy.draft.integration.model.SelectedPlayer;
 import net.blackcat.fantasy.draft.integration.model.Team;
@@ -29,13 +31,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class GameweekFacade {
 
-	private static final int CURRENT_GAMEWEEK = 2;
 	private LeagueDataService leagueDataService;
+	private GameweekDataService gameweekDataService;
 	
 	@Autowired
-	public GameweekFacade(final LeagueDataService leagueDataService) {
+	public GameweekFacade(final LeagueDataService leagueDataService, final GameweekDataService gameweekDataService) {
 		
 		this.leagueDataService = leagueDataService;
+		this.gameweekDataService = gameweekDataService;
 	}
 	
 	/**
@@ -46,7 +49,12 @@ public class GameweekFacade {
 	 */
 	public void calculateGameweekScores(final Map<Integer, PlayerGameweekScoreDto> playerGameweekScores) throws FantasyDraftIntegrationException {
 		
-		calculateScores(playerGameweekScores, CURRENT_GAMEWEEK);
+		final Gameweek gameweek = gameweekDataService.getGameweek();
+		
+		calculateScores(playerGameweekScores, gameweek.getCurrentGameweek());
+		
+		gameweek.moveToNextGameweek();
+		gameweekDataService.updateGameweek(gameweek);
 	}
 	
 	/**

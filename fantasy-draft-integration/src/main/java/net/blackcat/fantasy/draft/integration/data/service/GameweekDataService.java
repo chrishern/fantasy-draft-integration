@@ -19,4 +19,11 @@ public interface GameweekDataService {
 	 * @param gameweek Updated gameweek to save.
 	 */
 	void updateGameweek(Gameweek gameweek);
+
+	/**
+	 * Get gameweek data.
+	 * 
+	 * @return Gameweek data.
+	 */
+	Gameweek getGameweek();
 }
