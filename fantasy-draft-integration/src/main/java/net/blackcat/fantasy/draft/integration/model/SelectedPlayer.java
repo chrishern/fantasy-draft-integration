@@ -205,10 +205,22 @@ public class SelectedPlayer implements Serializable, Comparable<SelectedPlayer> 
 	@Override
 	public int compareTo(final SelectedPlayer objectToCompare) {
 		
-		if (this.startingTeamStatus == objectToCompare.startingTeamStatus) {
+		if (this.selectedStatus == null) {
+			return this.player.getPosition().compareTo(objectToCompare.player.getPosition());
+		}
+		
+		if (this.startingTeamStatus.isSubstitutePosition() && objectToCompare.startingTeamStatus.isStartingPosition()) {
+			return 1;
+		}
+		
+		if (this.startingTeamStatus.isStartingPosition() && objectToCompare.startingTeamStatus.isSubstitutePosition()) {
+			return -1;
+		}
+		
+		if (this.startingTeamStatus.isSubstitutePosition() && objectToCompare.startingTeamStatus.isSubstitutePosition()) {
 			return this.startingTeamStatus.compareTo(objectToCompare.startingTeamStatus);
 		}
 		
-		return this.player.getPosition().compareTo(objectToCompare.getPlayer().getPosition());
+		return this.player.getPosition().compareTo(objectToCompare.player.getPosition());
 	}
 }

@@ -2,7 +2,7 @@ SELECT sp.id, p.forename, p.surname, sp.startingTeamStatus
 FROM Player p, SelectedPlayer sp, Team_SelectedPlayer tsp
 WHERE p.id = sp.player_id
 	AND sp.id = tsp.selectedPlayers_id
-	AND tsp.Team_id = 12
+	AND tsp.Team_id = 4
 ORDER BY sp.id;
 
 
@@ -22,3 +22,5 @@ UPDATE SelectedPlayer SET startingTeamStatus = 'SUB_2' WHERE id = 82;
 UPDATE SelectedPlayer SET startingTeamStatus = 'SUB_3' WHERE id = 146;
 UPDATE SelectedPlayer SET startingTeamStatus = 'SUB_4' WHERE id = 88;
 UPDATE SelectedPlayer SET startingTeamStatus = 'SUB_5' WHERE id = 148;
+
+UPDATE SelectedPlayer SET startingTeamStatus = 'SUB_3' WHERE id = 141;
