@@ -25,6 +25,13 @@ public interface TeamDataService {
      */
     Team getTeam(int teamId) throws FantasyDraftIntegrationException;
 
+    /**
+     * Get the {@link Team} associated with the email address of a manager.
+     * 
+     * @param managerEmailAddress Email address of the manager to the get the team for.
+     * @return {@link Team} for the manager.
+     * @throws FantasyDraftIntegrationException If a {@link Team} can't be found for the given email address.
+     */
     Team getTeamForManager(String managerEmailAddress) throws FantasyDraftIntegrationException;
 
     /**
