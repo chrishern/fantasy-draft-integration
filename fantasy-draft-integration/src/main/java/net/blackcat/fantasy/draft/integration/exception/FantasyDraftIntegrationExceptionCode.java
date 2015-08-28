@@ -35,7 +35,12 @@ public enum FantasyDraftIntegrationExceptionCode {
     /**
      * Team codes.
      */
-    TEAM_NOT_FOUND;
+    TEAM_NOT_FOUND,
+    
+    /**
+     * Gameweek codes.
+     */
+    GAMEWEEK_SCORE_NOT_FOUND;
     
     // @formatter:on
 }

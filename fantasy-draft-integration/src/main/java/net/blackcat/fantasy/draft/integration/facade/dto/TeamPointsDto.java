@@ -16,11 +16,13 @@ public class TeamPointsDto implements Serializable, Comparable<TeamPointsDto> {
 	private static final long serialVersionUID = -2834997113081208665L;
 
 	private String teamName;
-	private int points;
+	private int weekPoints;
+	private int totalPoints;
 	
-	public TeamPointsDto(final String teamName, final int points) {
+	public TeamPointsDto(final String teamName, final int weekPoints, final int totalPoints) {
 		this.teamName = teamName;
-		this.points = points;
+		this.weekPoints = weekPoints;
+		this.totalPoints = totalPoints;
 	}
 
 	/**
@@ -31,15 +33,22 @@ public class TeamPointsDto implements Serializable, Comparable<TeamPointsDto> {
 	}
 
 	/**
+	 * @return the weekPoints
+	 */
+	public int getWeekPoints() {
+		return weekPoints;
+	}
+
+	/**
 	 * @return the points
 	 */
-	public int getPoints() {
-		return points;
+	public int getTotalPoints() {
+		return totalPoints;
 	}
 
 	@Override
 	public int compareTo(final TeamPointsDto objectToCompare) {
-		return Integer.valueOf(objectToCompare.points).compareTo(points);
+		return Integer.valueOf(objectToCompare.totalPoints).compareTo(totalPoints);
 	}
 
 }

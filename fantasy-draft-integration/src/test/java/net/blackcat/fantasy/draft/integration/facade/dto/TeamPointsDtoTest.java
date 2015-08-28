@@ -24,9 +24,9 @@ public class TeamPointsDtoTest {
 	@Test
 	public void testCompareTo() {
 		// arrange
-		final TeamPointsDto team1 = new TeamPointsDto(TestDataConstants.TEAM_ONE_NAME, 13);
-		final TeamPointsDto team2 = new TeamPointsDto(TestDataConstants.TEAM_TWO_NAME, 11);
-		final TeamPointsDto team3 = new TeamPointsDto(TestDataConstants.TEAM_THREE_NAME, 45);
+		final TeamPointsDto team1 = new TeamPointsDto(TestDataConstants.TEAM_ONE_NAME, 2, 13);
+		final TeamPointsDto team2 = new TeamPointsDto(TestDataConstants.TEAM_TWO_NAME, 1, 11);
+		final TeamPointsDto team3 = new TeamPointsDto(TestDataConstants.TEAM_THREE_NAME, 14, 45);
 		
 		final List<TeamPointsDto> teams = Arrays.asList(team1, team2, team3);
 		
