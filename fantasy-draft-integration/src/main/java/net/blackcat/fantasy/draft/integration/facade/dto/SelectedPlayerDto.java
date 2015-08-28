@@ -23,6 +23,7 @@ public class SelectedPlayerDto implements Serializable, Comparable<SelectedPlaye
     private String surname;
     private Position position;
     private BigDecimal cost;
+    private Integer weeklyPointsScored;
     private int pointsScored;
 
     /**
@@ -68,6 +69,20 @@ public class SelectedPlayerDto implements Serializable, Comparable<SelectedPlaye
     }
 
     /**
+	 * @return the weeklyPointsScored
+	 */
+	public Integer getWeeklyPointsScored() {
+		return weeklyPointsScored;
+	}
+
+	/**
+	 * @param weeklyPointsScored the weeklyPointsScored to set
+	 */
+	public void setWeeklyPointsScored(Integer weeklyPointsScored) {
+		this.weeklyPointsScored = weeklyPointsScored;
+	}
+
+	/**
      * @param selectedPlayerId
      *            the selectedPlayerId to set
      */

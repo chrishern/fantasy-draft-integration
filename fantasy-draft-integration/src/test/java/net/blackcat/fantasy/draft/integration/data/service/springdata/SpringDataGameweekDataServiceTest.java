@@ -7,11 +7,16 @@ import static org.fest.assertions.Assertions.assertThat;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.model.Gameweek;
+import net.blackcat.fantasy.draft.integration.model.Player;
+import net.blackcat.fantasy.draft.integration.model.SelectedPlayer;
 import net.blackcat.fantasy.draft.integration.model.Team;
 import net.blackcat.fantasy.draft.integration.repository.GameweekRepository;
 import net.blackcat.fantasy.draft.integration.repository.GameweekScoreRepository;
+import net.blackcat.fantasy.draft.integration.repository.PlayerRepository;
 import net.blackcat.fantasy.draft.integration.repository.TeamRepository;
 import net.blackcat.fantasy.draft.integration.test.util.CustomIntegrationExceptionMatcher;
+import net.blackcat.fantasy.draft.integration.testdata.PlayerTestDataBuilder;
+import net.blackcat.fantasy.draft.integration.testdata.SelectedPlayerTestDataBuilder;
 import net.blackcat.fantasy.draft.integration.testdata.TeamTestDataBuilder;
 import net.blackcat.fantasy.draft.integration.testdata.TestDataConstants;
 
@@ -35,6 +40,7 @@ import org.unitils.reflectionassert.ReflectionAssert;
 @ContextConfiguration(value = { "/hsqlDatasourceContext.xml", "/testApplicationContext.xml" })
 public class SpringDataGameweekDataServiceTest {
 
+	private static final int PLAYER_GAMEWEEK_ONE_SCORE = 5;
 	private static final int GAMEWEEK_ONE = 1;
 	private static final int GAMEWEEK_TWO = 2;
 	private static final int TEAM_ONE_GAMEWEEK_ONE_SCORE = 12;
@@ -53,6 +59,9 @@ public class SpringDataGameweekDataServiceTest {
 	
 	@Autowired
 	private TeamRepository teamRepository;
+	
+	@Autowired
+	private PlayerRepository playerRepository;
 	
 	private SpringDataGameweekDataService dataService;
 
@@ -137,5 +146,53 @@ public class SpringDataGameweekDataServiceTest {
 		
 		// assert
 		assertThat(gameweekScore).isEqualTo(TEAM_TWO_GAMEWEEK_TWO_SCORE);
+	}
+	
+	@Test
+	public void testGetGameweekScoreForPlayer() {
+		// arrange
+		final Player player = PlayerTestDataBuilder.aPlayer().build();
+		final SelectedPlayer selectedPlayer = SelectedPlayerTestDataBuilder.aSelectedPlayer(player)
+				.withGameweekScore(GAMEWEEK_ONE, PLAYER_GAMEWEEK_ONE_SCORE)
+				.build();
+		
+		final Team team = TeamTestDataBuilder.aTeam()
+				.withName(TestDataConstants.TEAM_FOUR_NAME)
+				.build();
+		
+		team.getSelectedPlayers().add(selectedPlayer);
+		
+		playerRepository.save(player);
+		teamRepository.save(team);
+		
+		// act
+		final Integer gameweekScoreForPlayer = dataService.getGameweekScoreForPlayer(selectedPlayer.getId(), GAMEWEEK_ONE);
+		
+		// assert
+		assertThat(gameweekScoreForPlayer).isEqualTo(PLAYER_GAMEWEEK_ONE_SCORE);
+	}
+	
+	@Test
+	public void testGetGameweekScoreForPlayer_NoScore() {
+		// arrange
+		final Player player = PlayerTestDataBuilder.aPlayer().build();
+		final SelectedPlayer selectedPlayer = SelectedPlayerTestDataBuilder.aSelectedPlayer(player)
+				.withGameweekScore(GAMEWEEK_ONE, PLAYER_GAMEWEEK_ONE_SCORE)
+				.build();
+		
+		final Team team = TeamTestDataBuilder.aTeam()
+				.withName(TestDataConstants.TEAM_FIVE_NAME)
+				.build();
+		
+		team.getSelectedPlayers().add(selectedPlayer);
+		
+		playerRepository.save(player);
+		teamRepository.save(team);
+		
+		// act
+		final Integer gameweekScoreForPlayer = dataService.getGameweekScoreForPlayer(selectedPlayer.getId(), GAMEWEEK_TWO);
+		
+		// assert
+		assertThat(gameweekScoreForPlayer).isNull();
 	}
 }

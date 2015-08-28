@@ -59,4 +59,16 @@ public class SpringDataGameweekDataService implements GameweekDataService {
 		return (Integer) gameweekScoreForTeam.get(0);
 	}
 
+	@Override
+	public Integer getGameweekScoreForPlayer(final int selectedPlayerId, final int gameweek) {
+		
+		final List<Object> gameweekScoreForPlayer = gameweekScoreRepository.getGameweekScoreForPlayer(selectedPlayerId, gameweek);
+		
+		if (gameweekScoreForPlayer.isEmpty()) {
+			return null;
+		}
+		
+		return (Integer) gameweekScoreForPlayer.get(0);
+	}
+
 }

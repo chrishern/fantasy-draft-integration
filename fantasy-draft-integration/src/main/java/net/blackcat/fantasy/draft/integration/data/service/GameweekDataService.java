@@ -37,4 +37,13 @@ public interface GameweekDataService {
 	 * @throws FantasyDraftIntegrationException
 	 */
 	int getGameweekScoreForTeam(int teamId, int gameweek) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Get the Gameweek score in a given gameweek for a certain selected player.
+	 * 
+	 * @param selectedPlayerId ID od the selected player.
+	 * @param gameweek Gameweek number to get the score for.
+	 * @return Gameweek score for the selected player in the given gameweek.
+	 */
+	Integer getGameweekScoreForPlayer(int selectedPlayerId, int gameweek);
 }

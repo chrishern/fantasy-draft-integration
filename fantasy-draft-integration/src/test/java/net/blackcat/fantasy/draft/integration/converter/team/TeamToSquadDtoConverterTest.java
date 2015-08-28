@@ -4,13 +4,21 @@
 package net.blackcat.fantasy.draft.integration.converter.team;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.when;
+import net.blackcat.fantasy.draft.integration.data.service.GameweekDataService;
 import net.blackcat.fantasy.draft.integration.facade.dto.SelectedPlayerDto;
 import net.blackcat.fantasy.draft.integration.facade.dto.SquadDto;
+import net.blackcat.fantasy.draft.integration.model.Gameweek;
 import net.blackcat.fantasy.draft.integration.model.SelectedPlayer;
 import net.blackcat.fantasy.draft.integration.model.Team;
 import net.blackcat.fantasy.draft.integration.testdata.TeamTestDataBuilder;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * Unit tests for {@link TeamToSquadDtoConverter}.
@@ -18,14 +26,28 @@ import org.junit.Test;
  * @author Chris
  *
  */
+@RunWith(MockitoJUnitRunner.class)
 public class TeamToSquadDtoConverterTest {
 
-	private TeamToSquadDtoConverter converter = new TeamToSquadDtoConverter();
+	private static final int PLAYER_GAMEWEEK_SCORE = 14;
+
+	@Mock
+	private GameweekDataService gameweekDataService;
+	
+	private TeamToSquadDtoConverter converter;
+	
+	@Before
+	public void setup() {
+		converter = new TeamToSquadDtoConverter(gameweekDataService);
+	}
 	
 	@Test
-	public void test() {
+	public void testConvert() {
 		// arrange
 		final Team team = TeamTestDataBuilder.aTeam().withSquadSize(3).build();
+		
+		when(gameweekDataService.getGameweek()).thenReturn(new Gameweek());
+		when(gameweekDataService.getGameweekScoreForPlayer(anyInt(), anyInt())).thenReturn(PLAYER_GAMEWEEK_SCORE);
 		
 		// act
 		final SquadDto squadDto = converter.convert(team);
@@ -44,6 +66,7 @@ public class TeamToSquadDtoConverterTest {
 		assertThat(selectedPlayerDto.getPointsScored()).isEqualTo(selectedPlayer.getPointsScored());
 		assertThat(selectedPlayerDto.getPosition()).isEqualTo(selectedPlayer.getPlayer().getPosition());
 		assertThat(selectedPlayerDto.getSelectedPlayerId()).isEqualTo(selectedPlayer.getId());
+		assertThat(selectedPlayerDto.getWeeklyPointsScored()).isEqualTo(PLAYER_GAMEWEEK_SCORE);
 	}
 
 }

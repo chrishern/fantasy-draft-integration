@@ -4,12 +4,15 @@
 package net.blackcat.fantasy.draft.integration.converter.team;
 
 import net.blackcat.fantasy.draft.integration.converter.IntegrationConverter;
+import net.blackcat.fantasy.draft.integration.data.service.GameweekDataService;
 import net.blackcat.fantasy.draft.integration.facade.dto.SelectedPlayerDto;
 import net.blackcat.fantasy.draft.integration.facade.dto.SquadDto;
+import net.blackcat.fantasy.draft.integration.model.Gameweek;
 import net.blackcat.fantasy.draft.integration.model.Player;
 import net.blackcat.fantasy.draft.integration.model.SelectedPlayer;
 import net.blackcat.fantasy.draft.integration.model.Team;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 
 /**
@@ -21,6 +24,13 @@ import org.springframework.core.convert.converter.Converter;
 @IntegrationConverter
 public class TeamToSquadDtoConverter implements Converter<Team, SquadDto> {
 
+	private GameweekDataService gameweekDataService;
+	
+	@Autowired
+	public TeamToSquadDtoConverter(final GameweekDataService gameweekDataService) {
+		this.gameweekDataService = gameweekDataService;
+	}
+	
     @Override
     public SquadDto convert(final Team team) {
 
@@ -36,11 +46,14 @@ public class TeamToSquadDtoConverter implements Converter<Team, SquadDto> {
      */
     private void addSelectedPlayers(final Team team, final SquadDto squad) {
 
+    	final Gameweek gameweek = gameweekDataService.getGameweek();
+    	final int previousGameweek = gameweek.getPreviousGameweek();
+    	
         for (final SelectedPlayer selectedPlayer : team.getSelectedPlayers()) {
 
             final Player player = selectedPlayer.getPlayer();
-
             final SelectedPlayerDto selectedPlayerDto = new SelectedPlayerDto();
+			final Integer gameweekScoreForPlayer = gameweekDataService.getGameweekScoreForPlayer(selectedPlayer.getId(), previousGameweek);
 
             selectedPlayerDto.setCost(selectedPlayer.getCost());
             selectedPlayerDto.setForename(player.getForename());
@@ -48,6 +61,7 @@ public class TeamToSquadDtoConverter implements Converter<Team, SquadDto> {
             selectedPlayerDto.setPointsScored(selectedPlayer.getPointsScored());
             selectedPlayerDto.setPosition(player.getPosition());
             selectedPlayerDto.setSelectedPlayerId(selectedPlayer.getId());
+            selectedPlayerDto.setWeeklyPointsScored(gameweekScoreForPlayer);
 
             squad.addSelectedPlayer(selectedPlayerDto);
         }
