@@ -62,6 +62,7 @@ public class TeamToSquadDtoConverter implements Converter<Team, SquadDto> {
             selectedPlayerDto.setPosition(player.getPosition());
             selectedPlayerDto.setSelectedPlayerId(selectedPlayer.getId());
             selectedPlayerDto.setWeeklyPointsScored(gameweekScoreForPlayer);
+            selectedPlayerDto.setStartingTeamStatus(selectedPlayer.getStartingTeamStatus());
 
             squad.addSelectedPlayer(selectedPlayerDto);
         }

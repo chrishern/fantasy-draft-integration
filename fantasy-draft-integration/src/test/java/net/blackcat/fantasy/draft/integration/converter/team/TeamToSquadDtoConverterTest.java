@@ -67,6 +67,7 @@ public class TeamToSquadDtoConverterTest {
 		assertThat(selectedPlayerDto.getPosition()).isEqualTo(selectedPlayer.getPlayer().getPosition());
 		assertThat(selectedPlayerDto.getSelectedPlayerId()).isEqualTo(selectedPlayer.getId());
 		assertThat(selectedPlayerDto.getWeeklyPointsScored()).isEqualTo(PLAYER_GAMEWEEK_SCORE);
+		assertThat(selectedPlayerDto.getStartingTeamStatus()).isEqualTo(selectedPlayer.getStartingTeamStatus());
 	}
 
 }

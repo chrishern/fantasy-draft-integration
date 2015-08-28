@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import net.blackcat.fantasy.draft.integration.model.types.player.Position;
+import net.blackcat.fantasy.draft.integration.model.types.player.StartingTeamStatus;
 
 /**
  * DTO used to transfer selected player information.
@@ -22,6 +23,7 @@ public class SelectedPlayerDto implements Serializable, Comparable<SelectedPlaye
     private String forename;
     private String surname;
     private Position position;
+    private StartingTeamStatus startingTeamStatus;
     private BigDecimal cost;
     private Integer weeklyPointsScored;
     private int pointsScored;
@@ -73,6 +75,20 @@ public class SelectedPlayerDto implements Serializable, Comparable<SelectedPlaye
 	 */
 	public Integer getWeeklyPointsScored() {
 		return weeklyPointsScored;
+	}
+
+	/**
+	 * @return the startingTeamStatus
+	 */
+	public StartingTeamStatus getStartingTeamStatus() {
+		return startingTeamStatus;
+	}
+
+	/**
+	 * @param startingTeamStatus the startingTeamStatus to set
+	 */
+	public void setStartingTeamStatus(StartingTeamStatus startingTeamStatus) {
+		this.startingTeamStatus = startingTeamStatus;
 	}
 
 	/**
@@ -132,6 +148,23 @@ public class SelectedPlayerDto implements Serializable, Comparable<SelectedPlaye
 
 	@Override
 	public int compareTo(final SelectedPlayerDto playerToCompare) {
-		return position.compareTo(playerToCompare.getPosition());
+		
+		if (this.startingTeamStatus == null || playerToCompare.startingTeamStatus == null) {
+			return this.position.compareTo(playerToCompare.position);
+		}
+		
+		if (this.startingTeamStatus.isSubstitutePosition() && playerToCompare.startingTeamStatus.isStartingPosition()) {
+			return 1;
+		}
+		
+		if (this.startingTeamStatus.isStartingPosition() && playerToCompare.startingTeamStatus.isSubstitutePosition()) {
+			return -1;
+		}
+		
+		if (this.startingTeamStatus.isSubstitutePosition() && playerToCompare.startingTeamStatus.isSubstitutePosition()) {
+			return this.startingTeamStatus.compareTo(playerToCompare.startingTeamStatus);
+		}
+		
+		return this.position.compareTo(playerToCompare.position);
 	}
 }
