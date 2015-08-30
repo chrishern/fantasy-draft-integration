@@ -3,6 +3,9 @@
  */
 package net.blackcat.fantasy.draft.integration.data.service.springdata;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
 import net.blackcat.fantasy.draft.integration.data.specification.TeamSpecification;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
@@ -10,6 +13,7 @@ import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationE
 import net.blackcat.fantasy.draft.integration.model.Team;
 import net.blackcat.fantasy.draft.integration.repository.TeamRepository;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
@@ -42,6 +46,16 @@ public class SpringDataTeamDataService implements TeamDataService {
 
         return team;
     }
+    
+    @Override
+	public List<Team> getTeams() {
+
+    	final List<Team> teams = new ArrayList<Team>();
+    	final Iterable<Team> allTeams = repository.findAll();
+    	CollectionUtils.addAll(teams, allTeams.iterator());
+    	
+    	return teams;
+	}
 
     @Override
     public void updateTeam(final Team updatedTeam) throws FantasyDraftIntegrationException {
@@ -66,5 +80,4 @@ public class SpringDataTeamDataService implements TeamDataService {
 
         return team;
     }
-
 }

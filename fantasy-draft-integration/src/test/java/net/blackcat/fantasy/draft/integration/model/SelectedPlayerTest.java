@@ -5,6 +5,7 @@ package net.blackcat.fantasy.draft.integration.model;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +23,8 @@ import org.junit.Test;
  */
 public class SelectedPlayerTest {
 
+	private static final BigDecimal PRICE_CHANGE = new BigDecimal("0.5");
+
 	@Test
 	public void testCompareTo() {
 		// arrange
@@ -37,5 +40,33 @@ public class SelectedPlayerTest {
 		
 		// assert
 		assertThat(selectedPlayers).containsExactly(goalkeeper, defender, midfielder, striker);
+	}
+	
+	@Test
+	public void testUpdateCurrentSellToPotPrice_PriceIncrease() {
+		// arrange
+		final SelectedPlayer selectedPlayer = SelectedPlayerTestDataBuilder.aSelectedPlayer(Position.GOALKEEPER).build();
+		
+		final BigDecimal newFplPrice = selectedPlayer.getFplCostAtPurchase().add(PRICE_CHANGE);
+		
+		// act
+		selectedPlayer.updateCurrentSellToPotPrice(newFplPrice);
+		
+		// assert
+		assertThat(selectedPlayer.getCurrentSellToPotPrice()).isEqualTo(new BigDecimal("6.9"));
+	}
+	
+	@Test
+	public void testUpdateCurrentSellToPotPrice_PriceDecrease() {
+		// arrange
+		final SelectedPlayer selectedPlayer = SelectedPlayerTestDataBuilder.aSelectedPlayer(Position.GOALKEEPER).build();
+		
+		final BigDecimal newFplPrice = selectedPlayer.getFplCostAtPurchase().subtract(PRICE_CHANGE);
+		
+		// act
+		selectedPlayer.updateCurrentSellToPotPrice(newFplPrice);
+		
+		// assert
+		assertThat(selectedPlayer.getCurrentSellToPotPrice()).isEqualTo(new BigDecimal("4.1"));
 	}
 }

@@ -5,6 +5,7 @@ package net.blackcat.fantasy.draft.integration.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,9 @@ import net.blackcat.fantasy.draft.integration.model.types.player.StartingTeamSta
 public class SelectedPlayer implements Serializable, Comparable<SelectedPlayer> {
 
     private static final long serialVersionUID = -9196777599538702713L;
+    
+    private static final String PRICE_CHANGE_MULTIPLIER = "0.05";
+	private static final String FPL_PRICE_CHANGE_FACTOR = "0.1";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -79,6 +83,17 @@ public class SelectedPlayer implements Serializable, Comparable<SelectedPlayer> 
         this.selectedStatus = SelectedPlayerStatus.STILL_SELECTED;
     }
     
+    /**
+     * Return true/false depending on whether this player is still selected for this team.
+     * 
+     * TODO Unit test for this once we can set the selected player status to something other than 
+     * 'STILL_SELECTED' and also set the starting position.
+     * 
+     * @return True/false depending on whether this player is still selected for this team.
+     */
+    public boolean isStillSelected() {
+    	return this.selectedStatus == SelectedPlayerStatus.STILL_SELECTED;
+    }
 
     /**
      * Return true/false depending on whether this player is in the starting lineup for this team.
@@ -89,7 +104,7 @@ public class SelectedPlayer implements Serializable, Comparable<SelectedPlayer> 
      * @return True/false depending on whether this player is part of the starting lineup.
      */
     public boolean isInStartingLineup() {
-    	return this.selectedStatus == SelectedPlayerStatus.STILL_SELECTED && this.startingTeamStatus.isStartingPosition();
+    	return this.isStillSelected() && this.startingTeamStatus.isStartingPosition();
     }
     
     /**
@@ -101,7 +116,7 @@ public class SelectedPlayer implements Serializable, Comparable<SelectedPlayer> 
      * @return True/false depending on whether this player is a substitute.
      */
     public boolean isSubstitute() {
-    	return this.selectedStatus == SelectedPlayerStatus.STILL_SELECTED && this.startingTeamStatus.isSubstitutePosition();
+    	return this.isStillSelected() && this.startingTeamStatus.isSubstitutePosition();
     }
     
     /**
@@ -113,7 +128,7 @@ public class SelectedPlayer implements Serializable, Comparable<SelectedPlayer> 
      * @return True/false depending on whether this player is the captain.
      */
     public boolean isCaptain() {
-    	return this.selectedStatus == SelectedPlayerStatus.STILL_SELECTED && this.startingTeamStatus == StartingTeamStatus.CAPTAIN;
+    	return this.isStillSelected() && this.startingTeamStatus == StartingTeamStatus.CAPTAIN;
     }
     
     /**
@@ -125,7 +140,7 @@ public class SelectedPlayer implements Serializable, Comparable<SelectedPlayer> 
      * @return True/false depending on whether this player is the vice captain.
      */
     public boolean isViceCaptain() {
-    	return this.selectedStatus == SelectedPlayerStatus.STILL_SELECTED && this.startingTeamStatus == StartingTeamStatus.VICE_CAPTAIN;
+    	return this.isStillSelected() && this.startingTeamStatus == StartingTeamStatus.VICE_CAPTAIN;
     }
     
     /**
@@ -144,6 +159,26 @@ public class SelectedPlayer implements Serializable, Comparable<SelectedPlayer> 
     	
     	final GameweekScore gameweekScore = new GameweekScore(gameweek, score);
     	gameweekScores.add(gameweekScore);
+    }
+    
+    /**
+     * Update the current sell to pot price for this selected player.
+     * 
+     * @param currentFplPrice The current FPL price for this player.
+     */
+    public void updateCurrentSellToPotPrice(final BigDecimal currentFplPrice) {
+    	
+    	final BigDecimal purchasePrice = this.getCost();
+		final BigDecimal priceAdjustmentFactor = purchasePrice.multiply(new BigDecimal(PRICE_CHANGE_MULTIPLIER));
+		
+		final BigDecimal fplPriceChange = currentFplPrice.subtract(this.getFplCostAtPurchase());
+		final BigDecimal amountPriceHasChanged = fplPriceChange.divide(new BigDecimal(FPL_PRICE_CHANGE_FACTOR));
+		
+		final BigDecimal draftPriceChange = priceAdjustmentFactor.multiply(amountPriceHasChanged);
+		
+		final BigDecimal currentResalePrice = purchasePrice.add(draftPriceChange);
+		
+		this.currentSellToPotPrice = currentResalePrice.setScale(1, RoundingMode.HALF_UP);
     }
 
     /**

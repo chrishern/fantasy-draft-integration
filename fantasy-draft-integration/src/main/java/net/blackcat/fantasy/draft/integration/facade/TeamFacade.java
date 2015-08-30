@@ -5,12 +5,15 @@ package net.blackcat.fantasy.draft.integration.facade;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import net.blackcat.fantasy.draft.integration.converter.ConverterService;
 import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
+import net.blackcat.fantasy.draft.integration.facade.dto.PlayerDto;
 import net.blackcat.fantasy.draft.integration.facade.dto.SquadDto;
 import net.blackcat.fantasy.draft.integration.model.League;
+import net.blackcat.fantasy.draft.integration.model.SelectedPlayer;
 import net.blackcat.fantasy.draft.integration.model.Team;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,5 +74,27 @@ public class TeamFacade {
     	}
     	
     	return squads;
+    }
+
+    /**
+     * Update the current sell to pot price of the currently selected players in each team.
+     * 
+     * @param playerDtoMap Map of player ID to {@link PlayerDto} containing the current price of the player.
+     * @throws FantasyDraftIntegrationException
+     */
+    public void updateSelectedPlayersSellToPotPrice(final Map<Integer, PlayerDto> playerDtoMap) throws FantasyDraftIntegrationException {
+    	
+    	final List<Team> teams = teamDataService.getTeams();
+    	
+    	for (final Team team : teams) {
+    		
+    		for (final SelectedPlayer selectedPlayer : team.getCurrentlySelectedPlayers()) {
+    			
+    			final PlayerDto playerDto = playerDtoMap.get(selectedPlayer.getPlayer().getId());
+    			selectedPlayer.updateCurrentSellToPotPrice(playerDto.getCurrentPrice());
+    		}
+    		
+    		teamDataService.updateTeam(team);
+    	}
     }
 }

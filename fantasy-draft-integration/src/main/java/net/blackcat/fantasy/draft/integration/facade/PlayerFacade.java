@@ -5,6 +5,8 @@ package net.blackcat.fantasy.draft.integration.facade;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import net.blackcat.fantasy.draft.integration.converter.ConverterService;
 import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
@@ -77,6 +79,29 @@ public class PlayerFacade {
                     new PlayerStatistics(playerDto.getTotalPoints(), playerDto.getGoals(), playerDto.getAssists(), playerDto.getCleanSheets(), playerDto.getPointsPerGame());
             player.withStatistics(statistics);
             
+            modelPlayersToUpdate.add(player);
+        }
+        
+        playerDataService.updatePlayers(modelPlayersToUpdate);
+    }
+
+    /**
+     * Update the current price for each player.
+     * 
+     * @param playerDtoMap Map of player ID to {@link PlayerDto}.
+     * @throws FantasyDraftIntegrationException
+     */
+    public void updatePlayersCurrentPrice(final Map<Integer, PlayerDto> playerDtoMap) throws FantasyDraftIntegrationException {
+    	
+    	final List<Player> modelPlayersToUpdate = new ArrayList<Player>();
+
+        for (final Entry<Integer, PlayerDto> playerDtoEntry : playerDtoMap.entrySet()) {
+        	
+        	final PlayerDto playerDto = playerDtoEntry.getValue();
+        	final Player player = playerDataService.getPlayer(playerDto.getId());
+        
+        	player.setCurrentPrice(playerDto.getCurrentPrice());
+        	
             modelPlayersToUpdate.add(player);
         }
         

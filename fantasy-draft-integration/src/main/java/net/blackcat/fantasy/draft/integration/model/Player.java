@@ -114,6 +114,16 @@ public class Player implements Serializable {
     public void setTotalPoints(final int newTotalPoints) {
         this.totalPoints = newTotalPoints;
     }
+    
+    /**
+     * Update the current price for this player.
+     * 
+     * @param currentPrice
+     *            New current price of this player.
+     */
+    public void setCurrentPrice(final BigDecimal currentPrice) {
+        this.currentPrice = currentPrice;
+    }
 
     /**
      * @return the id

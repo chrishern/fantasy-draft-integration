@@ -6,6 +6,9 @@ package net.blackcat.fantasy.draft.integration.data.service.springdata;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.util.List;
+
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
 import net.blackcat.fantasy.draft.integration.model.Team;
@@ -137,5 +140,16 @@ public class SpringDataTeamDataServiceTest {
 
         // assert
         Assert.fail("Exception expected");
+    }
+    
+    @Test
+    public void testGetTeams() {
+    	// arrange
+    	
+    	// act
+    	final List<Team> teams = dataService.getTeams();
+    	
+    	// assert
+    	assertThat(teams).isNotEmpty();
     }
 }

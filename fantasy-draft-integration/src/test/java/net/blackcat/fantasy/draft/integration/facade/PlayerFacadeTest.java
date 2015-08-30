@@ -8,7 +8,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.blackcat.fantasy.draft.integration.converter.ConverterService;
 import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
@@ -116,5 +118,30 @@ public class PlayerFacadeTest {
     	assertThat(updatedPlayer.getGoals()).isEqualTo(playerDto.getGoals());
     	assertThat(updatedPlayer.getPointsPerGame()).isEqualTo(playerDto.getPointsPerGame());
     	assertThat(updatedPlayer.getTotalPoints()).isEqualTo(playerDto.getTotalPoints());
+    }
+    
+    @Test
+    public void testUpdatePlayersCurrentPrice() throws Exception {
+    	// arrange
+    	final Player player = PlayerTestDataBuilder.aPlayer().build();
+    	final PlayerDto playerDto = PlayerDtoTestDataBuilder.aPlayer().build();
+    	
+    	final Map<Integer, PlayerDto> playerDtoMap = new HashMap<Integer, PlayerDto>();
+    	playerDtoMap.put(playerDto.getId(), playerDto);
+    	
+    	when(playerDataService.getPlayer(playerDto.getId())).thenReturn(player);
+    	
+    	// act
+    	playerFacade.updatePlayersCurrentPrice(playerDtoMap);
+    	
+    	// assert
+    	verify(playerDataService).updatePlayers(playerListCaptor.capture());
+    	
+    	final List<Player> updatedPlayerList = playerListCaptor.getValue();
+    	assertThat(updatedPlayerList).hasSize(1);
+    	
+    	final Player updatedPlayer = updatedPlayerList.get(0);
+    	
+    	assertThat(updatedPlayer.getCurrentPrice()).isEqualTo(playerDto.getCurrentPrice());
     }
 }

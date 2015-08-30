@@ -21,7 +21,7 @@ import net.blackcat.fantasy.draft.integration.model.types.player.Position;
 public class SelectedPlayerTestDataBuilder {
 
 	private static final BigDecimal DEFAULT_COST = new BigDecimal("5.5");
-	private static final BigDecimal DEFAULT_FPL_COST_AT_PURCHASE = new BigDecimal("7.5");
+	public static final BigDecimal DEFAULT_FPL_COST_AT_PURCHASE = new BigDecimal("7.5");
 	
 	private List<GameweekScore> gameweekScores;
 	private Player player;

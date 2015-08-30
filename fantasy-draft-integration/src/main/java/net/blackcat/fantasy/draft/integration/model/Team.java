@@ -198,6 +198,26 @@ public class Team implements Serializable {
     }
     
     /**
+     * Get the currently selected players for this team.
+     * 
+     * TODO test this once we can have players who are no longer selected.
+     * 
+     * @return Currently selected players for this team.
+     */
+    public List<SelectedPlayer> getCurrentlySelectedPlayers() {
+    	
+    	final List<SelectedPlayer> currentlySelectedPlayers = new ArrayList<SelectedPlayer>();
+    	
+    	for (final SelectedPlayer selectedPlayer : this.selectedPlayers) {
+    		if (selectedPlayer.isStillSelected()) {
+    			currentlySelectedPlayers.add(selectedPlayer);
+    		}
+    	}
+    	
+    	return currentlySelectedPlayers;
+    }
+    
+    /**
      * @return the id
      */
     public int getId() {

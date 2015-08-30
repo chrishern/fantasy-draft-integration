@@ -3,6 +3,8 @@
  */
 package net.blackcat.fantasy.draft.integration.data.service;
 
+import java.util.List;
+
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.model.Team;
 
@@ -24,6 +26,13 @@ public interface TeamDataService {
      *             If a {@link Team} with the given ID does not exist.
      */
     Team getTeam(int teamId) throws FantasyDraftIntegrationException;
+    
+    /**
+     * Get all teams in the game.
+     * 
+     * @return List of all teams in the game.
+     */
+    List<Team> getTeams();
 
     /**
      * Get the {@link Team} associated with the email address of a manager.
