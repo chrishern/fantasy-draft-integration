@@ -135,7 +135,7 @@ public class SpringDataPlayerDataServiceTest {
         updatedPlayer.setTotalPoints(12);
 
         // act
-        playerDataService.updatePlayer(updatedPlayer);
+        playerDataService.updatePlayers(Arrays.asList(updatedPlayer));
 
         // assert - done in @ExpectedDatabase annotation
     }

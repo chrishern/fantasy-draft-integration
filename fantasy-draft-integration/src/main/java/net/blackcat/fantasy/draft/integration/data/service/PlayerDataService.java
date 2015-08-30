@@ -60,10 +60,10 @@ public interface PlayerDataService {
     Player getPlayer(int id) throws FantasyDraftIntegrationException;
 
     /**
-     * Update the given player in the backend.
+     * Update the given players in the backend.
      * 
-     * @param updatedPlayer
-     *            {@link Player} to update with updated data.
+     * @param updatedPlayers
+     *            List of {@link Player} objects to update with updated data.
      */
-    void updatePlayer(Player updatedPlayer);
+    void updatePlayers(List<Player> updatedPlayers);
 }

@@ -68,7 +68,7 @@ public class SpringDataPlayerDataService implements PlayerDataService {
     }
 
     @Override
-    public void updatePlayer(final Player updatedPlayer) {
+    public void updatePlayers(final List<Player> updatedPlayer) {
 
         repository.save(updatedPlayer);
     }

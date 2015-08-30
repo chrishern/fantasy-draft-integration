@@ -8,8 +8,10 @@ import java.util.List;
 
 import net.blackcat.fantasy.draft.integration.converter.ConverterService;
 import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
+import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.facade.dto.PlayerDto;
 import net.blackcat.fantasy.draft.integration.model.Player;
+import net.blackcat.fantasy.draft.integration.model.PlayerStatistics;
 import net.blackcat.fantasy.draft.integration.model.types.player.PlayerSelectionStatus;
 import net.blackcat.fantasy.draft.integration.model.types.player.Position;
 import net.blackcat.fantasy.draft.integration.model.types.player.SelectedPlayerStatus;
@@ -54,6 +56,31 @@ public class PlayerFacade {
         }
 
         playerDataService.addPlayers(modelPlayers);
+    }
+    
+    /**
+     * Update a the statistics for a list of players in the game.
+     * 
+     * @param playerDtos
+     *            List of {@link PlayerDto} objects containing the player data to update the statistics for in the system.
+     * @throws FantasyDraftIntegrationException 
+     */
+    public void updatePlayersStatistics(final List<PlayerDto> playerDtos) throws FantasyDraftIntegrationException {
+
+        final List<Player> modelPlayersToUpdate = new ArrayList<Player>();
+
+        for (final PlayerDto playerDto : playerDtos) {
+        	
+        	final Player player = playerDataService.getPlayer(playerDto.getId());
+        	
+        	final PlayerStatistics statistics =
+                    new PlayerStatistics(playerDto.getTotalPoints(), playerDto.getGoals(), playerDto.getAssists(), playerDto.getCleanSheets(), playerDto.getPointsPerGame());
+            player.withStatistics(statistics);
+            
+            modelPlayersToUpdate.add(player);
+        }
+        
+        playerDataService.updatePlayers(modelPlayersToUpdate);
     }
 
     /**

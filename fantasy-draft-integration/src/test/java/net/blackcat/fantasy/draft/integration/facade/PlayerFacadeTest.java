@@ -91,4 +91,30 @@ public class PlayerFacadeTest {
         // assert
         assertThat(actualPlayerDtos).containsOnly(playerDto1, playerDto2);
     }
+    
+    @Test
+    public void testUpdatePlayersStatistics() throws Exception {
+    	// arrange
+    	final Player player = PlayerTestDataBuilder.aPlayer().build();
+    	final PlayerDto playerDto = PlayerDtoTestDataBuilder.aPlayer().build();
+    	
+    	when(playerDataService.getPlayer(playerDto.getId())).thenReturn(player);
+    	
+    	// act
+    	playerFacade.updatePlayersStatistics(Arrays.asList(playerDto));
+    	
+    	// assert
+    	verify(playerDataService).updatePlayers(playerListCaptor.capture());
+    	
+    	final List<Player> updatedPlayerList = playerListCaptor.getValue();
+    	assertThat(updatedPlayerList).hasSize(1);
+    	
+    	final Player updatedPlayer = updatedPlayerList.get(0);
+    	
+    	assertThat(updatedPlayer.getAssists()).isEqualTo(playerDto.getAssists());
+    	assertThat(updatedPlayer.getCleanSheets()).isEqualTo(playerDto.getCleanSheets());
+    	assertThat(updatedPlayer.getGoals()).isEqualTo(playerDto.getGoals());
+    	assertThat(updatedPlayer.getPointsPerGame()).isEqualTo(playerDto.getPointsPerGame());
+    	assertThat(updatedPlayer.getTotalPoints()).isEqualTo(playerDto.getTotalPoints());
+    }
 }
