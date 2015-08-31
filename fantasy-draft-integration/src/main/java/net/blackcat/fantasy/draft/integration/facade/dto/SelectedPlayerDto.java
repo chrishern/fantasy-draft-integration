@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import net.blackcat.fantasy.draft.integration.model.types.player.Position;
+import net.blackcat.fantasy.draft.integration.model.types.player.SelectedPlayerStatus;
 import net.blackcat.fantasy.draft.integration.model.types.player.StartingTeamStatus;
 
 /**
@@ -27,6 +28,8 @@ public class SelectedPlayerDto implements Serializable, Comparable<SelectedPlaye
     private BigDecimal cost;
     private Integer weeklyPointsScored;
     private int pointsScored;
+    private BigDecimal sellToPotPrice;
+    private SelectedPlayerStatus selectedStatus;
 
     /**
      * @return the selectedPlayerId
@@ -145,6 +148,41 @@ public class SelectedPlayerDto implements Serializable, Comparable<SelectedPlaye
     public void setPointsScored(int pointsScored) {
         this.pointsScored = pointsScored;
     }
+
+	/**
+	 * @return the sellToPotPrice
+	 */
+	public BigDecimal getSellToPotPrice() {
+		return sellToPotPrice;
+	}
+
+	/**
+	 * @param sellToPotPrice the sellToPotPrice to set
+	 */
+	public void setSellToPotPrice(BigDecimal sellToPotPrice) {
+		this.sellToPotPrice = sellToPotPrice;
+	}
+
+	/**
+	 * @return the selectedStatus
+	 */
+	public SelectedPlayerStatus getSelectedStatus() {
+		return selectedStatus;
+	}
+
+	/**
+	 * @param selectedStatus the selectedStatus to set
+	 */
+	public void setSelectedStatus(SelectedPlayerStatus selectedStatus) {
+		this.selectedStatus = selectedStatus;
+	}
+
+	/**
+	 * @return the cost
+	 */
+	public BigDecimal getCost() {
+		return cost;
+	}
 
 	@Override
 	public int compareTo(final SelectedPlayerDto playerToCompare) {

@@ -34,7 +34,7 @@ public class TeamToSquadDtoConverter implements Converter<Team, SquadDto> {
     @Override
     public SquadDto convert(final Team team) {
 
-        final SquadDto squad = new SquadDto(team.getId(), team.getName());
+        final SquadDto squad = new SquadDto(team.getId(), team.getName(), team.getRemainingBudget());
 
         addSelectedPlayers(team, squad);
         
@@ -63,6 +63,8 @@ public class TeamToSquadDtoConverter implements Converter<Team, SquadDto> {
             selectedPlayerDto.setSelectedPlayerId(selectedPlayer.getId());
             selectedPlayerDto.setWeeklyPointsScored(gameweekScoreForPlayer);
             selectedPlayerDto.setStartingTeamStatus(selectedPlayer.getStartingTeamStatus());
+            selectedPlayerDto.setSelectedStatus(selectedPlayer.getSelectedStatus());
+            selectedPlayerDto.setSellToPotPrice(selectedPlayer.getCurrentSellToPotPrice());
 
             squad.addSelectedPlayer(selectedPlayerDto);
         }

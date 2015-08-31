@@ -55,6 +55,7 @@ public class TeamToSquadDtoConverterTest {
 		// assert
 		assertThat(squadDto.getTeamId()).isEqualTo(team.getId());
 		assertThat(squadDto.getTeamName()).isEqualTo(team.getName());
+		assertThat(squadDto.getRemainingBudget()).isEqualTo(team.getRemainingBudget());
 		assertThat(squadDto.getCurrentPlayers()).hasSize(team.getSelectedPlayers().size());
 		
 		final SelectedPlayerDto selectedPlayerDto = squadDto.getCurrentPlayers().get(0);
@@ -68,6 +69,8 @@ public class TeamToSquadDtoConverterTest {
 		assertThat(selectedPlayerDto.getSelectedPlayerId()).isEqualTo(selectedPlayer.getId());
 		assertThat(selectedPlayerDto.getWeeklyPointsScored()).isEqualTo(PLAYER_GAMEWEEK_SCORE);
 		assertThat(selectedPlayerDto.getStartingTeamStatus()).isEqualTo(selectedPlayer.getStartingTeamStatus());
+		assertThat(selectedPlayerDto.getSelectedStatus()).isEqualTo(selectedPlayer.getSelectedStatus());
+		assertThat(selectedPlayerDto.getSellToPotPrice()).isEqualTo(selectedPlayer.getCurrentSellToPotPrice());
 	}
 
 }

@@ -130,6 +130,21 @@ public class Team implements Serializable {
     	final GameweekScore gameweekScore = new GameweekScore(gameweek, score);
     	gameweekScores.add(gameweekScore);
     }
+    
+    /**
+     * Sell a player in this team to the pot.
+     * 
+     * @param selectedPlayerId ID of the selected player to sell to the pot.
+     * @param amount Amount they have been sold for.
+     */
+    public void sellPlayerToPot(final int selectedPlayerId, final BigDecimal amount) {
+    	
+    	final SelectedPlayer selectedPlayer = getSelectedPlayer(selectedPlayerId);
+    	selectedPlayer.sellToPot();
+    	
+    	this.status = TeamStatus.INCOMPLETE;
+    	this.remainingBudget = remainingBudget.add(amount);
+    }
 
     /**
      * Set the {@link User} representing the manager of this Team.
@@ -215,6 +230,23 @@ public class Team implements Serializable {
     	}
     	
     	return currentlySelectedPlayers;
+    }
+    
+    /**
+     * Get a {@link SelectedPlayer} in this team with a given ID.
+     * 
+     * @param selectedPlayerId Selected player ID of the player to get.
+     * @return {@link SelectedPlayer} with the given ID or null if one can not be found.
+     */
+    public SelectedPlayer getSelectedPlayer(final int selectedPlayerId) {
+    	
+    	for (final SelectedPlayer selectedPlayer : this.selectedPlayers) {
+    		if (selectedPlayer.getId() == selectedPlayerId) {
+    			return selectedPlayer;
+    		}
+    	}
+    	
+    	return null;
     }
     
     /**

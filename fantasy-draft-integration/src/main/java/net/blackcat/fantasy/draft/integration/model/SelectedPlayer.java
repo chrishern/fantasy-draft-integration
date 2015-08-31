@@ -180,6 +180,13 @@ public class SelectedPlayer implements Serializable, Comparable<SelectedPlayer> 
 		
 		this.currentSellToPotPrice = currentResalePrice.setScale(1, RoundingMode.HALF_UP);
     }
+    
+    /**
+     * Mark this player as being sold to the pot.
+     */
+    public void sellToPot() {
+    	this.selectedStatus = SelectedPlayerStatus.PENDING_SALE_TO_POT;
+    }
 
     /**
      * @return the player

@@ -41,6 +41,9 @@ public class League implements Serializable {
 
     @OneToOne(cascade = { CascadeType.ALL })
     private Auction auction;
+    
+    @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "league")
+    private List<TransferWindow> transferWindows;
 
     /*
      * Used only for Hibernate database mapping.
@@ -145,4 +148,11 @@ public class League implements Serializable {
     public Auction getAuction() {
         return auction;
     }
+
+	/**
+	 * @return the transferWindows
+	 */
+	public List<TransferWindow> getTransferWindows() {
+		return transferWindows;
+	}
 }

@@ -3,6 +3,7 @@
  */
 package net.blackcat.fantasy.draft.integration.facade.dto;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,11 +18,13 @@ public class SquadDto {
 
 	private int teamId;
 	private String teamName;
+	private BigDecimal remainingBudget;
     private List<SelectedPlayerDto> currentPlayers;
 
-    public SquadDto(final int teamId, final String teamName) {
+    public SquadDto(final int teamId, final String teamName, final BigDecimal remainingBudget) {
     	this.teamId = teamId;
     	this.teamName = teamName;
+    	this.remainingBudget = remainingBudget;
         this.currentPlayers = new ArrayList<SelectedPlayerDto>();
     }
     
@@ -55,4 +58,11 @@ public class SquadDto {
     public List<SelectedPlayerDto> getCurrentPlayers() {
         return currentPlayers;
     }
+
+	/**
+	 * @return the remainingBudget
+	 */
+	public BigDecimal getRemainingBudget() {
+		return remainingBudget;
+	}
 }
