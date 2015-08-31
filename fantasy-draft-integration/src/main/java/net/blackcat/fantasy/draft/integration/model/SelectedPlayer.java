@@ -187,6 +187,13 @@ public class SelectedPlayer implements Serializable, Comparable<SelectedPlayer> 
     public void sellToPot() {
     	this.selectedStatus = SelectedPlayerStatus.PENDING_SALE_TO_POT;
     }
+    
+    /**
+     * Mark this player as having has a transfer bid accepted.
+     */
+    public void transferBidAccepted() {
+    	this.selectedStatus = SelectedPlayerStatus.PENDING_TRANSFER_OUT;
+    }
 
     /**
      * @return the player

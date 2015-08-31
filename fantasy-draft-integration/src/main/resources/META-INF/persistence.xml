@@ -15,6 +15,7 @@
 		<class>net.blackcat.fantasy.draft.integration.model.SaleToPot</class>
 		<class>net.blackcat.fantasy.draft.integration.model.SelectedPlayer</class>
 		<class>net.blackcat.fantasy.draft.integration.model.Team</class>
+		<class>net.blackcat.fantasy.draft.integration.model.Transfer</class>
 		<class>net.blackcat.fantasy.draft.integration.model.TransferWindow</class>
 		<class>net.blackcat.fantasy.draft.integration.model.User</class>
 

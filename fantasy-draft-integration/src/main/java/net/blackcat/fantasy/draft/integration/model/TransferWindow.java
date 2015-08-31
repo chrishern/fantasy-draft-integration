@@ -42,6 +42,9 @@ public class TransferWindow implements Serializable {
 	
 	@OneToMany(cascade = { CascadeType.ALL })
 	private List<SaleToPot> potSales;
+	
+	@OneToMany(cascade = { CascadeType.ALL })
+	private List<Transfer> transfers;
 
 	/*
 	 * Only used for Hibernate database mapping.
@@ -54,6 +57,7 @@ public class TransferWindow implements Serializable {
 	public TransferWindow(final int leagueSequenceNumber) {
 		this.leagueSequenceNumber = leagueSequenceNumber;
 		this.potSales = new ArrayList<SaleToPot>();
+		this.transfers = new ArrayList<Transfer>();
 	}
 	
 	/**
@@ -66,5 +70,61 @@ public class TransferWindow implements Serializable {
 	public void addPotSale(final Team team, final SelectedPlayer player, final BigDecimal amount) {
 		final SaleToPot potSale = new SaleToPot(team, player, amount);
 		potSales.add(potSale);
+	}
+	
+	/**
+	 * Make a transfer bid in the window.
+	 * 
+	 * @param buyingTeam The team making the offer.
+	 * @param sellingTeam The team subject to the offer.
+	 * @param playerBiddedFor The player subject to the offer.
+	 * @param amount The amount of the offer.
+	 */
+	public void makeTransferBid(final Team buyingTeam, final Team sellingTeam, final SelectedPlayer playerBiddedFor, final BigDecimal amount) {
+		final Transfer transfer = new Transfer(buyingTeam, sellingTeam, playerBiddedFor, amount);
+		transfers.add(transfer);
+	}
+	
+	/**
+	 * Accept a transfer bid based on the ID of the bid.
+	 * 
+	 * @param bidId ID of the bis to accept.
+	 */
+	public void acceptTransfer(final int bidId) {
+
+		final Transfer bid = getTransfer(bidId);
+		bid.acceptBid();
+	}
+	
+	/**
+	 * Reject a transfer bid based on the ID of the bid.
+	 * 
+	 * @param bidId ID of the bis to accept.
+	 */
+	public void rejectTransfer(final int bidId) {
+		
+		final Transfer bid = getTransfer(bidId);
+		bid.rejectBid();
+	}
+	
+	/*
+	 * Get a transfer bid based on the bid ID.
+	 */
+	private Transfer getTransfer(final int bidId) {
+		
+		for (final Transfer bid : transfers) {
+			if (bid.getId() == bidId) {
+				return bid;
+			}
+		}
+		
+		return null;
+	}
+
+	/**
+	 * @return the transfers
+	 */
+	public List<Transfer> getTransfers() {
+		return transfers;
 	}
 }

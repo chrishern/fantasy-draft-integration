@@ -145,6 +145,25 @@ public class Team implements Serializable {
     	this.status = TeamStatus.INCOMPLETE;
     	this.remainingBudget = remainingBudget.add(amount);
     }
+    
+    /**
+     * Record the fact that this team has had a transfer bid accepted.
+     * 
+     * @param amount The amount the bid was for.
+     */
+    public void transferBidAccepted(final BigDecimal amount) {
+    	reduceRemaningBudget(amount);
+    }
+    
+    /**
+     * Record the fact that this team has agreed to sell a player to another team.
+     * 
+     * @param amount The amount the bid was for.
+     */
+    public void agreedToSellPlayer(final BigDecimal amount) {
+    	this.status = TeamStatus.INCOMPLETE;
+    	this.remainingBudget = remainingBudget.add(amount);
+    }
 
     /**
      * Set the {@link User} representing the manager of this Team.
