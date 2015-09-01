@@ -75,6 +75,30 @@ public class AuctionPhaseResultsService {
 
         return updatedPlayerBids;
     }
+    
+    /*
+     * TODO Look at this
+     */
+    public Map<Integer, List<Bid>> determineSuccessfulBidsWithoutModelUpdates(final Map<Integer, List<Bid>> playerBids) {
+
+        final Map<Integer, List<Bid>> updatedPlayerBids = new HashMap<Integer, List<Bid>>();
+
+        for (final Integer playerId : playerBids.keySet()) {
+
+            final List<Bid> bids = playerBids.get(playerId);
+            Collections.sort(bids);
+
+            if (playerHasOnlyOneBid(bids)) {
+            	markSuccessfulBidWithoutModelUpdates(bids);
+            } else {
+            	processMultipleBidPlayerWithoutModelUpdates(bids);
+            }
+
+            updatedPlayerBids.put(playerId, bids);
+        }
+
+        return updatedPlayerBids;
+    }
 
     /**
      * Get a map of Team objects mapped to a list of successful bids that team has made.
@@ -129,6 +153,15 @@ public class AuctionPhaseResultsService {
             markSuccessfulBid(bids);
         }
     }
+    
+    /*
+     * TODO Look at this.
+     */
+    private void processMultipleBidPlayerWithoutModelUpdates(final List<Bid> bids) {
+        if (!isMatchingHighestBids(bids)) {
+            markSuccessfulBidWithoutModelUpdates(bids);
+        }
+    }
 
     /*
      * Determine if a player only has one bid.
@@ -153,5 +186,15 @@ public class AuctionPhaseResultsService {
 
         successfulBid.markBidAsSuccessful();
         successfulBid.getPlayer().markPlayerAsSelected();
+    }
+    
+    /*
+     * TODO Look at this.
+     */
+    private void markSuccessfulBidWithoutModelUpdates(final List<Bid> bids) {
+
+        final Bid successfulBid = bids.get(0);
+
+        successfulBid.markBidAsSuccessful();
     }
 }

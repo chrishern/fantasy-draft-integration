@@ -51,4 +51,25 @@ public class SaleToPot implements Serializable {
 		this.player = player;
 		this.amount = amount;
 	}
+
+	/**
+	 * @return the team
+	 */
+	public Team getTeam() {
+		return team;
+	}
+
+	/**
+	 * @return the player
+	 */
+	public SelectedPlayer getPlayer() {
+		return player;
+	}
+
+	/**
+	 * @return the amount
+	 */
+	public BigDecimal getAmount() {
+		return amount;
+	}
 }

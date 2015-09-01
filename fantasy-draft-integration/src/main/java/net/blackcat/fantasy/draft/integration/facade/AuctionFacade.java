@@ -213,7 +213,7 @@ public class AuctionFacade {
                 final AuctionPhaseResultsDto auctionPhaseResults = new AuctionPhaseResultsDto(auctionPhase.getSequenceNumber());
 
                 final Map<Integer, List<Bid>> playerBids = auctionPhaseResultsService.buildUpPlayerBidList(auctionPhase);
-                final Map<Integer, List<Bid>> playerBidsWithSuccessMarked = auctionPhaseResultsService.determineSuccessfulBids(playerBids);
+                final Map<Integer, List<Bid>> playerBidsWithSuccessMarked = auctionPhaseResultsService.determineSuccessfulBidsWithoutModelUpdates(playerBids);
 
                 createAndAddAuctionPhaseResultsDtos(auctionPhaseResults, playerBidsWithSuccessMarked);
 

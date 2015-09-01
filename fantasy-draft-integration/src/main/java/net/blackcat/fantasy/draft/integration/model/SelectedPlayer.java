@@ -80,6 +80,7 @@ public class SelectedPlayer implements Serializable, Comparable<SelectedPlayer> 
         this.player = player;
         this.cost = cost;
         this.fplCostAtPurchase = fplCostAtPurchase;
+        this.startingTeamStatus = StartingTeamStatus.TO_BE_SET;
         this.selectedStatus = SelectedPlayerStatus.STILL_SELECTED;
     }
     
@@ -189,10 +190,26 @@ public class SelectedPlayer implements Serializable, Comparable<SelectedPlayer> 
     }
     
     /**
+     * Complete this player being sold to the pot.
+     */
+    public void completeSaleToPot() {
+    	this.startingTeamStatus = StartingTeamStatus.NOT_APPLICABLE;
+    	this.selectedStatus = SelectedPlayerStatus.SOLD_TO_POT;
+    }
+    
+    /**
      * Mark this player as having has a transfer bid accepted.
      */
     public void transferBidAccepted() {
     	this.selectedStatus = SelectedPlayerStatus.PENDING_TRANSFER_OUT;
+    }
+    
+    /**
+     * Complete the sale of a player from one team to another.
+     */
+    public void completePlayerSale() {
+    	this.selectedStatus = SelectedPlayerStatus.TRANSFERRED_OUT;
+    	this.selectedStatus = SelectedPlayerStatus.SOLD_TO_POT;
     }
 
     /**

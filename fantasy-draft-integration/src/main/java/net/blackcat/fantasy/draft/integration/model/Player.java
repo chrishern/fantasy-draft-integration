@@ -104,6 +104,13 @@ public class Player implements Serializable {
     public void markPlayerAsSelected() {
         this.selectionStatus = PlayerSelectionStatus.SELECTED;
     }
+    
+    /**
+     * Mark this player as not being selected by a team.
+     */
+    public void markPlayerAsNotSelected() {
+        this.selectionStatus = PlayerSelectionStatus.NOT_SELECTED;
+    }
 
     /**
      * Update the total points scored for this player.

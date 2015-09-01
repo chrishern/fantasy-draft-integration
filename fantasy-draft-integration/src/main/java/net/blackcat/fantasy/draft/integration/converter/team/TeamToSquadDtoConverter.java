@@ -49,7 +49,7 @@ public class TeamToSquadDtoConverter implements Converter<Team, SquadDto> {
     	final Gameweek gameweek = gameweekDataService.getGameweek();
     	final int previousGameweek = gameweek.getPreviousGameweek();
     	
-        for (final SelectedPlayer selectedPlayer : team.getSelectedPlayers()) {
+        for (final SelectedPlayer selectedPlayer : team.getCurrentlySelectedPlayers()) {
 
             final Player player = selectedPlayer.getPlayer();
             final SelectedPlayerDto selectedPlayerDto = new SelectedPlayerDto();

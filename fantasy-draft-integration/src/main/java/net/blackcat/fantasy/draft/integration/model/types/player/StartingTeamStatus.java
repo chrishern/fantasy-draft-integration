@@ -18,7 +18,9 @@ public enum StartingTeamStatus {
 	SUB_2(false),
 	SUB_3(false),
 	SUB_4(false),
-	SUB_5(false);
+	SUB_5(false),
+	TO_BE_SET(false),
+	NOT_APPLICABLE(false);
 	
 	private boolean isStartingPosition;
 	

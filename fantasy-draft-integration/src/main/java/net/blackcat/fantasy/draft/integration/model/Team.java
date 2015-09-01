@@ -164,6 +164,18 @@ public class Team implements Serializable {
     	this.status = TeamStatus.INCOMPLETE;
     	this.remainingBudget = remainingBudget.add(amount);
     }
+    
+    /**
+     * Complete the purcahse of a player from another team.
+     * 
+     * @param player The player being bought.
+     * @param cost The cost of the player.
+     */
+    public void completePlayerPurchase(final Player player, final BigDecimal cost) {
+    	final SelectedPlayer newSelectedPlayer = new SelectedPlayer(player, cost, player.getCurrentPrice());
+    	this.selectedPlayers.add(newSelectedPlayer);
+    	this.updateTeamStatus();
+    }
 
     /**
      * Set the {@link User} representing the manager of this Team.
@@ -355,7 +367,7 @@ public class Team implements Serializable {
      */
     private void updateTeamStatus() {
 
-        if (this.selectedPlayers.size() == SQUAD_SIZE) {
+        if (this.getCurrentlySelectedPlayers().size() == SQUAD_SIZE) {
             this.status = TeamStatus.COMPLETE;
         }
     }

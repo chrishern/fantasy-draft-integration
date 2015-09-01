@@ -45,6 +45,9 @@ public class TransferWindow implements Serializable {
 	
 	@OneToMany(cascade = { CascadeType.ALL })
 	private List<Transfer> transfers;
+	
+	@OneToMany(cascade = { CascadeType.ALL })
+	private List<AuctionPhase> auctionPhases;
 
 	/*
 	 * Only used for Hibernate database mapping.
@@ -58,6 +61,7 @@ public class TransferWindow implements Serializable {
 		this.leagueSequenceNumber = leagueSequenceNumber;
 		this.potSales = new ArrayList<SaleToPot>();
 		this.transfers = new ArrayList<Transfer>();
+		this.auctionPhases = new ArrayList<AuctionPhase>();
 	}
 	
 	/**
@@ -107,6 +111,38 @@ public class TransferWindow implements Serializable {
 		bid.rejectBid();
 	}
 	
+	/**
+	 * @return the transfers
+	 */
+	public List<Transfer> getTransfers() {
+		return transfers;
+	}
+	
+	/**
+	 * Get the open auction phase for this transfer window.
+	 * 
+	 * @return The open auction phase for this transfer window or null if one does not exist.
+	 */
+	public AuctionPhase getOpenAuctionPhase() {
+		
+		for (final AuctionPhase phase : auctionPhases) {
+			if (phase.isOpen()) {
+				return phase;
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Start a new auction phase for this transfer window.
+	 */
+	public void startAuctionPhase() {
+		
+		final AuctionPhase newPhase = new AuctionPhase(auctionPhases.size() + 1);
+		auctionPhases.add(newPhase);
+	}
+
 	/*
 	 * Get a transfer bid based on the bid ID.
 	 */
@@ -122,9 +158,17 @@ public class TransferWindow implements Serializable {
 	}
 
 	/**
-	 * @return the transfers
+	 * @return the auctionPhases
 	 */
-	public List<Transfer> getTransfers() {
-		return transfers;
+	public List<AuctionPhase> getAuctionPhases() {
+		return auctionPhases;
 	}
+
+	/**
+	 * @return the potSales
+	 */
+	public List<SaleToPot> getPotSales() {
+		return potSales;
+	}
+	
 }
