@@ -41,7 +41,7 @@ public class League implements Serializable {
 
     @OneToOne(cascade = { CascadeType.ALL })
     private Auction auction;
-    
+
     @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "league")
     private List<TransferWindow> transferWindows;
 
@@ -106,14 +106,6 @@ public class League implements Serializable {
     }
 
     /**
-     * @param name
-     *            the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
      * @param auction
      *            the auction to set
      */
@@ -149,10 +141,10 @@ public class League implements Serializable {
         return auction;
     }
 
-	/**
-	 * @return the transferWindows
-	 */
-	public List<TransferWindow> getTransferWindows() {
-		return transferWindows;
-	}
+    /**
+     * @return the transferWindows
+     */
+    public List<TransferWindow> getTransferWindows() {
+        return transferWindows;
+    }
 }

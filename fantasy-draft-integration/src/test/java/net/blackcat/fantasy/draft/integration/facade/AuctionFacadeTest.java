@@ -212,7 +212,7 @@ public class AuctionFacadeTest {
     @Test
     public void testCloseAuctionPhase() throws Exception {
         // arrange
-        final Auction auction = AuctionTestDataBuilder.anAuctionWithOpenPhase().build();
+        final Auction auction = AuctionTestDataBuilder.anAuction().build();
         final AuctionPhase openAuctionPhase = auction.getPhases().get(0);
         final League league = LeagueTestDataBuilder.aLeague().withAuction(auction).build();
         final Team team = mock(Team.class);
