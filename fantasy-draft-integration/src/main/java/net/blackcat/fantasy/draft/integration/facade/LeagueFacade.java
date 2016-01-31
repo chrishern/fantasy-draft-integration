@@ -86,8 +86,11 @@ public class LeagueFacade {
     		final TeamSummaryDto teamSummary = new TeamSummaryDto(team.getId(), team.getName());
     		
     		for (final SelectedPlayer selectedPlayer : team.getSelectedPlayers()) {
-    			final Player player = selectedPlayer.getPlayer();
-    			teamSummary.addPlayer(selectedPlayer.getId(), player.getForename(), player.getSurname(), player.getPosition());
+    			
+    			if (selectedPlayer.isStillSelected()) {
+    				final Player player = selectedPlayer.getPlayer();
+    				teamSummary.addPlayer(selectedPlayer.getId(), player.getForename(), player.getSurname(), player.getPosition());
+    			}
     		}
     		
     		teamSummaries.add(teamSummary);

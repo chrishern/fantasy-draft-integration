@@ -93,7 +93,8 @@ public class SelectedPlayer implements Serializable, Comparable<SelectedPlayer> 
      * @return True/false depending on whether this player is still selected for this team.
      */
     public boolean isStillSelected() {
-    	return this.selectedStatus == SelectedPlayerStatus.STILL_SELECTED;
+    	return this.selectedStatus == SelectedPlayerStatus.STILL_SELECTED || 
+    			this.selectedStatus == SelectedPlayerStatus.PENDING_SALE_TO_POT || this.selectedStatus == SelectedPlayerStatus.PENDING_TRANSFER_OUT;
     }
 
     /**

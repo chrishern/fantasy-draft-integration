@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.blackcat.fantasy.draft.integration.facade.dto.transferwindow.TransferWindowDto;
+
 /**
  * DTO for transferring a summary of the activity within a transfer window.
  * 
@@ -17,56 +19,20 @@ public class TransferWindowSummaryDto implements Serializable {
 
 	private static final long serialVersionUID = 8601040086924884432L;
 
-	private List<AuctionPhaseResultsDto> auctionPhaseResults;
-	private List<PotSaleSummaryDto> potSales;
-	private List<TransferSummaryDto> transfers;
+	private List<TransferWindowDto> transferWindows;
 	
 	public TransferWindowSummaryDto() {
-		auctionPhaseResults = new ArrayList<AuctionPhaseResultsDto>();
-		potSales = new ArrayList<PotSaleSummaryDto>();
-		transfers = new ArrayList<TransferSummaryDto>();
+		transferWindows = new ArrayList<TransferWindowDto>();
+	}
+	
+	public void addTransferWindow(final TransferWindowDto transferWindow) {
+		transferWindows.add(transferWindow);
 	}
 
 	/**
-	 * @return the auctionPhaseResults
+	 * @return the transferWindows
 	 */
-	public List<AuctionPhaseResultsDto> getAuctionPhaseResults() {
-		return auctionPhaseResults;
-	}
-
-	/**
-	 * @param auctionPhaseResults the auctionPhaseResults to set
-	 */
-	public void setAuctionPhaseResults(
-			List<AuctionPhaseResultsDto> auctionPhaseResults) {
-		this.auctionPhaseResults = auctionPhaseResults;
-	}
-
-	/**
-	 * @return the potSales
-	 */
-	public List<PotSaleSummaryDto> getPotSales() {
-		return potSales;
-	}
-
-	/**
-	 * @param potSales the potSales to set
-	 */
-	public void setPotSales(List<PotSaleSummaryDto> potSales) {
-		this.potSales = potSales;
-	}
-
-	/**
-	 * @return the transfers
-	 */
-	public List<TransferSummaryDto> getTransfers() {
-		return transfers;
-	}
-
-	/**
-	 * @param transfers the transfers to set
-	 */
-	public void setTransfers(List<TransferSummaryDto> transfers) {
-		this.transfers = transfers;
+	public List<TransferWindowDto> getTransferWindows() {
+		return transferWindows;
 	}
 }

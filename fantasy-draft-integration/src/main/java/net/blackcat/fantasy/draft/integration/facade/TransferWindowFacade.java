@@ -21,6 +21,7 @@ import net.blackcat.fantasy.draft.integration.facade.dto.TeamAuctionStatusDto;
 import net.blackcat.fantasy.draft.integration.facade.dto.TransferBidDto;
 import net.blackcat.fantasy.draft.integration.facade.dto.TransferSummaryDto;
 import net.blackcat.fantasy.draft.integration.facade.dto.TransferWindowSummaryDto;
+import net.blackcat.fantasy.draft.integration.facade.dto.transferwindow.TransferWindowDto;
 import net.blackcat.fantasy.draft.integration.model.AuctionPhase;
 import net.blackcat.fantasy.draft.integration.model.Bid;
 import net.blackcat.fantasy.draft.integration.model.League;
@@ -41,6 +42,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TransferWindowFacade {
 
+	private final static int TRANSFER_WINDOW = 2;
+	
 	private TeamDataService teamDataService;
 	private LeagueDataService leagueDataService;
 	private PlayerDataService playerDataService;
@@ -64,7 +67,7 @@ public class TransferWindowFacade {
 		
 		final Team teamForManager = teamDataService.getTeamForManager(sellPlayerToPotDto.getManagerEmailAddress());
     	final League league = teamForManager.getLeague();
-    	final TransferWindow transferWindow = league.getTransferWindows().get(0);
+    	final TransferWindow transferWindow = league.getTransferWindows().get(TRANSFER_WINDOW);
     	final SelectedPlayer soldToPotPlayer = teamForManager.getSelectedPlayer(sellPlayerToPotDto.getSelectedPlayerId());
     	
     	teamForManager.sellPlayerToPot(sellPlayerToPotDto.getSelectedPlayerId(), sellPlayerToPotDto.getAmount());
@@ -85,7 +88,7 @@ public class TransferWindowFacade {
 		final Team sellingTeam = teamDataService.getTeam(transferBid.getSellingTeam());
 		final SelectedPlayer playerSubjectOfBid = sellingTeam.getSelectedPlayer(transferBid.getSelectedPlayerSubjectOfBid());
 		final League league = buyingTeam.getLeague();
-		final TransferWindow transferWindow = league.getTransferWindows().get(0);
+		final TransferWindow transferWindow = league.getTransferWindows().get(TRANSFER_WINDOW);
 		
 		transferWindow.makeTransferBid(buyingTeam, sellingTeam, playerSubjectOfBid, transferBid.getAmount());
 		
@@ -103,7 +106,7 @@ public class TransferWindowFacade {
 		
 		final Team teamForManager = teamDataService.getTeamForManager(managerEmailAddress);
     	final League league = teamForManager.getLeague();
-    	final TransferWindow transferWindow = league.getTransferWindows().get(0);
+    	final TransferWindow transferWindow = league.getTransferWindows().get(TRANSFER_WINDOW);
     	
     	transferWindow.acceptTransfer(transferId);
     	
@@ -121,7 +124,7 @@ public class TransferWindowFacade {
 		
 		final Team teamForManager = teamDataService.getTeamForManager(managerEmailAddress);
     	final League league = teamForManager.getLeague();
-    	final TransferWindow transferWindow = league.getTransferWindows().get(0);
+    	final TransferWindow transferWindow = league.getTransferWindows().get(TRANSFER_WINDOW);
     	
     	transferWindow.rejectTransfer(transferId);
     	
@@ -132,7 +135,7 @@ public class TransferWindowFacade {
 		
 		final Team teamForManager = teamDataService.getTeamForManager(managerEmailAddress);
     	final League league = teamForManager.getLeague();
-    	final TransferWindow transferWindow = league.getTransferWindows().get(0);
+    	final TransferWindow transferWindow = league.getTransferWindows().get(TRANSFER_WINDOW);
     	final int teamId = teamForManager.getId();
     	
     	final OpenTransferWindowTeamTransfersDto transferDetail = new OpenTransferWindowTeamTransfersDto(teamId);
@@ -177,7 +180,7 @@ public class TransferWindowFacade {
 	public void moveTransferWindowOntoAuction(final int leagueId) throws FantasyDraftIntegrationException {
 		
 		final League league = leagueDataService.getLeague(leagueId);
-        final TransferWindow transferWindow = league.getTransferWindows().get(0);
+        final TransferWindow transferWindow = league.getTransferWindows().get(TRANSFER_WINDOW);
         
         updatePlayersSoldToPot(transferWindow);
         updateTransfersBetweenTeams(transferWindow);
@@ -196,7 +199,7 @@ public class TransferWindowFacade {
     public void startAuctionPhase(final int leagueId) throws FantasyDraftIntegrationException {
 
         final League league = leagueDataService.getLeague(leagueId);
-        final TransferWindow transferWindow = league.getTransferWindows().get(0);
+        final TransferWindow transferWindow = league.getTransferWindows().get(TRANSFER_WINDOW);
 
         transferWindow.startAuctionPhase();
         
@@ -214,7 +217,7 @@ public class TransferWindowFacade {
         // Get team associated with bids, league associated with team and open auction phase for league
         final Team team = teamDataService.getTeam(bids.getTeamId());
         final League league = team.getLeague();
-        final TransferWindow transferWindow = league.getTransferWindows().get(0);
+        final TransferWindow transferWindow = league.getTransferWindows().get(TRANSFER_WINDOW);
         final AuctionPhase openAuctionPhase = transferWindow.getOpenAuctionPhase();
 
         // Convert dtos to domain bids
@@ -238,7 +241,7 @@ public class TransferWindowFacade {
 
         // Get league and open auction phase
         final League league = leagueDataService.getLeague(leagueId);
-        final TransferWindow transferWindow = league.getTransferWindows().get(0);
+        final TransferWindow transferWindow = league.getTransferWindows().get(TRANSFER_WINDOW);
         final AuctionPhase openAuctionPhase = transferWindow.getOpenAuctionPhase();
 
         // Build up a map of PlayerId to List of Bids for that player
@@ -273,7 +276,7 @@ public class TransferWindowFacade {
 
         final Team team = teamDataService.getTeamForManager(managerEmailAddress);
         final League league = team.getLeague();
-        final TransferWindow transferWindow = league.getTransferWindows().get(0);
+        final TransferWindow transferWindow = league.getTransferWindows().get(TRANSFER_WINDOW);
         final AuctionPhase openAuctionPhase = transferWindow.getOpenAuctionPhase();
 
         final TeamAuctionStatusDto teamAuctionStatus = new TeamAuctionStatusDto(team.getRemainingBudget());
@@ -300,17 +303,31 @@ public class TransferWindowFacade {
     public TransferWindowSummaryDto getTransferWindowSummary(final int leagueId) throws FantasyDraftIntegrationException {
 
     	final TransferWindowSummaryDto transferWindowSummary = new TransferWindowSummaryDto();
-        
-        final League league = leagueDataService.getLeague(leagueId);
-        final TransferWindow transferWindow = league.getTransferWindows().get(0);
 
-        final List<AuctionPhaseResultsDto> auctionPhaseResultsList = createAuctionPhaseResults(transferWindow);
-        final List<PotSaleSummaryDto> potSaleSummaryList = createPotSaleSummary(transferWindow);
-        final List<TransferSummaryDto> transferSummaryList = createTransferSummary(transferWindow);
+    	final League league = leagueDataService.getLeague(leagueId);
+        int windowSequenceNumber = 1;
         
-        transferWindowSummary.setTransfers(transferSummaryList);
-        transferWindowSummary.setPotSales(potSaleSummaryList);
-        transferWindowSummary.setAuctionPhaseResults(auctionPhaseResultsList);
+        for (final TransferWindow transferWindow : league.getTransferWindows()) {
+
+        	final TransferWindowDto transferWindowDto = new TransferWindowDto(windowSequenceNumber);
+
+        	final List<AuctionPhaseResultsDto> auctionPhaseResultsList = createAuctionPhaseResults(transferWindow);
+        	final List<PotSaleSummaryDto> potSaleSummaryList = createPotSaleSummary(transferWindow);
+        	final List<TransferSummaryDto> transferSummaryList = createTransferSummary(transferWindow);
+        	
+        	transferWindowDto.setTransfers(transferSummaryList);
+        	transferWindowDto.setPotSales(potSaleSummaryList);
+        	transferWindowDto.setAuctionPhaseResults(auctionPhaseResultsList);
+        	
+        	transferWindowSummary.addTransferWindow(transferWindowDto);
+        	windowSequenceNumber++;
+        	
+        	if (windowSequenceNumber == 3) {
+        		break;
+        	}
+        }
+        
+
         
         return transferWindowSummary;
     }
