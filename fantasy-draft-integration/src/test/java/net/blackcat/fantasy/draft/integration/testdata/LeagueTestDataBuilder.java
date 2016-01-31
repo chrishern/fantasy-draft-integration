@@ -11,13 +11,20 @@ import net.blackcat.fantasy.draft.integration.model.League;
  */
 public class LeagueTestDataBuilder {
 
-    private static final String LEAGUE_NAME = TestDataConstants.LEAGUE_ONE_NAME;
+    private static final String DEFAULT_NAME = TestDataConstants.LEAGUE_ONE_NAME;
 
     private Auction auction;
+    private String name = DEFAULT_NAME;
 
     public static LeagueTestDataBuilder aLeague() {
 
         return new LeagueTestDataBuilder();
+    }
+
+    public LeagueTestDataBuilder withName(final String name) {
+
+        this.name = name;
+        return this;
     }
 
     public LeagueTestDataBuilder withAuction() {
@@ -34,7 +41,7 @@ public class LeagueTestDataBuilder {
 
     public League build() {
 
-        final League league = new League(LEAGUE_NAME);
+        final League league = new League(name);
 
         if (auction != null) {
             league.setAuction(auction);

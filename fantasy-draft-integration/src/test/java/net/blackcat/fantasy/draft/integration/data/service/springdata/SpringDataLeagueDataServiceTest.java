@@ -8,12 +8,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationExceptionCode;
+import net.blackcat.fantasy.draft.integration.model.Auction;
 import net.blackcat.fantasy.draft.integration.model.AuctionPhase;
 import net.blackcat.fantasy.draft.integration.model.League;
+import net.blackcat.fantasy.draft.integration.model.Team;
 import net.blackcat.fantasy.draft.integration.model.types.auction.AuctionPhaseStatus;
 import net.blackcat.fantasy.draft.integration.repository.LeagueRepository;
 import net.blackcat.fantasy.draft.integration.test.util.CustomIntegrationExceptionMatcher;
-import net.blackcat.fantasy.draft.integration.testdata.TestDataConstants;
+import net.blackcat.fantasy.draft.integration.testdata.AuctionPhaseTestDataBuilder;
+import net.blackcat.fantasy.draft.integration.testdata.AuctionTestDataBuilder;
+import net.blackcat.fantasy.draft.integration.testdata.LeagueTestDataBuilder;
+import net.blackcat.fantasy.draft.integration.testdata.TeamTestDataBuilder;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,30 +28,18 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
-
-import com.github.springtestdbunit.DbUnitTestExecutionListener;
-import com.github.springtestdbunit.annotation.DatabaseSetup;
-import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Unit tests for {@link SpringDataLeagueDataService}.
  * 
- * These tests are currently ignored because Spring DBUnit seems unable to properly clear the DB down because of foreign
- * key constraints. I need to refactor these tests or find out exactly what Spring DB unit is doing.
- * 
  * @author Chris Hern
  * 
  */
+@Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(value = { "/hsqlDatasourceContext.xml", "/testApplicationContext.xml" })
-@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
-        TransactionalTestExecutionListener.class, DbUnitTestExecutionListener.class })
-@DatabaseSetup("LeagueData.xml")
 public class SpringDataLeagueDataServiceTest {
 
     @Rule
@@ -64,16 +57,31 @@ public class SpringDataLeagueDataServiceTest {
     }
 
     @Test
-    public void testGetLeague_Success() throws Exception {
+    public void testAddLeague() {
         // arrange
+        final League league = LeagueTestDataBuilder.aLeague().build();
 
         // act
-        final League league = leagueDataService.getLeague(TestDataConstants.LEAGUE_ONE_ID);
+        leagueDataService.addLeague(league);
 
         // assert
-        assertThat(league).isNotNull();
-        assertThat(league.getId()).isEqualTo(TestDataConstants.LEAGUE_ONE_ID);
-        assertThat(league.getName()).isEqualTo(TestDataConstants.LEAGUE_ONE_NAME);
+        assertThat(repository.exists(league.getId())).isTrue();
+    }
+
+    @Test
+    public void testGetLeague_Success() throws Exception {
+        // arrange
+        final String newLeagueName = "New league name";
+        final League league = LeagueTestDataBuilder.aLeague().withName(newLeagueName).build();
+
+        repository.save(league);
+
+        // act
+        final League actualLeague = leagueDataService.getLeague(league.getId());
+
+        // assert
+        assertThat(actualLeague).isNotNull();
+        assertThat(actualLeague.getName()).isEqualTo(newLeagueName);
     }
 
     @Test
@@ -83,47 +91,42 @@ public class SpringDataLeagueDataServiceTest {
         thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.LEAGUE_NOT_FOUND));
 
         // act
-        leagueDataService.getLeague(100);
+        leagueDataService.getLeague(99999);
 
         // assert
-        Assert.fail("Exception expected");
+        Assert.fail("Exception expected.");
     }
 
     @Test
-    @ExpectedDatabase("LeagueData-AddedLeague.xml")
-    public void testAddLeague() {
-        // arrange
-        final League newLeague = new League(TestDataConstants.LEAGUE_FOUR_NAME);
-
-        // act
-        leagueDataService.addLeague(newLeague);
-
-        // assert - done via @ExpectedDatabase annotation
-    }
-
-    @Test
-    @ExpectedDatabase("LeagueData-UpdatedLeague.xml")
     public void testUpdateLeague_Success() throws Exception {
         // arrange
-        final League league = leagueDataService.getLeague(TestDataConstants.LEAGUE_ONE_ID);
+        final String newLeagueName = "Update league name";
+        final League league = LeagueTestDataBuilder.aLeague().withName(newLeagueName).build();
 
-        league.setName("New Name");
+        repository.save(league);
+
+        final League initialLeague = repository.findOne(league.getId());
+
+        assertThat(initialLeague.getTeams()).isEmpty();
 
         // act
+        final Team team = TeamTestDataBuilder.aTeam().build();
+        league.addTeam(team);
+
         leagueDataService.updateLeague(league);
 
         // assert
+        final League actualLeague = repository.findOne(league.getId());
+
+        assertThat(actualLeague.getTeams()).contains(team);
     }
 
     @Test
-    public void testUpdateLeague_LeagueDoesNotExist() throws Exception {
+    public void testUpdateLeague_LeagueNotFound() throws Exception {
         // arrange
         final League league = mock(League.class);
 
-        when(league.getId()).thenReturn(14);
-        when(league.getName()).thenReturn(TestDataConstants.LEAGUE_ONE_NAME);
-
-        league.openAuction();
+        when(league.getId()).thenReturn(9999999);
 
         thrownException.expect(FantasyDraftIntegrationException.class);
         thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.LEAGUE_NOT_FOUND));
@@ -132,13 +135,17 @@ public class SpringDataLeagueDataServiceTest {
         leagueDataService.updateLeague(league);
 
         // assert
-        Assert.fail("Exception expected");
+        Assert.fail("Exception expected.");
     }
 
     @Test
     public void testGetOpenAuctionPhase_Success() throws Exception {
         // arrange
-        final League league = leagueDataService.getLeague(TestDataConstants.LEAGUE_ONE_ID);
+        final AuctionPhase closedPhase = AuctionPhaseTestDataBuilder.aClosedAuctionPhase().build();
+        final Auction auction = AuctionTestDataBuilder.anAuction().withPhase(closedPhase).build();
+        final League league = LeagueTestDataBuilder.aLeague().withAuction(auction).build();
+
+        repository.save(league);
 
         // act
         final AuctionPhase openAuctionPhase = leagueDataService.getOpenAuctionPhase(league);
@@ -146,13 +153,15 @@ public class SpringDataLeagueDataServiceTest {
         // assert
         assertThat(openAuctionPhase).isNotNull();
         assertThat(openAuctionPhase.getStatus()).isEqualTo(AuctionPhaseStatus.OPEN);
-        assertThat(openAuctionPhase.getId()).isEqualTo(2);
     }
 
     @Test
-    public void testGetOpenAuctionPhase_NoOpenPhase() throws Exception {
+    public void testGetOpenAuctionPhase_DoesNotExist() throws Exception {
         // arrange
-        final League league = leagueDataService.getLeague(TestDataConstants.LEAGUE_TWO_ID);
+        final Auction auction = AuctionTestDataBuilder.anAuctionWithClosedPhase().build();
+        final League league = LeagueTestDataBuilder.aLeague().withAuction(auction).build();
+
+        repository.save(league);
 
         thrownException.expect(FantasyDraftIntegrationException.class);
         thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.OPEN_AUCTION_PHASE_NOT_FOUND));
@@ -161,57 +170,6 @@ public class SpringDataLeagueDataServiceTest {
         leagueDataService.getOpenAuctionPhase(league);
 
         // assert
-        Assert.fail("Exception expected");
-    }
-
-    @Test
-    public void testGetOpenAuctionPhase_NoAuction() throws Exception {
-        // arrange
-        final League league = leagueDataService.getLeague(TestDataConstants.LEAGUE_THREE_ID);
-
-        thrownException.expect(FantasyDraftIntegrationException.class);
-        thrownException.expect(CustomIntegrationExceptionMatcher.hasCode(FantasyDraftIntegrationExceptionCode.OPEN_AUCTION_PHASE_NOT_FOUND));
-
-        // act
-        leagueDataService.getOpenAuctionPhase(league);
-
-        // assert
-        Assert.fail("Exception expected");
-    }
-
-    @Test
-    public void testDoesOpenAuctionPhaseExist_True() throws Exception {
-        // arrange
-        final League league = leagueDataService.getLeague(TestDataConstants.LEAGUE_ONE_ID);
-
-        // act
-        final boolean doesOpenAuctionPhaseExist = leagueDataService.doesOpenAuctionPhaseExist(league);
-
-        // assert
-        assertThat(doesOpenAuctionPhaseExist).isTrue();
-    }
-
-    @Test
-    public void testDoesOpenAuctionPhaseExist_False_NoOpenPhase() throws Exception {
-        // arrange
-        final League league = leagueDataService.getLeague(TestDataConstants.LEAGUE_TWO_ID);
-
-        // act
-        final boolean doesOpenAuctionPhaseExist = leagueDataService.doesOpenAuctionPhaseExist(league);
-
-        // assert
-        assertThat(doesOpenAuctionPhaseExist).isFalse();
-    }
-
-    @Test
-    public void testDoesOpenAuctionPhaseExist_False_NoAuction() throws Exception {
-        // arrange
-        final League league = leagueDataService.getLeague(TestDataConstants.LEAGUE_THREE_ID);
-
-        // act
-        final boolean doesOpenAuctionPhaseExist = leagueDataService.doesOpenAuctionPhaseExist(league);
-
-        // assert
-        assertThat(doesOpenAuctionPhaseExist).isFalse();
+        Assert.fail("Exception expected.");
     }
 }

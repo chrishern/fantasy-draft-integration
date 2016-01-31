@@ -8,6 +8,7 @@ import java.util.List;
 
 import net.blackcat.fantasy.draft.integration.model.Auction;
 import net.blackcat.fantasy.draft.integration.model.AuctionPhase;
+import net.blackcat.fantasy.draft.integration.model.types.auction.AuctionPhaseStatus;
 
 /**
  * @author Chris Hern
@@ -16,6 +17,7 @@ import net.blackcat.fantasy.draft.integration.model.AuctionPhase;
 public class AuctionTestDataBuilder {
 
     private List<AuctionPhase> phases;
+    private boolean isOnlyPhaseClosed;
 
     private AuctionTestDataBuilder() {
         phases = new ArrayList<AuctionPhase>();
@@ -26,12 +28,11 @@ public class AuctionTestDataBuilder {
         return new AuctionTestDataBuilder();
     }
 
-    public static AuctionTestDataBuilder anAuctionWithOpenPhase() {
+    public static AuctionTestDataBuilder anAuctionWithClosedPhase() {
 
         final AuctionTestDataBuilder builder = new AuctionTestDataBuilder();
-        final AuctionPhase openAuctionPhase = AuctionPhaseTestDataBuilder.anOpenAuctionPhase().build();
 
-        builder.phases.add(openAuctionPhase);
+        builder.isOnlyPhaseClosed = true;
 
         return builder;
     }
@@ -47,8 +48,16 @@ public class AuctionTestDataBuilder {
 
         final Auction auction = new Auction();
 
+        if (isOnlyPhaseClosed) {
+            auction.getPhases().get(0).setStatus(AuctionPhaseStatus.CLOSED);
+        }
+
         for (final AuctionPhase phase : phases) {
             auction.createNewPhase();
+
+            if (!phase.isOpen()) {
+                auction.getPhases().get(auction.getPhases().size() - 1).setStatus(AuctionPhaseStatus.CLOSED);
+            }
         }
 
         return auction;

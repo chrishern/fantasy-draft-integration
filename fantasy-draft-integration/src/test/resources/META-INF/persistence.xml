@@ -12,8 +12,11 @@
 		<class>net.blackcat.fantasy.draft.integration.model.GameweekScore</class>
 		<class>net.blackcat.fantasy.draft.integration.model.League</class>
 		<class>net.blackcat.fantasy.draft.integration.model.Player</class>
+		<class>net.blackcat.fantasy.draft.integration.model.SaleToPot</class>
 		<class>net.blackcat.fantasy.draft.integration.model.SelectedPlayer</class>
 		<class>net.blackcat.fantasy.draft.integration.model.Team</class>
+		<class>net.blackcat.fantasy.draft.integration.model.Transfer</class>
+		<class>net.blackcat.fantasy.draft.integration.model.TransferWindow</class>
 		<class>net.blackcat.fantasy.draft.integration.model.User</class>
 
 	</persistence-unit>
