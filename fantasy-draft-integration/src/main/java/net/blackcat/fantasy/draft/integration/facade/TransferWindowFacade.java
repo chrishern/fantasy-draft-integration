@@ -321,10 +321,6 @@ public class TransferWindowFacade {
         	
         	transferWindowSummary.addTransferWindow(transferWindowDto);
         	windowSequenceNumber++;
-        	
-        	if (windowSequenceNumber == 3) {
-        		break;
-        	}
         }
         
 
