@@ -3,70 +3,98 @@
  */
 package net.blackcat.fantasy.draft.integration.facade;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import net.blackcat.fantasy.draft.integration.converter.ConverterService;
+import net.blackcat.fantasy.draft.integration.data.service.TeamDataService;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
-import net.blackcat.fantasy.draft.player.FplCostPlayer;
-import net.blackcat.fantasy.draft.team.Team;
-import net.blackcat.fantasy.draft.team.TeamSummary;
+import net.blackcat.fantasy.draft.integration.facade.dto.PlayerDto;
+import net.blackcat.fantasy.draft.integration.facade.dto.SquadDto;
+import net.blackcat.fantasy.draft.integration.model.League;
+import net.blackcat.fantasy.draft.integration.model.SelectedPlayer;
+import net.blackcat.fantasy.draft.integration.model.Team;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Operations for manipulating team related data.
+ * Facade providing team information.
  * 
- * @author Chris
- *
+ * @author Chris Hern
+ * 
  */
-public interface TeamFacade {
+@Component
+@Transactional
+public class TeamFacade {
 
-	/**
-	 * Create a new team within the back end.
-	 * 
-	 * @param teamName Name of the team to create.
-	 */
-	void createTeam(String teamName);
-	
-	/**
-	 * Get a team based on the name of the team.
-	 * 
-	 * @param teamName Name of the team to find
-	 * @return {@link Team} with the given name. 
-	 * @throws FantasyDraftIntegrationException If a team with the given name does not exist.
-	 */
-	Team getTeam(String teamName) throws FantasyDraftIntegrationException;
-	
-	
-	/**
-	 * Get the list of completed (i.e. fully picked) teams for a given league.
-	 * 
-	 * This was used to display the list of squads straight after the auction finished.
-	 * I.e. without any points or selected starting eleven information.
-	 * 
-	 * @param leagueId ID of the league to get the teams for.
-	 * @return List of {@link Team} objects in the given league.
-	 * @throws FantasyDraftIntegrationException If the league IF does not exist.
-	 */
-	List<Team> getCompleteTeams(int leagueId) throws FantasyDraftIntegrationException;
-	
-	/**
-	 * Get the summary of a team.  This summary includes the total points for the team and the
-	 * squad (in selection order) with the total points for each player.
-	 * 
-	 * @param teamId ID of the team to get the summary for.
-	 * @return Summary of the desired team.
-	 * @throws FantasyDraftIntegrationException If a team with the given ID is not found.
-	 */
-	TeamSummary getTeamSummary(int teamId) throws FantasyDraftIntegrationException;
-	
-	/**
-	 * Get the team summaries for a specific league.  This summary includes the total points for 
-	 * the team and the squad (in selection order) with the total points for each player.
-	 * 
-	 * @param leagueId ID of the league to get the team summaries for.
-	 * @return Team summaries from the desired league.
-	 * @throws FantasyDraftIntegrationException If a league with the given ID is not found.
-	 */
-	List<TeamSummary> getTeamSummaries(int leagueId) throws FantasyDraftIntegrationException;
-	
-	void updateSelectedPlayersWithInitialFplCost(final Map<Integer, FplCostPlayer> initialPlayerCosts);
+    private TeamDataService teamDataService;
+    private ConverterService converterService;
+
+    @Autowired
+    public TeamFacade(final TeamDataService teamDataService, final ConverterService converterService) {
+
+        this.teamDataService = teamDataService;
+        this.converterService = converterService;
+    }
+
+    /**
+     * Get squad details for the team owned by a given manager.
+     * 
+     * @param managerEmailAddress
+     *            Email address of the manager to get the squad for.
+     * @return Squad for the given manager.
+     * @throws FantasyDraftIntegrationException
+     */
+    public SquadDto getSquadDetails(final String managerEmailAddress) throws FantasyDraftIntegrationException {
+
+        final Team teamForManager = teamDataService.getTeamForManager(managerEmailAddress);
+
+        return converterService.convert(teamForManager, SquadDto.class);
+    }
+    
+    /**
+     * Get details of all squads in a manager's league.
+     * 
+     * @param managerEmailAddress Email address of the manager to get the squads for.
+     * @return List of squads in the manager's league.
+     * @throws FantasyDraftIntegrationException
+     */
+    public List<SquadDto> getSquadDetailsForLeague(final String managerEmailAddress) throws FantasyDraftIntegrationException {
+    	
+    	final Team teamForManager = teamDataService.getTeamForManager(managerEmailAddress);
+    	final League league = teamForManager.getLeague();
+    	
+    	final List<SquadDto> squads = new ArrayList<SquadDto>();
+    	
+    	for (final Team team : league.getTeams()) {
+    		squads.add(converterService.convert(team, SquadDto.class));
+    	}
+    	
+    	return squads;
+    }
+
+    /**
+     * Update the current sell to pot price of the currently selected players in each team.
+     * 
+     * @param playerDtoMap Map of player ID to {@link PlayerDto} containing the current price of the player.
+     * @throws FantasyDraftIntegrationException
+     */
+    public void updateSelectedPlayersSellToPotPrice(final Map<Integer, PlayerDto> playerDtoMap) throws FantasyDraftIntegrationException {
+    	
+    	final List<Team> teams = teamDataService.getTeams();
+    	
+    	for (final Team team : teams) {
+    		
+    		for (final SelectedPlayer selectedPlayer : team.getCurrentlySelectedPlayers()) {
+    			
+    			final PlayerDto playerDto = playerDtoMap.get(selectedPlayer.getPlayer().getId());
+    			selectedPlayer.updateCurrentSellToPotPrice(playerDto.getCurrentPrice());
+    		}
+    		
+    		teamDataService.updateTeam(team);
+    	}
+    }
 }

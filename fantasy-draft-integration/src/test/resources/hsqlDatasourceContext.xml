@@ -23,7 +23,7 @@
 	</bean>
 
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<property name="persistenceUnitName" value="jpaData" />
+		<property name="persistenceUnitName" value="testJpaData" />
 		<property name="dataSource" ref="dataSource" />
 		<property name="jpaProperties" ref="jpaProperties" />
 	</bean>

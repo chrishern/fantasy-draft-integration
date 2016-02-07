@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<Player id="1" forename="Chris" surname="Makin" team="Sunderland" position="DEFENDER" selectionStatus="NOT_SELECTED" totalPoints="12" goals="0" assists="0" cleanSheets="0"  />
+	<Player id="2" forename="Nicky" surname="Summerbee" team="Sunderland" position="MIDFIELDER" selectionStatus="SELECTED" totalPoints="45" goals="0" assists="0" cleanSheets="0"  />
+	<Player id="3" forename="Alex" surname="Rae" team="Sunderland" position="MIDFIELDER" selectionStatus="NOT_SELECTED" totalPoints="0" goals="0" assists="0" cleanSheets="0" />
+	<Player id="4" forename="Kevin" surname="Phillips" team="Sunderland" position="STRIKER" selectionStatus="NOT_SELECTED" totalPoints="12" currentPrice="9.5"  goals="0" assists="0" cleanSheets="0" />
+	<User />
+	<Team />
+	<League />
+	<Auction />
+	<AuctionPhase />
+	<Auction_AuctionPhase />
+	<AuctionPhase_Bid />
+	<Bid />
+	<SelectedPlayer />
+	<Team_SelectedPlayer />
+</dataset>

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence       http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
-	<persistence-unit name="jpaData" transaction-type="RESOURCE_LOCAL">
+	<persistence-unit name="testJpaData" transaction-type="RESOURCE_LOCAL">
 
 		<provider>org.hibernate.ejb.HibernatePersistence</provider> 
 		
-		<class>net.blackcat.fantasy.draft.integration.entity.BidEntity</class>
-		<class>net.blackcat.fantasy.draft.integration.entity.DraftRoundEntity</class>
-		<class>net.blackcat.fantasy.draft.integration.entity.ExchangedPlayerEntity</class>
-		<class>net.blackcat.fantasy.draft.integration.entity.GameweekEntity</class>
-		<class>net.blackcat.fantasy.draft.integration.entity.GameweekScoreEntity</class>
-		<class>net.blackcat.fantasy.draft.integration.entity.LeagueEntity</class>
-		<class>net.blackcat.fantasy.draft.integration.entity.ManagerEntity</class>
-		<class>net.blackcat.fantasy.draft.integration.entity.PlayerEntity</class>
-		<class>net.blackcat.fantasy.draft.integration.entity.TransferEntity</class>
-		<class>net.blackcat.fantasy.draft.integration.entity.TransferredPlayerEntity</class>
-		<class>net.blackcat.fantasy.draft.integration.entity.SelectedPlayerEntity</class>
-		<class>net.blackcat.fantasy.draft.integration.entity.TeamEntity</class>
-		<class>net.blackcat.fantasy.draft.integration.entity.TransferWindowEntity</class>
+		<class>net.blackcat.fantasy.draft.integration.model.Auction</class>
+		<class>net.blackcat.fantasy.draft.integration.model.AuctionPhase</class>
+		<class>net.blackcat.fantasy.draft.integration.model.Bid</class>
+		<class>net.blackcat.fantasy.draft.integration.model.Gameweek</class>
+		<class>net.blackcat.fantasy.draft.integration.model.GameweekScore</class>
+		<class>net.blackcat.fantasy.draft.integration.model.League</class>
+		<class>net.blackcat.fantasy.draft.integration.model.Player</class>
+		<class>net.blackcat.fantasy.draft.integration.model.SaleToPot</class>
+		<class>net.blackcat.fantasy.draft.integration.model.SelectedPlayer</class>
+		<class>net.blackcat.fantasy.draft.integration.model.Team</class>
+		<class>net.blackcat.fantasy.draft.integration.model.Transfer</class>
+		<class>net.blackcat.fantasy.draft.integration.model.TransferWindow</class>
+		<class>net.blackcat.fantasy.draft.integration.model.User</class>
 
 	</persistence-unit>
 </persistence>

@@ -3,48 +3,64 @@
  */
 package net.blackcat.fantasy.draft.integration.data.service;
 
-import java.util.List;
-
-import net.blackcat.fantasy.draft.integration.entity.LeagueEntity;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
+import net.blackcat.fantasy.draft.integration.model.AuctionPhase;
+import net.blackcat.fantasy.draft.integration.model.League;
 
 /**
- * Defined data operations on the {@link LeagueEntity}.
+ * Defines operations for accessing {@link League} data from the back end data store.
  * 
- * @author Chris
- *
+ * @author Chris Hern
+ * 
  */
 public interface LeagueDataService {
 
-	/**
-	 * Create a new league within the backend.
-	 * 
-	 * @param leagueName Name of the league to create.
-	 */
-	void createLeague(String leagueName);
-	
-	/**
-	 * Get a {@link LeagueEntity} with a given id.
-	 * 
-	 * @param leagueId Id of the league to get.
-	 * @return {@link LeagueEntity} with the given id.
-	 * @throws FantasyDraftIntegrationException If a league with the given id does not exist.
-	 */
-	LeagueEntity getLeague(int leagueId) throws FantasyDraftIntegrationException;
-	
-	/**
-	 * Get the {@link LeagueEntity} that a given team is part of.
-	 * 
-	 * @param teamId Id of the team to get the league for.
-	 * @return {@link LeagueEntity} for the given tea.
-	 * @throws FantasyDraftIntegrationException If a team with the given id does not exist.
-	 */
-	LeagueEntity getLeagueForTeam(int teamId) throws FantasyDraftIntegrationException;
-	
-	/**
-	 * Get all leagues stored in the backend.
-	 * 
-	 * @return All {@link LeagueEntity} objects currently stored in the backend.
-	 */
-	List<LeagueEntity> getLeagues();
+    /**
+     * Add a new league to the system.
+     * 
+     * @param league
+     *            League to add.
+     */
+    void addLeague(League league);
+
+    /**
+     * Get a {@link League} with the given ID.
+     * 
+     * @param leagueId
+     *            ID of the league to retrieve.
+     * @return Corresponding {@link League} object.
+     * @throws FantasyDraftIntegrationException
+     *             If a {@link League} with the given ID does not exist.
+     */
+    League getLeague(int leagueId) throws FantasyDraftIntegrationException;
+
+    /**
+     * Update an existing {@link League} within the system.
+     * 
+     * @param league
+     *            Updated {@link League} object to save.
+     * @throws FantasyDraftIntegrationException
+     *             If a {@link League} with the matching ID does not exist in the system.
+     */
+    void updateLeague(League league) throws FantasyDraftIntegrationException;
+
+    /**
+     * Determine if an open auction phase exists for a given {@link League}.
+     * 
+     * @param league
+     *            League to get the check the open auction phase for.
+     * @return True if an open auction phase exists. False otherwise.
+     */
+    boolean doesOpenAuctionPhaseExist(League league);
+
+    /**
+     * Get the currently open auction phase for a given {@link League}.
+     * 
+     * @param league
+     *            League to get the open auction phase for.
+     * @return Open {@link AuctionPhase}.
+     * @throws FantasyDraftIntegrationException
+     *             If the given league does not have an open auction phase.
+     */
+    AuctionPhase getOpenAuctionPhase(League league) throws FantasyDraftIntegrationException;
 }

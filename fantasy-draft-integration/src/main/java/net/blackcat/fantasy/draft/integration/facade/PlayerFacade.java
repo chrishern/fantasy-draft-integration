@@ -3,66 +3,149 @@
  */
 package net.blackcat.fantasy.draft.integration.facade;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import net.blackcat.fantasy.draft.integration.converter.ConverterService;
+import net.blackcat.fantasy.draft.integration.data.service.PlayerDataService;
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
-import net.blackcat.fantasy.draft.player.FplCostPlayer;
-import net.blackcat.fantasy.draft.player.Player;
-import net.blackcat.fantasy.draft.player.types.PlayerSelectionStatus;
-import net.blackcat.fantasy.draft.player.types.Position;
+import net.blackcat.fantasy.draft.integration.facade.dto.PlayerDto;
+import net.blackcat.fantasy.draft.integration.model.Player;
+import net.blackcat.fantasy.draft.integration.model.PlayerStatistics;
+import net.blackcat.fantasy.draft.integration.model.types.player.PlayerSelectionStatus;
+import net.blackcat.fantasy.draft.integration.model.types.player.Position;
+import net.blackcat.fantasy.draft.integration.model.types.player.SelectedPlayerStatus;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Facade for operations on the Player domain.
+ * Facade over player operations.
  * 
- * @author Chris
- *
+ * @author Chris Hern
+ * 
  */
-public interface PlayerFacade {
+@Component
+@Transactional
+public class PlayerFacade {
 
-	/**
-	 * Add a list of players.  
-	 * 
-	 * @param players Players to add.
-	 */
-	void addPlayers(List<Player> players);
-	
-	/**
-	 * Get a list of all players.
-	 * 
-	 * @return List of all {@link Player} objects.
-	 */
-	List<Player> getPlayers();
-	
-	/**
-	 * Get a list of all players in a given {@link Position}.
-	 * 
-	 * @return List of all {@link Player} objects in the requested position.
-	 */
-	List<Player> getPlayers(Position position);
-	
-	/**
-	 * Get a list of all players in a given {@link Position} and with a certain {@link PlayerSelectionStatus}.
-	 * 
-	 * @param position Position of the players we want.
-	 * @param selectionStatus The selection status of the players we want.
-	 * @return List of all {@link Player} objects in the requested position.
-	 */
-	List<Player> getPlayers(Position position, PlayerSelectionStatus selectionStatus);
-	
-	/**
-	 * Get a list of all players in a given {@link Position} and with a certain {@link PlayerSelectionStatus}.
-	 * 
-	 * @param position Position of the players we want.
-	 * @param selectionStatus The selection status of the players we want.
-	 * @return List of all {@link Player} objects in the requested position.
-	 */
-	List<Player> getPlayers(Position position, PlayerSelectionStatus selectionStatus, int notApplicableTeamId) throws FantasyDraftIntegrationException;
-	
-	/**
-	 * Update the current price of all players in the game with the latest data from FPL.
-	 * 
-	 * @param playersWithScores Map of the players containing the latest price from FPL.
-	 */
-	void updatePlayersCurrentPrice(Map<Integer, FplCostPlayer> playersWithScores);
+    private PlayerDataService playerDataService;
+    private ConverterService converterService;
+
+    @Autowired
+    public PlayerFacade(final PlayerDataService playerDataService, final ConverterService converterService) {
+
+        this.playerDataService = playerDataService;
+        this.converterService = converterService;
+    }
+
+    /**
+     * Add a list of players to the game.
+     * 
+     * @param playerDtos
+     *            List of {@link PlayerDto} objects containing the player data to add to the system.
+     */
+    public void addPlayers(final List<PlayerDto> playerDtos) {
+
+        final List<Player> modelPlayers = new ArrayList<Player>();
+
+        for (final PlayerDto playerDto : playerDtos) {
+            final Player modelPlayer = converterService.convert(playerDto, Player.class);
+            modelPlayers.add(modelPlayer);
+        }
+
+        playerDataService.addPlayers(modelPlayers);
+    }
+    
+    /**
+     * Update a the statistics for a list of players in the game.
+     * 
+     * @param playerDtos
+     *            List of {@link PlayerDto} objects containing the player data to update the statistics for in the system.
+     * @throws FantasyDraftIntegrationException 
+     */
+    public void updatePlayersStatistics(final List<PlayerDto> playerDtos) throws FantasyDraftIntegrationException {
+
+        final List<Player> modelPlayersToUpdate = new ArrayList<Player>();
+
+        for (final PlayerDto playerDto : playerDtos) {
+        	
+        	final Player player = playerDataService.getPlayer(playerDto.getId());
+        	
+        	final PlayerStatistics statistics =
+                    new PlayerStatistics(playerDto.getTotalPoints(), playerDto.getGoals(), playerDto.getAssists(), playerDto.getCleanSheets(), playerDto.getPointsPerGame());
+            player.withStatistics(statistics);
+            
+            modelPlayersToUpdate.add(player);
+        }
+        
+        playerDataService.updatePlayers(modelPlayersToUpdate);
+    }
+
+    /**
+     * Update the current price for each player.
+     * 
+     * @param playerDtoMap Map of player ID to {@link PlayerDto}.
+     * @throws FantasyDraftIntegrationException
+     */
+    public void updatePlayersCurrentPrice(final Map<Integer, PlayerDto> playerDtoMap) throws FantasyDraftIntegrationException {
+    	
+    	final List<Player> modelPlayersToUpdate = new ArrayList<Player>();
+
+        for (final Entry<Integer, PlayerDto> playerDtoEntry : playerDtoMap.entrySet()) {
+        	
+        	final PlayerDto playerDto = playerDtoEntry.getValue();
+        	final Player player = playerDataService.getPlayer(playerDto.getId());
+        
+        	player.setCurrentPrice(playerDto.getCurrentPrice());
+        	
+            modelPlayersToUpdate.add(player);
+        }
+        
+        playerDataService.updatePlayers(modelPlayersToUpdate);
+    }
+
+    /**
+     * Get all players in the game.
+     * 
+     * @return All players in the game.
+     */
+    public List<PlayerDto> getPlayers() {
+
+        final List<PlayerDto> playerDtos = new ArrayList<PlayerDto>();
+
+        for (final Position position : Position.values()) {
+	        for (final Player player : playerDataService.getPlayers(position)) {
+	            final PlayerDto playerDto = converterService.convert(player, PlayerDto.class);
+	            playerDtos.add(playerDto);
+	        }
+        }
+
+        return playerDtos;
+    }
+    
+    /**
+     * Get a list of {@link Player} objects in a given {@link Position} and with a certain {@link PlayerSelectionStatus}
+     * .
+     * 
+     * @param position
+     *            {@link Position} of the players to get.
+     * @param selectionStatus
+     *            {@link SelectedPlayerStatus} of the players to get.
+     * @return {@link Player} objects with the desired {@link Position} and {@link SelectedPlayerStatus}.
+     */
+    public List<PlayerDto> getPlayers(final Position position, final PlayerSelectionStatus selectionStatus) {
+
+        final List<PlayerDto> playerDtos = new ArrayList<PlayerDto>();
+
+        for (final Player player : playerDataService.getPlayers(position, selectionStatus)) {
+            final PlayerDto playerDto = converterService.convert(player, PlayerDto.class);
+            playerDtos.add(playerDto);
+        }
+
+        return playerDtos;
+    }
 }

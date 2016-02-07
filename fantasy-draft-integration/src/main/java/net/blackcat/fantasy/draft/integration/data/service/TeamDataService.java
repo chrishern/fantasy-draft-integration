@@ -3,47 +3,51 @@
  */
 package net.blackcat.fantasy.draft.integration.data.service;
 
-import net.blackcat.fantasy.draft.integration.entity.TeamEntity;
+import java.util.List;
+
 import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
+import net.blackcat.fantasy.draft.integration.model.Team;
 
 /**
- * Defines operations on the {@link TeamEntity}.
+ * Data operations for the {@link Team} object.
  * 
- * @author Chris
- *
+ * @author Chris Hern
+ * 
  */
 public interface TeamDataService {
 
-	/**
-	 * Create a new team within the back end.
-	 * 
-	 * @param teamName Name of the team to create.
-	 */
-	void createTeam(String teamName);
-	
-	/**
-	 * Update a {@link TeamEntity}.
-	 * 
-	 * @param team Team to update.
-	 */
-	void updateTeam(TeamEntity team);
+    /**
+     * Get a {@link Team} with a given ID.
+     * 
+     * @param teamId
+     *            ID of the team to get.
+     * @return {@link Team} with corresponding ID.
+     * @throws FantasyDraftIntegrationException
+     *             If a {@link Team} with the given ID does not exist.
+     */
+    Team getTeam(int teamId) throws FantasyDraftIntegrationException;
+    
+    /**
+     * Get all teams in the game.
+     * 
+     * @return List of all teams in the game.
+     */
+    List<Team> getTeams();
 
-	/**
-	 * Get a team based on the name of the team.
-	 * 
-	 * @param teamName Name of the team to find
-	 * @return {@link TeamEntity} with the given name. 
-	 * @throws FantasyDraftIntegrationException If a team with the given name does not exist.
-	 */
-	TeamEntity getTeam(String teamName) throws FantasyDraftIntegrationException;
-	
-	/**
-	 * Get a team based on the ID of the team.
-	 * 
-	 * @param id ID of the team to find
-	 * @return {@link TeamEntity} with the given ID. 
-	 * @throws FantasyDraftIntegrationException If a team with the given ID does not exist.
-	 */
-	TeamEntity getTeam(int id) throws FantasyDraftIntegrationException;
+    /**
+     * Get the {@link Team} associated with the email address of a manager.
+     * 
+     * @param managerEmailAddress Email address of the manager to the get the team for.
+     * @return {@link Team} for the manager.
+     * @throws FantasyDraftIntegrationException If a {@link Team} can't be found for the given email address.
+     */
+    Team getTeamForManager(String managerEmailAddress) throws FantasyDraftIntegrationException;
 
+    /**
+     * Update the given {@link Team} in the backend.
+     * 
+     * @param updatedTeam
+     *            {@link Team} to update with updated data.
+     */
+    void updateTeam(Team updatedTeam) throws FantasyDraftIntegrationException;
 }

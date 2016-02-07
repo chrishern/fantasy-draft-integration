@@ -3,10 +3,11 @@
  */
 package net.blackcat.fantasy.draft.integration.data.service;
 
-import net.blackcat.fantasy.draft.integration.entity.GameweekEntity;
+import net.blackcat.fantasy.draft.integration.exception.FantasyDraftIntegrationException;
+import net.blackcat.fantasy.draft.integration.model.Gameweek;
 
 /**
- * Data service defining data operations around gameweek data.
+ * Data service for manipulating {@link Gameweek} entity objects.
  * 
  * @author Chris
  *
@@ -14,16 +15,35 @@ import net.blackcat.fantasy.draft.integration.entity.GameweekEntity;
 public interface GameweekDataService {
 
 	/**
-	 * Get the gameweek data from the back end.
+	 * Update the given gameweek.
 	 * 
-	 * @return Gameweek data stored in the back end.
+	 * @param gameweek Updated gameweek to save.
 	 */
-	GameweekEntity getGameweekData();
+	void updateGameweek(Gameweek gameweek);
+
+	/**
+	 * Get gameweek data.
+	 * 
+	 * @return Gameweek data.
+	 */
+	Gameweek getGameweek();
 	
 	/**
-	 * Update the stored gameweek data.
+	 * Get the Gameweek score in a given gameweek for a certain team.
 	 * 
-	 * @param gameweekData Updated gameweek data.
+	 * @param teamId ID of the team to get the team ID for.
+	 * @param gameweek Gameweek number to get the score for.
+	 * @return Gameweek score for the team in the given gameweek.
+	 * @throws FantasyDraftIntegrationException
 	 */
-	void updateGameweekData(GameweekEntity gameweekData);
+	int getGameweekScoreForTeam(int teamId, int gameweek) throws FantasyDraftIntegrationException;
+	
+	/**
+	 * Get the Gameweek score in a given gameweek for a certain selected player.
+	 * 
+	 * @param selectedPlayerId ID od the selected player.
+	 * @param gameweek Gameweek number to get the score for.
+	 * @return Gameweek score for the selected player in the given gameweek.
+	 */
+	Integer getGameweekScoreForPlayer(int selectedPlayerId, int gameweek);
 }

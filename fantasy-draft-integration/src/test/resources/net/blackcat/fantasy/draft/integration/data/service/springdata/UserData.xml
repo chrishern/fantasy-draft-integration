@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<User emailAddress="user1@test.com" forename="User" surname="One" role="MANAGER" />
+	<Player />
+	<Team />
+	<League />
+	<Auction />
+	<Bid />
+</dataset>
