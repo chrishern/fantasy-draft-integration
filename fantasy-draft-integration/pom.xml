@@ -216,6 +216,8 @@
 				<configuration>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 					<pushReleases>true</pushReleases>
+					<noDeploy>true</noDeploy>
+					<pullMaster>true</pullMaster>
 				</configuration>
 			</plugin>
 
