@@ -42,7 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TransferWindowFacade {
 
-	private final static int TRANSFER_WINDOW = 2;
+	private final static int TRANSFER_WINDOW = 3;
 	
 	private TeamDataService teamDataService;
 	private LeagueDataService leagueDataService;
@@ -309,18 +309,21 @@ public class TransferWindowFacade {
         
         for (final TransferWindow transferWindow : league.getTransferWindows()) {
 
-        	final TransferWindowDto transferWindowDto = new TransferWindowDto(windowSequenceNumber);
-
-        	final List<AuctionPhaseResultsDto> auctionPhaseResultsList = createAuctionPhaseResults(transferWindow);
-        	final List<PotSaleSummaryDto> potSaleSummaryList = createPotSaleSummary(transferWindow);
-        	final List<TransferSummaryDto> transferSummaryList = createTransferSummary(transferWindow);
+        	if (windowSequenceNumber < 4) {
         	
-        	transferWindowDto.setTransfers(transferSummaryList);
-        	transferWindowDto.setPotSales(potSaleSummaryList);
-        	transferWindowDto.setAuctionPhaseResults(auctionPhaseResultsList);
-        	
-        	transferWindowSummary.addTransferWindow(transferWindowDto);
-        	windowSequenceNumber++;
+	        	final TransferWindowDto transferWindowDto = new TransferWindowDto(windowSequenceNumber);
+	
+	        	final List<AuctionPhaseResultsDto> auctionPhaseResultsList = createAuctionPhaseResults(transferWindow);
+	        	final List<PotSaleSummaryDto> potSaleSummaryList = createPotSaleSummary(transferWindow);
+	        	final List<TransferSummaryDto> transferSummaryList = createTransferSummary(transferWindow);
+	        	
+	        	transferWindowDto.setTransfers(transferSummaryList);
+	        	transferWindowDto.setPotSales(potSaleSummaryList);
+	        	transferWindowDto.setAuctionPhaseResults(auctionPhaseResultsList);
+	        	
+	        	transferWindowSummary.addTransferWindow(transferWindowDto);
+	        	windowSequenceNumber++;
+        	}
         }
         
 
