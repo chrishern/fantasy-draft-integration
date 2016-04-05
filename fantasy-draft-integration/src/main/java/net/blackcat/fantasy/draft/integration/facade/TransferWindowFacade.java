@@ -309,21 +309,18 @@ public class TransferWindowFacade {
         
         for (final TransferWindow transferWindow : league.getTransferWindows()) {
 
-        	if (windowSequenceNumber < 4) {
+        	final TransferWindowDto transferWindowDto = new TransferWindowDto(windowSequenceNumber);
+
+        	final List<AuctionPhaseResultsDto> auctionPhaseResultsList = createAuctionPhaseResults(transferWindow);
+        	final List<PotSaleSummaryDto> potSaleSummaryList = createPotSaleSummary(transferWindow);
+        	final List<TransferSummaryDto> transferSummaryList = createTransferSummary(transferWindow);
         	
-	        	final TransferWindowDto transferWindowDto = new TransferWindowDto(windowSequenceNumber);
-	
-	        	final List<AuctionPhaseResultsDto> auctionPhaseResultsList = createAuctionPhaseResults(transferWindow);
-	        	final List<PotSaleSummaryDto> potSaleSummaryList = createPotSaleSummary(transferWindow);
-	        	final List<TransferSummaryDto> transferSummaryList = createTransferSummary(transferWindow);
-	        	
-	        	transferWindowDto.setTransfers(transferSummaryList);
-	        	transferWindowDto.setPotSales(potSaleSummaryList);
-	        	transferWindowDto.setAuctionPhaseResults(auctionPhaseResultsList);
-	        	
-	        	transferWindowSummary.addTransferWindow(transferWindowDto);
-	        	windowSequenceNumber++;
-        	}
+        	transferWindowDto.setTransfers(transferSummaryList);
+        	transferWindowDto.setPotSales(potSaleSummaryList);
+        	transferWindowDto.setAuctionPhaseResults(auctionPhaseResultsList);
+        	
+        	transferWindowSummary.addTransferWindow(transferWindowDto);
+        	windowSequenceNumber++;
         }
         
 
