@@ -54,4 +54,8 @@ public class PlayerGameweekScoreDto implements Serializable {
 	public int getScore() {
 		return score;
 	}
+	
+	public void setMinutesPlayed(final int minutesPlayed) {
+		this.minutesPlayed = minutesPlayed;
+	}
 }

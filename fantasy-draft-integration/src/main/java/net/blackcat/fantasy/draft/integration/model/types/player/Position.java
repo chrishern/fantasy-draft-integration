@@ -10,17 +10,17 @@ public enum Position {
 
     // @formatter:off
 
-    GOALKEEPER("Goalkeeper", "goalkeepers"), 
-    DEFENDER("Defender", "defenders"), 
-    MIDFIELDER("Midfielder", "midfielders"),
-    STRIKER("Forward", "strikers");
+    GOALKEEPER(1, "goalkeepers"), 
+    DEFENDER(2, "defenders"), 
+    MIDFIELDER(3, "midfielders"),
+    STRIKER(4, "strikers");
 
     // @formatter:on
 
-    private String fantasyPremierLeagueValue;
+    private int fantasyPremierLeagueValue;
     private String restApiValue;
 
-    private Position(final String fantasyPremiumLeagueValue, final String restApiValue) {
+    private Position(final int fantasyPremiumLeagueValue, final String restApiValue) {
         this.fantasyPremierLeagueValue = fantasyPremiumLeagueValue;
         this.restApiValue = restApiValue;
     }
@@ -28,7 +28,7 @@ public enum Position {
     /**
      * @return the fantasyPremierLeagueValue
      */
-    public String getFantasyPremierLeagueValue() {
+    public int getFantasyPremierLeagueValue() {
         return fantasyPremierLeagueValue;
     }
 
@@ -43,12 +43,12 @@ public enum Position {
      * Convert the string FPL position value to the enum value.
      * 
      * @param fantasyPremierLeaguePosition
-     *            String value of the position from the FPL.
+     *            int value of the position from the FPL.
      * @return Equivalent Position enum.
      */
-    public static Position fromFantasyPremierLeaguePosition(final String fantasyPremierLeaguePosition) {
+    public static Position fromFantasyPremierLeaguePosition(final int fantasyPremierLeaguePosition) {
         for (final Position position : Position.values()) {
-            if (position.getFantasyPremierLeagueValue().equals(fantasyPremierLeaguePosition)) {
+            if (position.getFantasyPremierLeagueValue() == fantasyPremierLeaguePosition) {
                 return position;
             }
         }

@@ -65,21 +65,24 @@ public class PlayerFacade {
      * 
      * @param playerDtos
      *            List of {@link PlayerDto} objects containing the player data to update the statistics for in the system.
-     * @throws FantasyDraftIntegrationException 
      */
-    public void updatePlayersStatistics(final List<PlayerDto> playerDtos) throws FantasyDraftIntegrationException {
+    public void updatePlayersStatistics(final List<PlayerDto> playerDtos) {
 
         final List<Player> modelPlayersToUpdate = new ArrayList<Player>();
 
         for (final PlayerDto playerDto : playerDtos) {
-        	
-        	final Player player = playerDataService.getPlayer(playerDto.getId());
-        	
-        	final PlayerStatistics statistics =
-                    new PlayerStatistics(playerDto.getTotalPoints(), playerDto.getGoals(), playerDto.getAssists(), playerDto.getCleanSheets(), playerDto.getPointsPerGame());
-            player.withStatistics(statistics);
-            
-            modelPlayersToUpdate.add(player);
+        	try {
+	        	final Player player = playerDataService.getPlayer(playerDto.getId());
+	        	
+	        	
+	        	final PlayerStatistics statistics =
+	                    new PlayerStatistics(playerDto.getTotalPoints(), playerDto.getGoals(), playerDto.getAssists(), playerDto.getCleanSheets(), playerDto.getPointsPerGame());
+	            player.withStatistics(statistics);
+	            
+	            modelPlayersToUpdate.add(player);
+        	} catch (final FantasyDraftIntegrationException e) {
+        		System.out.println("Exception for player " + playerDto.getId());
+        	}
         }
         
         playerDataService.updatePlayers(modelPlayersToUpdate);
@@ -96,13 +99,16 @@ public class PlayerFacade {
     	final List<Player> modelPlayersToUpdate = new ArrayList<Player>();
 
         for (final Entry<Integer, PlayerDto> playerDtoEntry : playerDtoMap.entrySet()) {
-        	
-        	final PlayerDto playerDto = playerDtoEntry.getValue();
-        	final Player player = playerDataService.getPlayer(playerDto.getId());
-        
-        	player.setCurrentPrice(playerDto.getCurrentPrice());
-        	
-            modelPlayersToUpdate.add(player);
+        	try {
+	        	final PlayerDto playerDto = playerDtoEntry.getValue();
+	        	final Player player = playerDataService.getPlayer(playerDto.getId());
+	        
+	        	player.setCurrentPrice(playerDto.getCurrentPrice());
+	        	
+	            modelPlayersToUpdate.add(player);
+	        } catch (final FantasyDraftIntegrationException e) {
+	    		System.out.println("Exception for player " + playerDtoEntry.getValue().getId());
+	    	}
         }
         
         playerDataService.updatePlayers(modelPlayersToUpdate);

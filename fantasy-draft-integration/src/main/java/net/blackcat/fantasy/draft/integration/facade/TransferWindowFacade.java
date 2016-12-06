@@ -42,7 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TransferWindowFacade {
 
-	private final static int TRANSFER_WINDOW = 3;
+	private final static int TRANSFER_WINDOW = 0;
 	
 	private TeamDataService teamDataService;
 	private LeagueDataService leagueDataService;

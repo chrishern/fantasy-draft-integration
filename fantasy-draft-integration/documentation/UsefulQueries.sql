@@ -27,5 +27,27 @@ UPDATE SelectedPlayer SET startingTeamStatus = 'SUB_5' WHERE id = 309;
 SELECT DISTINCT b.team_id
 FROM Bid b, AuctionPhase_Bid a
 WHERE b.id = a.bids_id
-	AND a.AuctionPhase_id = 14
+	AND a.AuctionPhase_id = 3
 ORDER BY b.team_id;
+
+
+admintkuJvYS
+2gnq8_DXryUj
+
+https://black-cats1973.rhcloud.com/fantasy-draft-api/fantasydraft/league/table
+
+
+AUCTION STEPS
+----------------------
+
+Open auction: https://black-cats1973.rhcloud.com/fantasy-draft-api/fantasydraft/auction/1
+Close auction phase: http://localhost:8080/fantasy-draft-api/fantasydraft/auction/phase/1/close   	(PUT)
+Open auction phase: http://localhost:8080/fantasy-draft-api/fantasydraft/auction/phase/1			(PUT)
+
+
+
+TODO
+------------
+1. Can add same player twice
+2. Sub order on player list
+4. Remove players from list when picked in team
